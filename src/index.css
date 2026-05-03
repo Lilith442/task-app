@@ -20,6 +20,13 @@ body {
   padding: 12px;
   border-radius: 10px;
   margin-top: 10px;
+  cursor: grab;
+  transition: 0.2s;
+}
+
+.task-card:active {
+  cursor: grabbing;
+  transform: scale(1.02);
 }
 
 .tag {
