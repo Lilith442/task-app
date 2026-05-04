@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "./supabase";
 
 import {
-  DndContext,
-  closestCenter
+  DndContext
 } from "@dnd-kit/core";
 
 import {
@@ -28,7 +27,7 @@ function App() {
   const [editText, setEditText] = useState("");
   const [message, setMessage] = useState("");
 
-  // 🔥 AUTH
+  // 🔥 AUTH SESSION
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -46,21 +45,24 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // 🔥 FETCH
-  const fetchTasks = async () => {
+  // 🔥 FETCH (FIXED)
+  const fetchTasks = useCallback(async () => {
+    if (!user?.id) return;
+
     const { data, error } = await supabase
       .from("tasks")
       .select("*")
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .order("id", { ascending: true });
 
-    if (!error) setTasks(data);
-  };
-
-  useEffect(() => {
-    if (user?.id) fetchTasks();
+    if (!error) setTasks(data || []);
   }, [user]);
 
-  // 🔥 AUTH ACTIONS
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  // 🔥 AUTH
   const login = async () => {
     setMessage("");
 
@@ -92,43 +94,49 @@ function App() {
   const addTask = async () => {
     if (!input.trim()) return;
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("tasks")
       .insert([
         {
           text: input,
           user_id: user.id,
-          category
+          category,
+          completed: false
         }
       ])
       .select();
 
-    setTasks((prev) => [...prev, data[0]]);
-    setInput("");
+    if (!error) {
+      setTasks((prev) => [...prev, data[0]]);
+      setInput("");
+    }
   };
 
   // 🔥 DELETE
   const deleteTask = async (id) => {
     await supabase.from("tasks").delete().eq("id", id);
-
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // 🔥 🔥 EN ÖNEMLİ FIX (toggle)
+  // 🔥 ✅ FIXED TOGGLE (EN KRİTİK)
   const toggleTask = async (id) => {
     const task = tasks.find((t) => t.id === id);
+    if (!task) return;
 
-    await supabase
+    const newValue = !task.completed;
+
+    const { error } = await supabase
       .from("tasks")
-      .update({ completed: !task.completed })
+      .update({ completed: newValue })
       .eq("id", id);
 
-    // ❗ fetch YOK → direkt state güncelle
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
-    );
+    if (!error) {
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === id ? { ...t, completed: newValue } : t
+        )
+      );
+    }
   };
 
   // 🔥 EDIT
@@ -151,7 +159,6 @@ function App() {
   // 🔥 DRAG
   const handleDragEnd = (event) => {
     const { active, over } = event;
-
     if (!over || active.id === over.id) return;
 
     const oldIndex = tasks.findIndex((t) => t.id === active.id);
@@ -160,7 +167,7 @@ function App() {
     setTasks(arrayMove(tasks, oldIndex, newIndex));
   };
 
-  // 🔥 FILTER (geri geldi)
+  // 🔥 FILTER
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completed") return task.completed;
     if (filter === "active") return !task.completed;
@@ -209,7 +216,6 @@ function App() {
         <button onClick={addTask}>Ekle</button>
       </div>
 
-      {/* 🔥 FİLTRELER GERİ GELDİ */}
       <div className="filters">
         <button onClick={() => setFilter("all")}>Tümü</button>
         <button onClick={() => setFilter("active")}>Aktif</button>
@@ -268,7 +274,7 @@ function Item({
       <div {...attributes} {...listeners}>
         <input
           type="checkbox"
-          checked={task.completed}
+          checked={!!task.completed}
           onChange={() => toggleTask(task.id)}
         />
 
@@ -278,10 +284,12 @@ function Item({
             onChange={(e) => setEditText(e.target.value)}
           />
         ) : (
-          <span>{task.text}</span>
+          <span style={{ marginLeft: 10 }}>
+            {task.text}
+          </span>
         )}
 
-        <span>{task.category}</span>
+        <span className="tag">{task.category}</span>
       </div>
 
       <div>
