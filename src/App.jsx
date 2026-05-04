@@ -28,21 +28,7 @@ function App() {
   const [editText, setEditText] = useState("");
   const [message, setMessage] = useState("");
 
-  // 🔥 AUTH SESSION
-  const fetchTasks = async () => {
-    const { data, error } = await supabase
-      .from("tasks")
-      .select("*")
-      .eq("user_id", user.id);
-
-    if (error) {
-      console.error("FETCH ERROR:", error);
-      return;
-    }
-
-    setTasks(data || []);
-  };
-
+  // 🔥 AUTH
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -57,38 +43,24 @@ function App() {
       }
     );
 
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-  // 🔥 TASK FETCH
-  useEffect(() => {
-    if (user?.id) {
-      fetchTasks();
-    }
-  }, [user]);
+  // 🔥 FETCH
+  const fetchTasks = async () => {
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("user_id", user.id);
 
-  // 🔥 SIGN UP
-  const signUp = async () => {
-    setMessage("");
-
-    const { error } = await supabase.auth.signUp({
-      email: loginInput,
-      password: "123456",
-      options: {
-        emailRedirectTo: "https://task-app-tau-six.vercel.app/"
-      }
-    });
-
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage("📩 Mailini kontrol et ve doğrula");
-    }
+    if (!error) setTasks(data);
   };
 
-  // 🔥 LOGIN
+  useEffect(() => {
+    if (user?.id) fetchTasks();
+  }, [user]);
+
+  // 🔥 AUTH ACTIONS
   const login = async () => {
     setMessage("");
 
@@ -97,13 +69,17 @@ function App() {
       password: "123456"
     });
 
-    if (error) {
-      if (error.message.includes("Email not confirmed")) {
-        setMessage("⚠️ Önce emailini doğrulamalısın");
-      } else {
-        setMessage(error.message);
-      }
-    }
+    if (error) setMessage(error.message);
+  };
+
+  const signUp = async () => {
+    const { error } = await supabase.auth.signUp({
+      email: loginInput,
+      password: "123456"
+    });
+
+    if (error) setMessage(error.message);
+    else setMessage("📩 Mailini doğrula");
   };
 
   const logout = async () => {
@@ -112,11 +88,11 @@ function App() {
     setTasks([]);
   };
 
-  // 🔥 ADD TASK
+  // 🔥 ADD
   const addTask = async () => {
     if (!input.trim()) return;
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("tasks")
       .insert([
         {
@@ -127,20 +103,18 @@ function App() {
       ])
       .select();
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    setTasks([...tasks, data[0]]);
+    setTasks((prev) => [...prev, data[0]]);
     setInput("");
   };
 
+  // 🔥 DELETE
   const deleteTask = async (id) => {
     await supabase.from("tasks").delete().eq("id", id);
-    setTasks(tasks.filter((t) => t.id !== id));
+
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
+  // 🔥 🔥 EN ÖNEMLİ FIX (toggle)
   const toggleTask = async (id) => {
     const task = tasks.find((t) => t.id === id);
 
@@ -149,11 +123,35 @@ function App() {
       .update({ completed: !task.completed })
       .eq("id", id);
 
-    fetchTasks();
+    // ❗ fetch YOK → direkt state güncelle
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id ? { ...t, completed: !t.completed } : t
+      )
+    );
   };
 
+  // 🔥 EDIT
+  const saveEdit = async (id) => {
+    await supabase
+      .from("tasks")
+      .update({ text: editText })
+      .eq("id", id);
+
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id ? { ...t, text: editText } : t
+      )
+    );
+
+    setEditingId(null);
+    setEditText("");
+  };
+
+  // 🔥 DRAG
   const handleDragEnd = (event) => {
     const { active, over } = event;
+
     if (!over || active.id === over.id) return;
 
     const oldIndex = tasks.findIndex((t) => t.id === active.id);
@@ -162,65 +160,41 @@ function App() {
     setTasks(arrayMove(tasks, oldIndex, newIndex));
   };
 
-  const startEdit = (task) => {
-    setEditingId(task.id);
-    setEditText(task.text);
-  };
-
-  const saveEdit = async (id) => {
-    await supabase
-      .from("tasks")
-      .update({ text: editText })
-      .eq("id", id);
-
-    fetchTasks();
-    setEditingId(null);
-    setEditText("");
-  };
-
+  // 🔥 FILTER (geri geldi)
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completed") return task.completed;
     if (filter === "active") return !task.completed;
     return true;
   });
 
-  // 🔥 LOGIN SCREEN
+  // 🔥 LOGIN UI
   if (!user) {
     return (
       <div className="login">
-        <div className="login-box">
-          <h2>👋 Welcome</h2>
-
-          <input
-            value={loginInput}
-            onChange={(e) => setLoginInput(e.target.value)}
-            placeholder="Enter email"
-          />
-
-          {message && <p style={{ color: "white" }}>{message}</p>}
-
-          <button onClick={login}>Login</button>
-          <button onClick={signUp}>Sign Up</button>
-        </div>
+        <input
+          value={loginInput}
+          onChange={(e) => setLoginInput(e.target.value)}
+        />
+        <p>{message}</p>
+        <button onClick={login}>Login</button>
+        <button onClick={signUp}>Sign Up</button>
       </div>
     );
   }
 
-  // 🔥 APP
+  // 🔥 APP UI
   return (
     <div className="container">
-      <div className="top-bar">
-        <h1>Task App</h1>
-        <button onClick={logout}>
-          Logout ({user.email})
-        </button>
-      </div>
+      <h1>Task App</h1>
+
+      <button onClick={logout}>
+        Logout ({user.email})
+      </button>
 
       <div className="input-group">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Görev ekle"
         />
 
         <select
@@ -235,15 +209,24 @@ function App() {
         <button onClick={addTask}>Ekle</button>
       </div>
 
+      {/* 🔥 FİLTRELER GERİ GELDİ */}
+      <div className="filters">
+        <button onClick={() => setFilter("all")}>Tümü</button>
+        <button onClick={() => setFilter("active")}>Aktif</button>
+        <button onClick={() => setFilter("completed")}>
+          Tamamlanan
+        </button>
+      </div>
+
       {filteredTasks.length === 0 && <p>Görev yok</p>}
 
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext onDragEnd={handleDragEnd}>
         <SortableContext
           items={filteredTasks.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
           {filteredTasks.map((task) => (
-            <SortableItem
+            <Item
               key={task.id}
               task={task}
               toggleTask={toggleTask}
@@ -251,7 +234,7 @@ function App() {
               editingId={editingId}
               editText={editText}
               setEditText={setEditText}
-              startEdit={startEdit}
+              setEditingId={setEditingId}
               saveEdit={saveEdit}
             />
           ))}
@@ -262,14 +245,14 @@ function App() {
 }
 
 // 🔥 ITEM
-function SortableItem({
+function Item({
   task,
   toggleTask,
   deleteTask,
   editingId,
   editText,
   setEditText,
-  startEdit,
+  setEditingId,
   saveEdit
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -295,19 +278,19 @@ function SortableItem({
             onChange={(e) => setEditText(e.target.value)}
           />
         ) : (
-          <span style={{ marginLeft: 10 }}>
-            {task.text}
-          </span>
+          <span>{task.text}</span>
         )}
 
-        <span className="tag">{task.category}</span>
+        <span>{task.category}</span>
       </div>
 
       <div>
         {editingId === task.id ? (
           <button onClick={() => saveEdit(task.id)}>Kaydet</button>
         ) : (
-          <button onClick={() => startEdit(task)}>Düzenle</button>
+          <button onClick={() => setEditingId(task.id)}>
+            Düzenle
+          </button>
         )}
 
         <button onClick={() => deleteTask(task.id)}>Sil</button>
