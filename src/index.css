@@ -315,3 +315,83 @@ button:hover {
   font-size: 12px;
   opacity: 0.7;
 }
+
+/* ===== DARK MODE ===== */
+
+body.dark {
+  background: linear-gradient(to bottom, #1e1e1e, #121212);
+  color: #f1f1f1;
+}
+
+/* container */
+body.dark .container {
+  background: rgba(255,255,255,0.05);
+}
+
+/* card */
+body.dark .task-card {
+  background: rgba(255,255,255,0.08);
+}
+
+/* input */
+body.dark input,
+body.dark select {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+/* buttons */
+body.dark button {
+  background: #0f5c63;
+  color: white;
+}
+
+/* tag */
+body.dark .tag {
+  background: #0f5c63;
+}
+
+/* login */
+body.dark .login-container {
+  background: rgba(255,255,255,0.05);
+}
+
+/* SOL ÜST */
+.top-left {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+
+  background: #4f9da6;
+  color: white;
+  cursor: pointer;
+
+  z-index: 1000;
+}
+
+/* SAĞ ÜST */
+.top-right {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+
+  background: #4f9da6;
+  color: white;
+  cursor: pointer;
+
+  z-index: 1000;
+}
+
+.top-left:hover,
+.top-right:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}

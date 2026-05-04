@@ -111,8 +111,14 @@ function App() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
-  // 🔥 AUTH
+  // 🌙 DARK MODE
+  useEffect(() => {
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+
+  // 🔐 AUTH
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -140,19 +146,18 @@ function App() {
     else setMessage("📩 Mailini doğrula");
   };
 
-const login = async () => {
-  setMessage("");
-  setLoading(true);
+  const login = async () => {
+    setMessage("");
+    setLoading(true);
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password: "123456"
-  });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: "123456"
+    });
 
-  if (error) setMessage(error.message);
-
-  setLoading(false);
-};
+    if (error) setMessage(error.message);
+    setLoading(false);
+  };
 
   const logout = async () => {
     await supabase.auth.signOut();
@@ -160,63 +165,50 @@ const login = async () => {
     setTasks([]);
   };
 
-  // 🔥 FETCH
+  // 📦 FETCH
   useEffect(() => {
     if (user) fetchTasks();
   }, [user]);
 
   const fetchTasks = async () => {
-  setLoading(true);
+    setLoading(true);
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("position", { ascending: true });
+    const { data } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("position", { ascending: true });
 
-  if (error) {
-    console.error(error);
-  } else {
     setTasks(data || []);
-  }
-
-  setLoading(false);
-};
-
-  // 🔥 ADD
-  const addTask = async () => {
-  if (!input.trim()) return;
-
-  setLoading(true);
-
-  const { data, error } = await supabase
-    .from("tasks")
-    .insert([
-      {
-        text: input,
-        category,
-        user_id: user.id,
-        position: tasks.length
-      }
-    ])
-    .select();
-
-  if (error) {
-    alert(error.message);
     setLoading(false);
-    return;
-  }
+  };
 
-  setTasks([...tasks, data[0]]);
-  setInput("");
+  // ➕ ADD
+  const addTask = async () => {
+    if (!input.trim()) return;
 
-  setLoading(false);
-};
+    setLoading(true);
 
-  // 🔥 DRAG
+    const { data } = await supabase
+      .from("tasks")
+      .insert([
+        {
+          text: input,
+          category,
+          user_id: user.id,
+          position: tasks.length
+        }
+      ])
+      .select();
+
+    setTasks([...tasks, data[0]]);
+    setInput("");
+    setLoading(false);
+  };
+
+  // 🔄 DRAG
   const handleDragEnd = (event) => {
     const { active, over } = event;
-
     if (!over || active.id === over.id) return;
 
     const oldIndex = tasks.findIndex(t => t.id === active.id);
@@ -225,7 +217,6 @@ const login = async () => {
     const updated = arrayMove(tasks, oldIndex, newIndex);
     setTasks(updated);
 
-    // DB sync
     updated.forEach((task, index) => {
       supabase
         .from("tasks")
@@ -234,7 +225,6 @@ const login = async () => {
     });
   };
 
-  // 🔥 TOGGLE
   const toggleTask = async (id) => {
     const task = tasks.find(t => t.id === id);
     const newValue = !task.completed;
@@ -252,7 +242,6 @@ const login = async () => {
     setTasks(updated);
   };
 
-  // 🔥 DELETE
   const deleteTask = async (id) => {
     if (!confirm("Silmek istediğine emin misin?")) return;
 
@@ -260,23 +249,20 @@ const login = async () => {
     setTasks(tasks.filter(t => t.id !== id));
   };
 
-  // 🔥 EDIT
   const saveEdit = async (id) => {
-    const { error } = await supabase
+    await supabase
       .from("tasks")
       .update({ text: editText })
       .eq("id", id);
 
-    if (!error) {
-      setTasks(prev =>
-        prev.map(t =>
-          t.id === id ? { ...t, text: editText } : t
-        )
-      );
+    setTasks(prev =>
+      prev.map(t =>
+        t.id === id ? { ...t, text: editText } : t
+      )
+    );
 
-      setEditingId(null);
-      setEditText("");
-    }
+    setEditingId(null);
+    setEditText("");
   };
 
   const filteredTasks = tasks.filter(task => {
@@ -285,128 +271,111 @@ const login = async () => {
     return true;
   });
 
-  const completedCount = tasks.filter(t => t.completed).length;
-  const totalCount = tasks.length;
   const percent =
-  totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
+    tasks.length === 0
+      ? 0
+      : Math.round(
+          (tasks.filter(t => t.completed).length / tasks.length) * 100
+        );
 
-  // 🔥 LOGIN UI
+  // 🔐 LOGIN UI
   if (!user) {
     return (
-  <div className="login-container">
+      <>
+        <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
+          {darkMode ? "☀️ Light" : "🌙 Dark"}
+        </button>
 
-  <div className="login-header">
-    <div className="avatar">🚀</div>
-    <h2>Welcome back</h2>
-    <p>Devam etmek için giriş yap</p>
-  </div>
+        <div className="login-container">
+          <h2>Welcome back</h2>
 
-  <div className="login-form">
-    <input
-      placeholder="Email adresin"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-    />
+          <input
+            placeholder="Email adresin"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-    {message && <p className="login-message">{message}</p>}
+          <p>{message}</p>
 
-    <button onClick={login} disabled={loading} className="primary">
-      {loading ? "Giriş yapılıyor..." : "Login"}
-    </button>
+          <button onClick={login} disabled={loading}>
+            {loading ? "..." : "Login"}
+          </button>
 
-    <button onClick={signUp} className="secondary">
-      Sign Up
-    </button>
-  </div>
-
-</div>
+          <button onClick={signUp}>Sign Up</button>
+        </div>
+      </>
     );
   }
 
   // 🔥 APP UI
   return (
-    <div className="container">
-      <h1>Task App</h1>
+    <>
+      <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
+        {darkMode ? "☀️ Light" : "🌙 Dark"}
+      </button>
 
-      <button onClick={logout}>
+      <button className="top-right" onClick={logout}>
         Logout ({user.email})
       </button>
 
-      <p style={{ opacity: 0.6 }}>
-        {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
-      </p>
-    <div className="progress-bar">
-      <div
-        className="progress-fill"
-        style={{ width: percent + "%" }}>
-      </div>
-  </div>
+      <div className="container">
+        <h1>Task App</h1>
 
-<p className="progress-text">%{percent} tamamlandı</p>
-
-      <div className="input-group">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") addTask();
-          }}
-          placeholder="Görev ekle"
-        />
-
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="genel">Genel</option>
-          <option value="iş">İş</option>
-          <option value="kişisel">Kişisel</option>
-        </select>
-
-        <button onClick={addTask} disabled={loading}>
-          {loading ? "..." : "Ekle"}
-        </button>
-      </div>
-
-      <div className="filters">
-        <button className={filter === "all" ? "active" : ""} onClick={() => setFilter("all")}>Tümü</button>
-        <button className={filter === "active" ? "active" : ""} onClick={() => setFilter("active")}>Aktif</button>
-        <button className={filter === "completed" ? "active" : ""} onClick={() => setFilter("completed")}>Tamamlanan</button>
-      </div>
-
-      {loading && (
-        <p style={{ opacity: 0.6, marginTop: 10 }}>
-          ⏳ Yükleniyor...
+        <p style={{ opacity: 0.6 }}>
+          {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
         </p>
-      )}
 
-      {filteredTasks.length === 0 && (
-        <p className="empty">
-          🎯 Hedef belirle → görev ekle → tamamla
-        </p>
-      )}
-      
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={filteredTasks.map(t => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          {filteredTasks.map((task) => (
-            <SortableItem
-              key={task.id}
-              task={task}
-              toggleTask={toggleTask}
-              deleteTask={deleteTask}
-              editingId={editingId}
-              editText={editText}
-              setEditText={setEditText}
-              setEditingId={setEditingId}
-              saveEdit={saveEdit}
-            />
-          ))}
-        </SortableContext>
-      </DndContext>
-    </div>
+        <div className="progress-bar">
+          <div className="progress-fill" style={{ width: percent + "%" }} />
+        </div>
+
+        <p className="progress-text">%{percent} tamamlandı</p>
+
+        <div className="input-group">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && addTask()}
+            placeholder="Görev ekle"
+          />
+
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="genel">Genel</option>
+            <option value="iş">İş</option>
+            <option value="kişisel">Kişisel</option>
+          </select>
+
+          <button onClick={addTask}>{loading ? "..." : "Ekle"}</button>
+        </div>
+
+        <div className="filters">
+          <button onClick={() => setFilter("all")}>Tümü</button>
+          <button onClick={() => setFilter("active")}>Aktif</button>
+          <button onClick={() => setFilter("completed")}>Tamamlanan</button>
+        </div>
+
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext
+            items={filteredTasks.map(t => t.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {filteredTasks.map(task => (
+              <SortableItem
+                key={task.id}
+                task={task}
+                toggleTask={toggleTask}
+                deleteTask={deleteTask}
+                editingId={editingId}
+                editText={editText}
+                setEditText={setEditText}
+                setEditingId={setEditingId}
+                saveEdit={saveEdit}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
+      </div>
+    </>
   );
 }
 
