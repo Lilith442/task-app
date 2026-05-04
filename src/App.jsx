@@ -1,3 +1,5 @@
+/*App.jsx*/
+
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 
@@ -112,6 +114,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [toast, setToast] = useState(null);
 
   // 🌙 DARK MODE
   useEffect(() => {
@@ -136,6 +139,13 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+// SADECE BU FONKSİYONU DEĞİŞTİR
+
+const showToast = (msg) => {
+  setToast(msg);
+  setTimeout(() => setToast(null), 2000);
+};
+
   const signUp = async () => {
     setMessage("");
     const { error } = await supabase.auth.signUp({
@@ -143,7 +153,10 @@ function App() {
       password: "123456"
     });
     if (error) setMessage(error.message);
-    else setMessage("📩 Mailini doğrula");
+    else {
+    setMessage("📩 Mailini doğrula");
+    showToast("Kayıt başarılı 📩");
+}
   };
 
   const login = async () => {
@@ -157,6 +170,9 @@ function App() {
 
     if (error) setMessage(error.message);
     setLoading(false);
+    if (!error) {
+    showToast("Giriş başarılı 🎉");
+    }
   };
 
   const logout = async () => {
@@ -204,6 +220,8 @@ function App() {
     setTasks([...tasks, data[0]]);
     setInput("");
     setLoading(false);
+
+    showToast("Görev eklendi ✅");
   };
 
   // 🔄 DRAG
@@ -247,6 +265,8 @@ function App() {
 
     await supabase.from("tasks").delete().eq("id", id);
     setTasks(tasks.filter(t => t.id !== id));
+
+    showToast("Görev silindi 🗑");
   };
 
   const saveEdit = async (id) => {
@@ -263,6 +283,8 @@ function App() {
 
     setEditingId(null);
     setEditText("");
+
+    showToast("Güncellendi ✏️");
   };
 
   const filteredTasks = tasks.filter(task => {
@@ -280,36 +302,49 @@ function App() {
 
   // 🔐 LOGIN UI
   if (!user) {
-    return (
-      <>
-        <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
-          {darkMode ? "☀️ Light" : "🌙 Dark"}
-        </button>
+  return (
+    <>
+      {toast && <div className="toast">{toast}</div>}
 
-        <div className="login-container">
+      <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
+        {darkMode ? "☀️ Light" : "🌙 Dark"}
+      </button>
+
+      <div className="login-container">
+
+        <div className="login-header">
+          <div className="avatar">🚀</div>
           <h2>Welcome back</h2>
+          <p>Devam etmek için giriş yap</p>
+        </div>
 
+        <div className="login-form">
           <input
             placeholder="Email adresin"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <p>{message}</p>
+          {message && <p className="login-message">{message}</p>}
 
-          <button onClick={login} disabled={loading}>
-            {loading ? "..." : "Login"}
+          <button onClick={login} disabled={loading} className="primary">
+            {loading ? "Giriş yapılıyor..." : "Login"}
           </button>
 
-          <button onClick={signUp}>Sign Up</button>
+          <button onClick={signUp} className="secondary">
+            Sign Up
+          </button>
         </div>
-      </>
-    );
-  }
+
+      </div>
+    </>
+  );
+}
 
   // 🔥 APP UI
   return (
     <>
+    {toast && <div className="toast">{toast}</div>}
       <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
         {darkMode ? "☀️ Light" : "🌙 Dark"}
       </button>
