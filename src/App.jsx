@@ -16,86 +16,129 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 function App() {
-  const [user, setUser] = useState(() => {
-    return JSON.parse(localStorage.getItem("user")) || null;
-  });
-
+  const [user, setUser] = useState(null);
   const [tasks, setTasks] = useState([]);
+
   const [loginInput, setLoginInput] = useState("");
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("genel");
   const [filter, setFilter] = useState("all");
+
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [message, setMessage] = useState("");
+
+  // 🔥 AUTH SESSION
+  const fetchTasks = async () => {
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("FETCH ERROR:", error);
+      return;
+    }
+
+    setTasks(data || []);
+  };
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setUser(data.session?.user || null);
+    };
+
+    getSession();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   // 🔥 TASK FETCH
   useEffect(() => {
-    if (user?.name) {
+    if (user?.id) {
       fetchTasks();
     }
   }, [user]);
 
-  const fetchTasks = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("user_name", user.name);
+  // 🔥 SIGN UP
+  const signUp = async () => {
+    setMessage("");
 
-      if (error) {
-        console.error("FETCH ERROR:", error);
-        return;
+    const { error } = await supabase.auth.signUp({
+      email: loginInput,
+      password: "123456",
+      options: {
+        emailRedirectTo: "https://task-app-tau-six.vercel.app/"
       }
+    });
 
-      setTasks(data || []);
-    } catch (err) {
-      console.error("CRASH:", err);
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("📩 Mailini kontrol et ve doğrula");
     }
   };
 
-  const login = () => {
-    if (!loginInput.trim()) return;
-    const userData = { name: loginInput };
+  // 🔥 LOGIN
+  const login = async () => {
+    setMessage("");
 
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginInput,
+      password: "123456"
+    });
+
+    if (error) {
+      if (error.message.includes("Email not confirmed")) {
+        setMessage("⚠️ Önce emailini doğrulamalısın");
+      } else {
+        setMessage(error.message);
+      }
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem("user");
     setTasks([]);
   };
 
+  // 🔥 ADD TASK
   const addTask = async () => {
-  if (!input.trim()) return;
+    if (!input.trim()) return;
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .insert([
-      {
-        text: input,
-        user_name: user.name,
-        category
-      }
-    ])
-    .select();
+    const { data, error } = await supabase
+      .from("tasks")
+      .insert([
+        {
+          text: input,
+          user_id: user.id,
+          category
+        }
+      ])
+      .select();
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
+    if (error) {
+      alert(error.message);
+      return;
+    }
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  setTasks([...tasks, data[0]]);
-  setInput("");
-};
+    setTasks([...tasks, data[0]]);
+    setInput("");
+  };
 
   const deleteTask = async (id) => {
     await supabase.from("tasks").delete().eq("id", id);
-    setTasks((prev) => prev.filter((t) => t.id !== id));
+    setTasks(tasks.filter((t) => t.id !== id));
   };
 
   const toggleTask = async (id) => {
@@ -141,22 +184,23 @@ function App() {
     return true;
   });
 
-  // 🔥 LOGIN
+  // 🔥 LOGIN SCREEN
   if (!user) {
     return (
       <div className="login">
         <div className="login-box">
           <h2>👋 Welcome</h2>
-          <p>Start managing your tasks</p>
 
           <input
             value={loginInput}
             onChange={(e) => setLoginInput(e.target.value)}
-            placeholder="Enter username"
-            onKeyDown={(e) => e.key === "Enter" && login()}
+            placeholder="Enter email"
           />
 
+          {message && <p style={{ color: "white" }}>{message}</p>}
+
           <button onClick={login}>Login</button>
+          <button onClick={signUp}>Sign Up</button>
         </div>
       </div>
     );
@@ -167,7 +211,9 @@ function App() {
     <div className="container">
       <div className="top-bar">
         <h1>Task App</h1>
-        <button onClick={logout}>Logout ({user.name})</button>
+        <button onClick={logout}>
+          Logout ({user.email})
+        </button>
       </div>
 
       <div className="input-group">
@@ -187,14 +233,6 @@ function App() {
         </select>
 
         <button onClick={addTask}>Ekle</button>
-      </div>
-
-      <div className="filters">
-        <button onClick={() => setFilter("all")}>Tümü</button>
-        <button onClick={() => setFilter("active")}>Aktif</button>
-        <button onClick={() => setFilter("completed")}>
-          Tamamlanan
-        </button>
       </div>
 
       {filteredTasks.length === 0 && <p>Görev yok</p>}
