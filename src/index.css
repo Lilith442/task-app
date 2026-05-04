@@ -1,105 +1,248 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(200deg, #D97D55, #F4E9D7);
-  color: #35858E;
+
+  background: linear-gradient(135deg, #d98c66, #e6c3a3);
+  min-height: 100vh;
+  background-attachment: fixed;
 }
 
+/* container */
 .container {
   max-width: 600px;
-  margin: 60px auto;
-  padding: 20px;
+  margin: 80px auto;
+  padding: 30px;
+
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-.task-card {
-  display: flex;
-  font-size: 12px;
-  align-items: center;
-  justify-content: space-between;
-  background: #F4E9D7;
-  padding: 12px;
-  border-radius: 10px;
-  margin-top: 10px;
-  cursor: grab;
-  transition: 0.2s;
+/* başlık */
+h1 {
+  text-align: center;
+  color: #0f5c63;
 }
 
-.task-card:active {
-  cursor: grabbing;
-  transform: scale(1.02);
-}
-
-.tag {
-  margin-left: 10px;
-  padding: 4px 8px;
-  background: #6aa6b2;
-  color: white;
-  border-radius: 8px;
-  font-size: 12px;
-}
-
+/* input alanı */
 .input-group {
   display: flex;
   gap: 10px;
+  margin: 20px 0;
 }
 
-input {
+.input-group input {
   flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-}
-
-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  background: #6FA4AF;
-  cursor: pointer;
-}
-
-.login {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-box {
-  background: rgba(255,255,255,0.1);
-  padding: 30px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  width: 300px;
-  text-align: center;
-}
-
-.login-box h2 {
-  margin-bottom: 10px;
-}
-
-.login-box input {
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   border: none;
   outline: none;
 }
 
-.login-box button {
+.input-group select {
   padding: 10px;
   border-radius: 8px;
-  border: none;
-  background: #6FA4AF;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
 }
 
-.login-box button:hover {
-  background: #5a8e98;
+.input-group button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #4f9da6;
+  color: white;
+  cursor: pointer;
+}
+
+input::placeholder {
+  opacity: 0.6;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #4f9da6;
+}
+
+/* filtre */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #4f9da6;
+  color: white;
+  cursor: pointer;
+}
+
+.filters button.active {
+  background: #0f5c63;
+}
+
+/* task kart */
+.task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: rgba(255,255,255,0.9);
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-card:hover {
+  transform: translateY(-3px) scale(1.01);
+}
+
+/* sol taraf */
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-actions button {
+  background: #4f9da6;
+  color: white;
+}
+
+/* tag */
+.tag {
+  background: #4f9da6;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* butonlar */
+
+button {
+  background: #4f9da6;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
+.task-actions button {
+  margin-left: 5px;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.done {
+  text-decoration: line-through;
+  opacity: 0.6;
+  transition: 0.2s;
+}
+
+.drag-handle {
+  cursor: grab;
+  opacity: 0.5;
+  transition: 0.2s;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+}
+
+.tag.genel { 
+  background: #4f9da6; 
+}
+.tag.iş { 
+  background: #f4a261;
+}
+.tag.kişisel { 
+  background: #2a9d8f; 
+}
+
+/* LOGIN WRAPPER */
+.login-container {
+  max-width: 400px;
+  margin: 120px auto;
+  padding: 30px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  text-align: center;
+}
+
+/* INPUT */
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 15px;
+  outline: none;
+}
+
+/* BUTTONS */
+.login-container button {
+  padding: 10px 16px;
+  margin: 5px;
+  border-radius: 10px;
+  border: none;
+  background: #4f9da6;
+  color: white;
+  cursor: pointer;
+}
+
+/* MESSAGE */
+.login-container p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #0f5c63;
+  transition: 0.3s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  opacity: 0.7;
 }
