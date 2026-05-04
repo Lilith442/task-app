@@ -293,23 +293,33 @@ const login = async () => {
   // 🔥 LOGIN UI
   if (!user) {
     return (
-      <div className="login-container">
-        <h2>Welcome 👋</h2>
-        <p style={{ opacity: 0.7 }}>Devam etmek için giriş yap</p>
+  <div className="login-container">
 
-        <input
-          placeholder="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+  <div className="login-header">
+    <div className="avatar">🚀</div>
+    <h2>Welcome back</h2>
+    <p>Devam etmek için giriş yap</p>
+  </div>
 
-        <p>{message}</p>
+  <div className="login-form">
+    <input
+      placeholder="Email adresin"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
 
-        <button onClick={login} disabled={loading}>
-           {loading ? "Giriş..." : "Login"}
-        </button>
-        <button onClick={signUp}>Sign Up</button>
-      </div>
+    {message && <p className="login-message">{message}</p>}
+
+    <button onClick={login} disabled={loading} className="primary">
+      {loading ? "Giriş yapılıyor..." : "Login"}
+    </button>
+
+    <button onClick={signUp} className="secondary">
+      Sign Up
+    </button>
+  </div>
+
+</div>
     );
   }
 
@@ -325,14 +335,12 @@ const login = async () => {
       <p style={{ opacity: 0.6 }}>
         {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
       </p>
-      <div className="progress-bar">
-        <div
+    <div className="progress-bar">
+      <div
         className="progress-fill"
-        style={{ width: percent + "%" }}
-      >
-
+        style={{ width: percent + "%" }}>
       </div>
-    </div>
+  </div>
 
 <p className="progress-text">%{percent} tamamlandı</p>
 
