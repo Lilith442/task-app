@@ -17,6 +17,8 @@ import {
 
 import { CSS } from "@dnd-kit/utilities";
 
+import { motion, AnimatePresence } from "framer-motion";
+
 // 🔥 DRAG WRAPPER
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -47,10 +49,17 @@ function Item({
   setEditText,
   setEditingId,
   saveEdit,
-  dragHandleProps
+  dragHandleProps,
+  setDeleteId
 }) {
   return (
-    <div className="task-card">
+    <motion.div className="task-card"
+    layout
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.8 }}
+    transition={{ duration: 0.2 }}
+    >
       <div className="task-left">
         <span
           className="drag-handle"
@@ -96,9 +105,11 @@ function Item({
           </button>
         )}
 
-        <button onClick={() => deleteTask(task.id)}>Sil</button>
+        <button onClick={() => setDeleteId(task.id)}>
+          Sil
+      </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -107,6 +118,7 @@ function App() {
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("genel");
   const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const [user, setUser] = useState(null);
@@ -114,7 +126,12 @@ function App() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [toast, setToast] = useState(null);
+  const [view, setView] = useState("list");
+  const [toast, setToast] = useState({
+  message: "",
+  type: ""
+  });
+  const [deleteId, setDeleteId] = useState(null);
 
   // 🌙 DARK MODE
   useEffect(() => {
@@ -141,9 +158,15 @@ function App() {
 
 // SADECE BU FONKSİYONU DEĞİŞTİR
 
-const showToast = (msg) => {
-  setToast(msg);
-  setTimeout(() => setToast(null), 2000);
+const showToast = (message, type = "success") => {
+  setToast({ message, type });
+
+  setTimeout(() => {
+    setToast({
+      message: "",
+      type: ""
+    });
+  }, 2000);
 };
 
   const signUp = async () => {
@@ -155,7 +178,7 @@ const showToast = (msg) => {
     if (error) setMessage(error.message);
     else {
     setMessage("📩 Mailini doğrula");
-    showToast("Kayıt başarılı 📩");
+    showToast("Kayıt başarılı 📩" , "success");
 }
   };
 
@@ -171,7 +194,7 @@ const showToast = (msg) => {
     if (error) setMessage(error.message);
     setLoading(false);
     if (!error) {
-    showToast("Giriş başarılı 🎉");
+    showToast("Giriş başarılı 🎉", "success");
     }
   };
 
@@ -180,28 +203,34 @@ const showToast = (msg) => {
     setUser(null);
     setTasks([]);
   };
+  
 
-  // 📦 FETCH
-  useEffect(() => {
-    if (user) fetchTasks();
-  }, [user]);
+const fetchTasks = async () => {
+  setLoading(true);
 
-  const fetchTasks = async () => {
-    setLoading(true);
+  const { data } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("position", { ascending: true });
 
-    const { data } = await supabase
-      .from("tasks")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("position", { ascending: true });
+  setTasks(data || []);
+  setLoading(false);
+};
 
-    setTasks(data || []);
-    setLoading(false);
-  };
+// 📦 FETCH
+useEffect(() => {
+  if (user) {
+    fetchTasks();
+  }
+}, [user]);
 
   // ➕ ADD
   const addTask = async () => {
-    if (!input.trim()) return;
+    if (!input.trim()) {
+    showToast("Görev boş olamaz ⚠️", "warning");
+    return;
+    }
 
     setLoading(true);
 
@@ -212,7 +241,8 @@ const showToast = (msg) => {
           text: input,
           category,
           user_id: user.id,
-          position: tasks.length
+          position: tasks.length,
+          status: "todo"
         }
       ])
       .select();
@@ -221,7 +251,7 @@ const showToast = (msg) => {
     setInput("");
     setLoading(false);
 
-    showToast("Görev eklendi ✅");
+    showToast("Görev eklendi ✅", "success");
   };
 
   // 🔄 DRAG
@@ -266,7 +296,7 @@ const showToast = (msg) => {
     await supabase.from("tasks").delete().eq("id", id);
     setTasks(tasks.filter(t => t.id !== id));
 
-    showToast("Görev silindi 🗑");
+    showToast("Görev silindi 🗑", "warning");
   };
 
   const saveEdit = async (id) => {
@@ -287,11 +317,15 @@ const showToast = (msg) => {
     showToast("Güncellendi ✏️");
   };
 
-  const filteredTasks = tasks.filter(task => {
+const filteredTasks = tasks
+  .filter(task => {
     if (filter === "completed") return task.completed;
     if (filter === "active") return !task.completed;
     return true;
-  });
+  })
+  .filter(task =>
+    task.text.toLowerCase().includes(search.toLowerCase())
+  );
 
   const percent =
     tasks.length === 0
@@ -304,7 +338,11 @@ const showToast = (msg) => {
   if (!user) {
   return (
     <>
-      {toast && <div className="toast">{toast}</div>}
+      {toast.message && (
+  <div className={`toast ${toast.type}`}>
+    {toast.message}
+  </div>
+)}
 
       <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
         {darkMode ? "☀️ Light" : "🌙 Dark"}
@@ -344,7 +382,11 @@ const showToast = (msg) => {
   // 🔥 APP UI
   return (
     <>
-    {toast && <div className="toast">{toast}</div>}
+    {toast.message && (
+  <div className={`toast ${toast.type}`}>
+    {toast.message}
+  </div>
+)}
       <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
         {darkMode ? "☀️ Light" : "🌙 Dark"}
       </button>
@@ -352,66 +394,215 @@ const showToast = (msg) => {
       <button className="top-right" onClick={logout}>
         Logout ({user.email})
       </button>
+      {deleteId && (
+  <div className="modal-overlay">
 
-      <div className="container">
-        <h1>Task App</h1>
+    <div className="modal">
 
-        <p style={{ opacity: 0.6 }}>
-          {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
-        </p>
+      <h3>Görevi sil?</h3>
 
-        <div className="progress-bar">
-          <div className="progress-fill" style={{ width: percent + "%" }} />
-        </div>
+      <p>Bu işlem geri alınamaz.</p>
 
-        <p className="progress-text">%{percent} tamamlandı</p>
+      <div className="modal-actions">
 
-        <div className="input-group">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addTask()}
-            placeholder="Görev ekle"
-          />
+        <button
+          className="cancel-btn"
+          onClick={() => setDeleteId(null)}
+        >
+          Vazgeç
+        </button>
 
-          <select value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="genel">Genel</option>
-            <option value="iş">İş</option>
-            <option value="kişisel">Kişisel</option>
-          </select>
+        <button
+          className="delete-btn"
+          onClick={async () => {
+          await deleteTask(deleteId);
+          setDeleteId(null);
+        }}
+        >
+          Sil
+        </button>
 
-          <button onClick={addTask}>{loading ? "..." : "Ekle"}</button>
-        </div>
-
-        <div className="filters">
-          <button onClick={() => setFilter("all")}>Tümü</button>
-          <button onClick={() => setFilter("active")}>Aktif</button>
-          <button onClick={() => setFilter("completed")}>Tamamlanan</button>
-        </div>
-
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext
-            items={filteredTasks.map(t => t.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {filteredTasks.map(task => (
-              <SortableItem
-                key={task.id}
-                task={task}
-                toggleTask={toggleTask}
-                deleteTask={deleteTask}
-                editingId={editingId}
-                editText={editText}
-                setEditText={setEditText}
-                setEditingId={setEditingId}
-                saveEdit={saveEdit}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
       </div>
-    </>
-  );
+    </div>
+  </div>
+)}
+<motion.div
+  className="container"
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  <h1>Task App</h1>
+
+  <p style={{ opacity: 0.6 }}>
+    {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
+  </p>
+
+  <div className="progress-bar">
+    <div
+      className="progress-fill"
+      style={{ width: percent + "%" }}
+    />
+  </div>
+
+  <p className="progress-text">
+    %{percent} tamamlandı
+  </p>
+
+  <div className="input-group">
+    <input
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={(e) => e.key === "Enter" && addTask()}
+      placeholder="Görev ekle"
+    />
+
+    <select
+      value={category}
+      onChange={(e) => setCategory(e.target.value)}
+    >
+      <option value="genel">Genel</option>
+      <option value="iş">İş</option>
+      <option value="kişisel">Kişisel</option>
+    </select>
+
+    <button onClick={addTask}>
+      {loading ? "..." : "Ekle"}
+    </button>
+  </div>
+
+  <div className="search-box">
+    <input
+      type="text"
+      placeholder="Görev Ara"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+  </div>
+
+  <div className="filters">
+    <button onClick={() => setFilter("all")}>
+      Tümü
+    </button>
+
+    <button onClick={() => setFilter("active")}>
+      Aktif
+    </button>
+
+    <button onClick={() => setFilter("completed")}>
+      Tamamlanan
+    </button>
+  </div>
+
+  <div className="view-switch">
+    <button onClick={() => setView("list")}>
+      📋 Liste
+    </button>
+
+    <button onClick={() => setView("board")}>
+      📌 Board
+    </button>
+  </div>
+
+  {filteredTasks.length === 0 && (
+    <motion.p
+      className="empty"
+      animate={{ y: [0, -5, 0] }}
+      transition={{
+        repeat: Infinity,
+        duration: 2
+      }}
+    >
+      🎯 Hedef belirle → görev ekle → tamamla
+    </motion.p>
+  )}
+
+  {view === "board" ? (
+
+    <div className="board">
+
+      <div className="column">
+        <h3>📝 Todo</h3>
+
+        {filteredTasks
+          .filter(task => task.status === "todo")
+          .map(task => (
+            <div
+              key={task.id}
+              className="task-card"
+            >
+              {task.text}
+            </div>
+        ))}
+      </div>
+
+      <div className="column">
+        <h3>⚡ Doing</h3>
+
+        {filteredTasks
+          .filter(task => task.status === "doing")
+          .map(task => (
+            <div
+              key={task.id}
+              className="task-card"
+            >
+              {task.text}
+            </div>
+        ))}
+      </div>
+
+      <div className="column">
+        <h3>✅ Done</h3>
+
+        {filteredTasks
+          .filter(task => task.status === "done")
+          .map(task => (
+            <div
+              key={task.id}
+              className="task-card"
+            >
+              {task.text}
+            </div>
+        ))}
+      </div>
+
+    </div>
+
+  ) : (
+
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={filteredTasks.map(t => t.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <AnimatePresence>
+          {filteredTasks.map(task => (
+            <SortableItem
+              key={task.id}
+              task={task}
+              toggleTask={toggleTask}
+              deleteTask={deleteTask}
+              editingId={editingId}
+              editText={editText}
+              setEditText={setEditText}
+              setEditingId={setEditingId}
+              saveEdit={saveEdit}
+              setDeleteId={setDeleteId}
+            />
+          ))}
+        </AnimatePresence>
+      </SortableContext>
+    </DndContext>
+
+  )}
+
+</motion.div>
+
+</>
+);
 }
 
 export default App;
