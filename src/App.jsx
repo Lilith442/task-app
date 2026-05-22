@@ -19,6 +19,14 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { motion, AnimatePresence } from "framer-motion";
 
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip
+} from "recharts";
+
 // 🔥 DRAG WRAPPER
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -81,9 +89,17 @@ function Item({
             onChange={(e) => setEditText(e.target.value)}
           />
         ) : (
-          <span className={task.completed ? "done" : ""}>
-            {task.text}
-          </span>
+          <div className="task-content">
+
+            <span className={task.completed ? "done task-title" : "task-title"}>
+              {task.text}
+            </span>
+
+            <span className="task-date">
+              Today
+            </span>
+
+          </div>
         )}
 
         <span className={`tag ${task.category}`}>
@@ -118,16 +134,24 @@ function App() {
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("genel");
   const [priority, setPriority] = useState("medium");
-  const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState(() => {
+  return localStorage.getItem("filterMode") || "all";
+  });
+  const [search, setSearch] = useState(() => {
+  return localStorage.getItem("searchText") || "";
+  });
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [view, setView] = useState("list");
+  const [darkMode, setDarkMode] = useState(() => {
+  return localStorage.getItem("darkMode") === "true";
+  });
+  const [view, setView] = useState(() => {
+  return localStorage.getItem("viewMode") || "list";
+  });
   const [toast, setToast] = useState({
   message: "",
   type: ""
@@ -140,6 +164,22 @@ function App() {
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);
   }, [darkMode]);
+
+  useEffect(() => {
+  localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+
+  useEffect(() => {
+    localStorage.setItem("viewMode", view);
+  }, [view]);
+
+  useEffect(() => {
+    localStorage.setItem("filterMode", filter);
+  }, [filter]);
+
+  useEffect(() => {
+    localStorage.setItem("searchText", search);
+  }, [search]);
 
   // 🔐 AUTH
   useEffect(() => {
@@ -383,6 +423,19 @@ const filteredTasks = tasks
       : Math.round(
           (tasks.filter(t => t.completed).length / tasks.length) * 100
         );
+        
+  const chartData = [
+  {
+    name: "Completed",
+    value: tasks.filter(t => t.completed).length
+  },
+  {
+    name: "Active",
+    value: tasks.filter(t => !t.completed).length
+  }
+];
+
+const COLORS = ["#0f5c63", "#4f9da6"];
 
   // 🔐 LOGIN UI
   if (!user) {
@@ -430,394 +483,484 @@ const filteredTasks = tasks
 }
 
   // APP UI
-  return (
-    <>
+return (
+  <div className="app-layout">
+
     {toast.message && (
-  <div className={`toast ${toast.type}`}>
-    {toast.message}
-  </div>
-)}
-      {deleteId && (
-  <div className="modal-overlay">
-
-    <div className="modal">
-
-      <h3>Görevi sil?</h3>
-
-      <p>Bu işlem geri alınamaz.</p>
-
-      <div className="modal-actions">
-
-        <button
-          className="cancel-btn"
-          onClick={() => setDeleteId(null)}
-        >
-          Vazgeç
-        </button>
-
-        <button
-          className="delete-btn"
-          onClick={async () => {
-          await deleteTask(deleteId);
-          setDeleteId(null);
-        }}
-        >
-          Sil
-        </button>
-
+      <div className={`toast ${toast.type}`}>
+        {toast.message}
       </div>
-    </div>
-  </div>
-)}
+    )}
 
-<div className="topbar">
+    {deleteId && (
+      <div className="modal-overlay">
 
-  <div className="topbar-left">
+        <div className="modal">
 
-    <div className="logo-circle">
-      ⚡
-    </div>
+          <h3>Görevi sil?</h3>
 
-    <div>
-      <h3>TaskFlow</h3>
-      <p>Stay productive</p>
-    </div>
+          <p>Bu işlem geri alınamaz.</p>
 
-  </div>
+          <div className="modal-actions">
 
-  <div className="topbar-right">
+            <button
+              className="cancel-btn"
+              onClick={() => setDeleteId(null)}
+            >
+              Vazgeç
+            </button>
 
-    <div className="user-box">
+            <button
+              className="delete-btn"
+              onClick={async () => {
+                await deleteTask(deleteId);
+                setDeleteId(null);
+              }}
+            >
+              Sil
+            </button>
 
-      <div className="online-dot"></div>
+          </div>
+        </div>
+      </div>
+    )}
 
-      <span>
-        {user.email}
-      </span>
 
-    </div>
+      <main className="main-content">
+        <div className="topbar">
 
-    <button
-      className="dark-toggle"
-      onClick={() => setDarkMode(!darkMode)}
-    >
-      {darkMode ? "☀️" : "🌙"}
-    </button>
+        <div className="topbar-left">
+          <div className="logo-circle">⚡</div>
 
-    <button
-      className="logout-btn"
-      onClick={logout}
-    >
-      Logout
-    </button>
-
-  </div>
-
-</div>
-<motion.div
-  className="container"
-  initial={{ opacity: 0, y: 40 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
->
-  <h1>Task App</h1>
-
-  <p style={{ opacity: 0.6 }}>
-    {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
-  </p>
-
-  <div className="progress-bar">
-    <div
-      className="progress-fill"
-      style={{ width: percent + "%" }}
-    />
-  </div>
-
-  <p className="progress-text">
-    %{percent} tamamlandı
-  </p>
-
-  <div className="input-group">
-    <input
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      onKeyDown={(e) => e.key === "Enter" && addTask()}
-      placeholder="Görev ekle"
-    />
-
-    <select
-      value={category}
-      onChange={(e) => setCategory(e.target.value)}
-    >
-      <option value="genel">Genel</option>
-      <option value="iş">İş</option>
-      <option value="kişisel">Kişisel</option>
-    </select>
-
-    <select
-      value={priority}
-      onChange={(e) => setPriority(e.target.value)}
-    >
-      <option value="low">Düşük öncelik</option>
-      <option value="medium">Orta</option>
-      <option value="high">Acil</option>
-    </select>
-
-    <button onClick={addTask}>
-      {loading ? "..." : "Ekle"}
-    </button>
-  </div>
-
-  <div className="search-box">
-    <input
-      type="text"
-      placeholder="Görev Ara"
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
-  </div>
-
-  <div className="filters">
-    <button onClick={() => setFilter("all")}>
-      Tümü
-    </button>
-
-    <button onClick={() => setFilter("active")}>
-      Aktif
-    </button>
-
-    <button onClick={() => setFilter("completed")}>
-      Tamamlanan
-    </button>
-  </div>
-
-  <div className="view-switch">
-    <button onClick={() => setView("list")}>
-      📋 Liste
-    </button>
-
-    <button onClick={() => setView("board")}>
-      📌 Board
-    </button>
-  </div>
-
-  {filteredTasks.length === 0 && (
-    <motion.p
-      className="empty"
-      animate={{ y: [0, -5, 0] }}
-      transition={{
-        repeat: Infinity,
-        duration: 2
-      }}
-    >
-      🎯 Hedef belirle → görev ekle → tamamla
-    </motion.p>
-  )}
-
-  {view === "board" ? (
-
-    <div className="board">
-
-      <div
-      className={`column ${activeColumn === "todo" ? "column-active" : ""}`}
-
-      onDragEnter={() => setActiveColumn("todo")}
-      onDragLeave={() => setActiveColumn(null)}
-
-      onDragOver={(e) => e.preventDefault()}
-
-      onDrop={() => {
-      handleStatusDrop("todo");
-      setActiveColumn(null);
-      }}
-      >
-        <h3>
-          📝 Todo
-          <span className="count">
-            ({filteredTasks.filter(task => task.status === "todo").length})
-          </span>
-        </h3>
-
-        {filteredTasks.filter(task => task.status === "todo").length === 0 ? (
-
-        <div className="empty-column">
-          Task yok 🚀
+          <div>
+            <h3>TaskFlow</h3>
+            <p>Stay productive</p>
+          </div>
         </div>
 
-      ) : (
+        <div className="topbar-right">
 
-        filteredTasks
-          .filter(task => task.status === "todo")
-          .map(task => (
-                  <motion.div
-                  key={task.id}
-                  className="task-card board-task"
-                  draggable
-                  onDragStart={() => setDraggedTask(task)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                <div className="board-task-top">
-                <span>{task.text}</span>
-              </div>
-
-  <div className="board-task-bottom">
-
-    <span className={`tag ${task.category}`}>
-      {task.category}
-    </span>
-
-    <span className={`priority ${task.priority || "medium"}`}>
-      {task.priority || "medium"}
-    </span>
-
-  </div>
-</motion.div>
-        )))}
-      </div>
-
-      <div
-      className={`column ${activeColumn === "doing" ? "column-active" : ""}`}
-
-  onDragEnter={() => setActiveColumn("doing")}
-  onDragLeave={() => setActiveColumn(null)}
-
-  onDragOver={(e) => e.preventDefault()}
-
-  onDrop={() => {
-    handleStatusDrop("doing");
-    setActiveColumn(null);
-  }}
->
-        <h3>⚡ Doing</h3>
-
-        {filteredTasks.filter(task => task.status === "doing").length === 0 ? (
-
-          <div className="empty-column">
-            Task yok 🚀
+          <div className="user-box">
+            <div className="online-dot"></div>
+            <span>{user.email}</span>
           </div>
 
-) : (
-
-  filteredTasks
-    .filter(task => task.status === "doing")
-    .map(task => (
-           <motion.div
-            key={task.id}
-            className="task-card board-task"
-            draggable
-            onDragStart={() => setDraggedTask(task)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
+            className="dark-toggle"
+            onClick={() => setDarkMode(!darkMode)}
           >
-            <div className="board-task-top">
-              <span>{task.text}</span>
-            </div>
+            🌙
+          </button>
 
-            <div className="board-task-bottom">
+          <button
+            className="logout-btn"
+            onClick={logout}
+          >
+            Logout
+          </button>
 
-              <span className={`tag ${task.category}`}>
-                {task.category}
-              </span>
-
-              <span className={`priority ${task.priority || "medium"}`}>
-                {task.priority || "medium"}
-              </span>
-
-            </div>
-          </motion.div>
-        )))}
-      </div>
-
-        <div
-          className={`column ${activeColumn === "done" ? "column-active" : ""}`}
-
-          onDragEnter={() => setActiveColumn("done")}
-          onDragLeave={() => setActiveColumn(null)}
-
-          onDragOver={(e) => e.preventDefault()}
-
-          onDrop={() => {
-            handleStatusDrop("done");
-            setActiveColumn(null);
-          }}
-        >
-        <h3>✅ Done</h3>
-
-       {filteredTasks.filter(task => task.status === "done").length === 0 ? (
-
-        <div className="empty-column">
-          Task yok 🚀
         </div>
-
-      ) : (
-
-        filteredTasks
-          .filter(task => task.status === "done")
-          .map(task => (
-            <motion.div
-            key={task.id}
-            className="task-card board-task"
-            draggable
-            onDragStart={() => setDraggedTask(task)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="board-task-top">
-              <span>{task.text}</span>
-            </div>
-
-            <div className="board-task-bottom">
-
-              <span className={`tag ${task.category}`}>
-                {task.category}
-              </span>
-
-              <span className={`priority ${task.priority || "medium"}`}>
-                {task.priority || "medium"}
-              </span>
-
-            </div>
-          </motion.div>
-        )))}
       </div>
+        <motion.div
+          className="container"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+
+          <h1>Task App</h1>
+
+          <p style={{ opacity: 0.6 }}>
+            {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
+          </p>
+
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{ width: percent + "%" }}
+            />
+          </div>
+
+          <p className="progress-text">
+            %{percent} tamamlandı
+          </p>
+
+          <div className="input-group">
+
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addTask()}
+              placeholder="Görev ekle"
+            />
+
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="genel">Genel</option>
+              <option value="iş">İş</option>
+              <option value="kişisel">Kişisel</option>
+            </select>
+
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+            >
+              <option value="low">Düşük öncelik</option>
+              <option value="medium">Orta</option>
+              <option value="high">Acil</option>
+            </select>
+
+            <button onClick={addTask}>
+              {loading ? "..." : "Ekle"}
+            </button>
+
+          </div>
+
+          <div className="search-box">
+
+            <input
+              type="text"
+              placeholder="Görev Ara"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+          </div>
+          <div className="stats-grid">
+
+            <div className="stat-card">
+              <h3>{tasks.length}</h3>
+              <p>Total Tasks</p>
+            </div>
+
+            <div className="stat-card">
+              <h3>{tasks.filter(t => t.completed).length}</h3>
+              <p>Completed</p>
+            </div>
+
+            <div className="stat-card">
+              <h3>{tasks.filter(t => !t.completed).length}</h3>
+              <p>Active</p>
+            </div>
+
+          </div>
+
+          <div className="chart-card">
+
+            <h3>Task Progress</h3>
+
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  dataKey="value"
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell
+                      key={index}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+
+                <Tooltip />
+
+              </PieChart>
+            </ResponsiveContainer>
+
+          </div>
+          <div className="filters">
+
+            <button onClick={() => setFilter("all")}>
+              Tümü
+            </button>
+
+            <button onClick={() => setFilter("active")}>
+              Aktif
+            </button>
+
+            <button onClick={() => setFilter("completed")}>
+              Tamamlanan
+            </button>
+
+          </div>
+
+          <div className="view-switch">
+
+            <button onClick={() => setView("list")}>
+              📋 Liste
+            </button>
+
+            <button onClick={() => setView("board")}>
+              📌 Board
+            </button>
+
+          </div>
+
+          {filteredTasks.length === 0 && (
+            <motion.div
+            className="empty-state"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+
+            <div className="empty-icon">
+              ✨
+            </div>
+
+            <h3>No tasks yet</h3>
+
+            <p>
+              Add your first task and start building momentum.
+            </p>
+
+          </motion.div>
+          )}
+
+          {view === "board" ? (
+
+            <div className="board">
+
+              <div
+                className={`column ${activeColumn === "todo" ? "column-active" : ""}`}
+
+                onDragEnter={() => setActiveColumn("todo")}
+                onDragLeave={() => setActiveColumn(null)}
+
+                onDragOver={(e) => e.preventDefault()}
+
+                onDrop={() => {
+                  handleStatusDrop("todo");
+                  setActiveColumn(null);
+                }}
+              >
+
+                <h3>
+                  📝 Todo
+                  <span className="count">
+                    ({filteredTasks.filter(task => task.status === "todo").length})
+                  </span>
+                </h3>
+
+                {filteredTasks.filter(task => task.status === "todo").length === 0 ? (
+
+                  <div className="empty-column">
+                    Task yok 🚀
+                  </div>
+
+                ) : (
+
+                  filteredTasks
+                    .filter(task => task.status === "todo")
+                    .map(task => (
+
+                      <motion.div
+                        key={task.id}
+                        className="task-card board-task"
+                        draggable
+                        onDragStart={() => setDraggedTask(task)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+
+                        <div className="board-task-top">
+                          <span>{task.text}</span>
+                        </div>
+
+                        <div className="board-task-bottom">
+
+                          <span className={`tag ${task.category}`}>
+                            {task.category}
+                          </span>
+
+                          <span className={`priority ${task.priority || "medium"}`}>
+                            {task.priority || "medium"}
+                          </span>
+
+                        </div>
+
+                      </motion.div>
+
+                    ))
+
+                )}
+
+              </div>
+
+              <div
+                className={`column ${activeColumn === "doing" ? "column-active" : ""}`}
+
+                onDragEnter={() => setActiveColumn("doing")}
+                onDragLeave={() => setActiveColumn(null)}
+
+                onDragOver={(e) => e.preventDefault()}
+
+                onDrop={() => {
+                  handleStatusDrop("doing");
+                  setActiveColumn(null);
+                }}
+              >
+
+                <h3>⚡ Doing</h3>
+
+                {filteredTasks.filter(task => task.status === "doing").length === 0 ? (
+
+                  <div className="empty-column">
+                    Task yok 🚀
+                  </div>
+
+                ) : (
+
+                  filteredTasks
+                    .filter(task => task.status === "doing")
+                    .map(task => (
+
+                      <motion.div
+                        key={task.id}
+                        className="task-card board-task"
+                        draggable
+                        onDragStart={() => setDraggedTask(task)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+
+                        <div className="board-task-top">
+                          <span>{task.text}</span>
+                        </div>
+
+                        <div className="board-task-bottom">
+
+                          <span className={`tag ${task.category}`}>
+                            {task.category}
+                          </span>
+
+                          <span className={`priority ${task.priority || "medium"}`}>
+                            {task.priority || "medium"}
+                          </span>
+
+                        </div>
+
+                      </motion.div>
+
+                    ))
+
+                )}
+
+              </div>
+
+              <div
+                className={`column ${activeColumn === "done" ? "column-active" : ""}`}
+
+                onDragEnter={() => setActiveColumn("done")}
+                onDragLeave={() => setActiveColumn(null)}
+
+                onDragOver={(e) => e.preventDefault()}
+
+                onDrop={() => {
+                  handleStatusDrop("done");
+                  setActiveColumn(null);
+                }}
+              >
+
+                <h3>✅ Done</h3>
+
+                {filteredTasks.filter(task => task.status === "done").length === 0 ? (
+
+                  <div className="empty-column">
+                    Task yok 🚀
+                  </div>
+
+                ) : (
+
+                  filteredTasks
+                    .filter(task => task.status === "done")
+                    .map(task => (
+
+                      <motion.div
+                        key={task.id}
+                        className="task-card board-task"
+                        draggable
+                        onDragStart={() => setDraggedTask(task)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+
+                        <div className="board-task-top">
+                          <span>{task.text}</span>
+                        </div>
+
+                        <div className="board-task-bottom">
+
+                          <span className={`tag ${task.category}`}>
+                            {task.category}
+                          </span>
+
+                          <span className={`priority ${task.priority || "medium"}`}>
+                            {task.priority || "medium"}
+                          </span>
+
+                        </div>
+
+                      </motion.div>
+
+                    ))
+
+                )}
+
+              </div>
+
+            </div>
+
+          ) : (
+
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+
+              <SortableContext
+                items={filteredTasks.map(t => t.id)}
+                strategy={verticalListSortingStrategy}
+              >
+
+                <AnimatePresence>
+
+                  {filteredTasks.map(task => (
+
+                    <SortableItem
+                      key={task.id}
+                      task={task}
+                      toggleTask={toggleTask}
+                      deleteTask={deleteTask}
+                      editingId={editingId}
+                      editText={editText}
+                      setEditText={setEditText}
+                      setEditingId={setEditingId}
+                      saveEdit={saveEdit}
+                      setDeleteId={setDeleteId}
+                    />
+
+                  ))}
+
+                </AnimatePresence>
+
+              </SortableContext>
+
+            </DndContext>
+
+          )}
+
+        </motion.div>
+
+      </main>
 
     </div>
-
-  ) : (
-
-    <DndContext
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext
-        items={filteredTasks.map(t => t.id)}
-        strategy={verticalListSortingStrategy}
-      >
-        <AnimatePresence>
-          {filteredTasks.map(task => (
-            <SortableItem
-              key={task.id}
-              task={task}
-              toggleTask={toggleTask}
-              deleteTask={deleteTask}
-              editingId={editingId}
-              editText={editText}
-              setEditText={setEditText}
-              setEditingId={setEditingId}
-              saveEdit={saveEdit}
-              setDeleteId={setDeleteId}
-            />
-          ))}
-        </AnimatePresence>
-      </SortableContext>
-    </DndContext>
-
-  )}
-
-</motion.div>
-
-</>
 );
 }
 
