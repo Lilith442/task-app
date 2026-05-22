@@ -133,6 +133,7 @@ function App() {
   type: ""
   });
   const [draggedTask, setDraggedTask] = useState(null);
+  const [activeColumn, setActiveColumn] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
 
   // 🌙 DARK MODE
@@ -220,11 +221,35 @@ const fetchTasks = async () => {
   setLoading(false);
 };
 
-// 📦 FETCH
+  // 📦 FETCH + REALTIME
 useEffect(() => {
-  if (user) {
-    fetchTasks();
-  }
+  if (!user) return;
+
+  fetchTasks();
+
+  const channel = supabase
+    .channel("tasks-realtime")
+
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "tasks",
+        filter: `user_id=eq.${user.id}`
+      },
+
+      () => {
+        fetchTasks();
+      }
+    )
+
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+
 }, [user]);
 
   // ➕ ADD
@@ -555,9 +580,19 @@ const filteredTasks = tasks
 
     <div className="board">
 
-      <div className="column"
+      <div
+      className={`column ${activeColumn === "todo" ? "column-active" : ""}`}
+
+      onDragEnter={() => setActiveColumn("todo")}
+      onDragLeave={() => setActiveColumn(null)}
+
       onDragOver={(e) => e.preventDefault()}
-      onDrop={() => handleStatusDrop("todo")}>
+
+      onDrop={() => {
+      handleStatusDrop("todo");
+      setActiveColumn(null);
+      }}
+      >
         <h3>
           📝 Todo
           <span className="count">
@@ -603,10 +638,19 @@ const filteredTasks = tasks
         )))}
       </div>
 
-      <div className="column"
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={() => handleStatusDrop("doing")}
-      >
+      <div
+      className={`column ${activeColumn === "doing" ? "column-active" : ""}`}
+
+  onDragEnter={() => setActiveColumn("doing")}
+  onDragLeave={() => setActiveColumn(null)}
+
+  onDragOver={(e) => e.preventDefault()}
+
+  onDrop={() => {
+    handleStatusDrop("doing");
+    setActiveColumn(null);
+  }}
+>
         <h3>⚡ Doing</h3>
 
         {filteredTasks.filter(task => task.status === "doing").length === 0 ? (
@@ -647,10 +691,19 @@ const filteredTasks = tasks
         )))}
       </div>
 
-      <div className="column"
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={() => handleStatusDrop("done")}
-      >
+        <div
+          className={`column ${activeColumn === "done" ? "column-active" : ""}`}
+
+          onDragEnter={() => setActiveColumn("done")}
+          onDragLeave={() => setActiveColumn(null)}
+
+          onDragOver={(e) => e.preventDefault()}
+
+          onDrop={() => {
+            handleStatusDrop("done");
+            setActiveColumn(null);
+          }}
+        >
         <h3>✅ Done</h3>
 
        {filteredTasks.filter(task => task.status === "done").length === 0 ? (
