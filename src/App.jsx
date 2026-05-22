@@ -437,13 +437,6 @@ const filteredTasks = tasks
     {toast.message}
   </div>
 )}
-      <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
-        {darkMode ? "☀️ Light" : "🌙 Dark"}
-      </button>
-
-      <button className="top-right" onClick={logout}>
-        Logout ({user.email})
-      </button>
       {deleteId && (
   <div className="modal-overlay">
 
@@ -476,6 +469,51 @@ const filteredTasks = tasks
     </div>
   </div>
 )}
+
+<div className="topbar">
+
+  <div className="topbar-left">
+
+    <div className="logo-circle">
+      ⚡
+    </div>
+
+    <div>
+      <h3>TaskFlow</h3>
+      <p>Stay productive</p>
+    </div>
+
+  </div>
+
+  <div className="topbar-right">
+
+    <div className="user-box">
+
+      <div className="online-dot"></div>
+
+      <span>
+        {user.email}
+      </span>
+
+    </div>
+
+    <button
+      className="dark-toggle"
+      onClick={() => setDarkMode(!darkMode)}
+    >
+      {darkMode ? "☀️" : "🌙"}
+    </button>
+
+    <button
+      className="logout-btn"
+      onClick={logout}
+    >
+      Logout
+    </button>
+
+  </div>
+
+</div>
 <motion.div
   className="container"
   initial={{ opacity: 0, y: 40 }}
