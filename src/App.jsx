@@ -418,6 +418,48 @@ useEffect(() => {
 
   const streak = calculateStreak();
 
+  const calculateBestStreak = () => {
+
+  const completedDates = tasks
+    .filter(task => task.completed_at)
+    .map(task => {
+      const date = new Date(task.completed_at);
+
+      return date.toISOString().split("T")[0];
+    });
+
+  const uniqueDays = [...new Set(completedDates)].sort();
+
+  if (uniqueDays.length === 0) return 0;
+
+  let best = 1;
+  let current = 1;
+
+  for (let i = 1; i < uniqueDays.length; i++) {
+
+    const previous = new Date(uniqueDays[i - 1]);
+    const currentDate = new Date(uniqueDays[i]);
+
+    const diff =
+      (currentDate - previous) / (1000 * 60 * 60 * 24);
+
+    if (diff === 1) {
+      current++;
+    } else {
+      current = 1;
+    }
+
+    if (current > best) {
+      best = current;
+    }
+
+  }
+
+  return best;
+
+};
+const bestStreak = calculateBestStreak();
+
   const deleteTask = async (id) => {
     if (!confirm("Silmek istediğine emin misin?")) return;
 
@@ -461,6 +503,28 @@ const filteredTasks = tasks
       : Math.round(
           (tasks.filter(t => t.completed).length / tasks.length) * 100
         );
+
+    const activeTasks = tasks.filter(t => !t.completed).length;
+
+    const completedTasks = tasks.filter(t => t.completed).length;
+
+    const dailyGoal = 5;
+
+    const todayCompleted = tasks.filter(task => {
+      if (!task.completed_at) return false;
+
+      const today = new Date().toISOString().split("T")[0];
+      const completedDate = new Date(task.completed_at)
+        .toISOString()
+        .split("T")[0];
+
+      return today === completedDate;
+    }).length;
+
+    const goalPercent = Math.min(
+      100,
+      Math.round((todayCompleted / dailyGoal) * 100)
+    );
         
   const chartData = [
   {
@@ -474,6 +538,15 @@ const filteredTasks = tasks
 ];
 
 const COLORS = ["#0f5c63", "#4f9da6"];
+const weekDays = [
+  "Pzt",
+  "Sal",
+  "Çar",
+  "Per",
+  "Cum",
+  "Cmt",
+  "Paz"
+];
 
   // 🔐 LOGIN UI
   if (!user) {
@@ -571,8 +644,8 @@ return (
           <div className="logo-circle">⚡</div>
 
           <div>
-            <h3>TaskFlow</h3>
-            <p>Stay productive</p>
+            <h3>Task-App</h3>
+            <p>Verimli Gün Planlama</p>
           </div>
         </div>
 
@@ -620,7 +693,7 @@ return (
                   : "Bugün henüz görev tamamlanmadı"}
               </p>
               <p className="best-streak">
-                🏆 En İyi Seri: {streak} Gün
+                🏆 En İyi Seri: {bestStreak} Gün
               </p>
             </div>
           </div>
@@ -698,6 +771,11 @@ return (
             <div className="stat-card">
               <h3>{tasks.filter(t => !t.completed).length}</h3>
               <p>Active</p>
+            </div>
+
+            <div className="stat-card">
+              <h3>{bestStreak}</h3>
+              <p>Best Streak 🔥</p>
             </div>
 
           </div>

@@ -1030,7 +1030,7 @@ body.dark .login-container {
   /* STATS */
 
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .stat-card {
@@ -1120,7 +1120,7 @@ body.dark .login-container {
 
 @media (max-width: 768px) {
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2,1fr);
   }
 }
 
