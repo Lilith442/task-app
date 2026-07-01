@@ -7,6 +7,8 @@ body {
   background: linear-gradient(135deg, #d98c66, #e6c3a3);
   min-height: 100vh;
   background-attachment: fixed;
+
+  overflow-x: hidden;
 }
 
 /* container */
@@ -908,7 +910,7 @@ body.dark .login-container {
 .logout-btn:hover {
   background: #c9302c;
 }
-  
+
 /* =========================
    📱 RESPONSIVE UPGRADE
 ========================= */
@@ -920,7 +922,7 @@ body.dark .login-container {
   }
 
   .container {
-    width: calc(100% - 32px);
+    width: min(700px, 92%);
 
     margin:
       20px auto 40px;
@@ -947,7 +949,7 @@ body.dark .login-container {
 
     align-items: flex-start;
 
-    gap: 18px;
+    gap: 16px;
   }
 
   .topbar-left {
@@ -983,7 +985,7 @@ body.dark .login-container {
   .input-group input,
   .input-group select,
   .input-group button {
-    width: 100%;
+    width: 90%;
   }
 
   .search-box input {
@@ -1120,4 +1122,71 @@ body.dark .login-container {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* =========================
+   📱 STICKY MOBILE INPUT
+========================= */
+
+@media (max-width: 768px) {
+
+  .mobile-sticky {
+    position: sticky;
+
+    bottom: 12px;
+
+    z-index: 100;
+
+    padding: 14px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    box-shadow:
+      0 10px 30px rgba(0,0,0,0.12);
+  }
+
+} 
+
+.streak-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  margin: 20px 0;
+
+  padding: 16px;
+
+  border-radius: 18px;
+
+  background: rgba(255,255,255,0.15);
+
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.streak-fire {
+  font-size: 34px;
+}
+
+.streak-card h3 {
+  margin: 0;
+}
+
+.streak-card p {
+  margin: 4px 0 0;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.best-streak {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.75;
 }

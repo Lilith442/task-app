@@ -369,7 +369,9 @@ useEffect(() => {
 
     await supabase
       .from("tasks")
-      .update({ completed: newValue })
+      .update({ completed: newValue,
+        completed_at: newValue ? new Date().toISOString() : null
+       })
       .eq("id", id);
 
     let updated = tasks.map(t =>
@@ -379,6 +381,42 @@ useEffect(() => {
     updated.sort((a, b) => a.completed - b.completed);
     setTasks(updated);
   };
+
+  const calculateStreak = () => {
+  const completedDates = tasks
+    .filter(task => task.completed_at)
+    .map(task => {
+      const date = new Date(task.completed_at);
+
+      return date.toISOString().split("T")[0];
+    });
+
+  const uniqueDays = [...new Set(completedDates)].sort().reverse();
+
+  let streak = 0;
+
+  const today = new Date();
+
+  for (let i = 0; i < uniqueDays.length; i++) {
+
+    const checkDate = new Date(today);
+
+    checkDate.setDate(today.getDate() - i);
+
+    const formatted = checkDate.toISOString().split("T")[0];
+
+    if (uniqueDays.includes(formatted)) {
+      streak++;
+    } else {
+      break;
+    }
+
+  }
+
+  return streak;
+};
+
+  const streak = calculateStreak();
 
   const deleteTask = async (id) => {
     if (!confirm("Silmek istediğine emin misin?")) return;
@@ -570,6 +608,23 @@ return (
 
           <h1>Task App</h1>
 
+          <div className="streak-card">
+            <div className="streak-fire">🔥</div>
+
+            <div>
+              <h3>{streak} Günlük Seri</h3>
+
+              <p>
+                {streak > 0
+                  ? "Bugün görev tamamlandı ✅"
+                  : "Bugün henüz görev tamamlanmadı"}
+              </p>
+              <p className="best-streak">
+                🏆 En İyi Seri: {streak} Gün
+              </p>
+            </div>
+          </div>
+
           <p style={{ opacity: 0.6 }}>
             {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
           </p>
@@ -585,7 +640,7 @@ return (
             %{percent} tamamlandı
           </p>
 
-          <div className="input-group">
+          <div className="input-group mobile-sticky">
 
             <input
               value={input}
