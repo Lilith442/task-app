@@ -134,6 +134,7 @@ function App() {
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("genel");
   const [priority, setPriority] = useState("medium");
+  const [dueDate, setDueDate] = useState("");
   const [filter, setFilter] = useState(() => {
   return localStorage.getItem("filterMode") || "all";
   });
@@ -310,13 +311,15 @@ useEffect(() => {
           priority,
           user_id: user.id,
           position: tasks.length,
-          status: "todo"
+          status: "todo",
+          due_date: dueDate || null,
         }
       ])
       .select();
 
     setTasks([...tasks, data[0]]);
     setInput("");
+    setDueDate("");
     setLoading(false);
 
     showToast("Görev eklendi ✅", "success");
@@ -548,6 +551,50 @@ const weekDays = [
   "Paz"
 ];
 
+const weeklyData = weekDays.map((day, index) => {
+  const count = tasks.filter(task => {
+    if (!task.completed_at) return false;
+
+    const completedDay = new Date(task.completed_at).getDay();
+
+    const convertedDay = completedDay === 0 ? 6 : completedDay - 1;
+
+    return convertedDay === index;
+  }).length;
+
+  return {
+    day,
+    count
+  };
+});
+
+const last30Days = Array.from({ length: 30 }, (_, i) => {
+
+  const date = new Date();
+
+  date.setDate(date.getDate() - (29 - i));
+
+  const formatted = date.toISOString().split("T")[0];
+
+  const completed = tasks.some(task => {
+
+    if (!task.completed_at) return false;
+
+    return (
+      new Date(task.completed_at)
+        .toISOString()
+        .split("T")[0] === formatted
+    );
+
+  });
+
+  return {
+    date: formatted,
+    completed
+  };
+
+});
+
   // 🔐 LOGIN UI
   if (!user) {
   return (
@@ -739,7 +786,12 @@ return (
               <option value="medium">Orta</option>
               <option value="high">Acil</option>
             </select>
-
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="date-input"
+            />
             <button onClick={addTask}>
               {loading ? "..." : "Ekle"}
             </button>
@@ -756,6 +808,36 @@ return (
             />
 
           </div>
+          <div className="daily-goal-card">
+
+          <div className="goal-header">
+
+            <h3>🎯 Günlük Hedef</h3>
+
+            <span>
+              {todayCompleted} / {dailyGoal}
+            </span>
+
+          </div>
+
+          <div className="goal-progress">
+
+            <div
+              className="goal-progress-fill"
+              style={{ width: `${goalPercent}%` }}
+            />
+
+          </div>
+
+          <p>
+
+            {goalPercent === 100
+              ? "🎉 Harika! Günlük hedefini tamamladın."
+              : `Bugünkü hedef için ${dailyGoal - todayCompleted} görev kaldı.`}
+
+          </p>
+
+        </div>
           <div className="stats-grid">
 
             <div className="stat-card">
@@ -806,6 +888,42 @@ return (
 
               </PieChart>
             </ResponsiveContainer>
+
+          </div>
+
+          <div className="weekly-card">
+
+            <h3>📅 Weekly Activity</h3>
+
+            {weeklyData.map((item) => (
+
+              <div
+                key={item.day}
+                className="week-row"
+              >
+
+                <span className="week-day">
+                  {item.day}
+                </span>
+
+                <div className="week-bar">
+
+                  <div
+                    className="week-fill"
+                    style={{
+                      width: `${Math.min(item.count * 20, 100)}%`
+                    }}
+                  />
+
+                </div>
+
+                <span className="week-count">
+                  {item.count}
+                </span>
+
+              </div>
+
+            ))}
 
           </div>
           <div className="filters">
