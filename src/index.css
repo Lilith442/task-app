@@ -1470,3 +1470,27 @@ body.dark .login-container {
     transform:scale(1.05);
 
 }
+
+.calendar-day{
+    position:relative;
+}
+
+.calendar-dot{
+
+    width:7px;
+
+    height:7px;
+
+    border-radius:50%;
+
+    background:#36d399;
+
+    position:absolute;
+
+    bottom:8px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+}

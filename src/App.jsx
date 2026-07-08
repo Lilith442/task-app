@@ -574,6 +574,7 @@ const filteredTasks = tasks
       return task.due_date === selectedDate;
 
     })
+
   .filter(task => {
     if (filter === "completed") return task.completed;
     if (filter === "active") return !task.completed;
@@ -1094,6 +1095,11 @@ return (
                   day &&
                   selectedDate ===
                     `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                    const dateKey =
+                      day &&
+                      `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+                    const hasTasks = day && tasksByDate[dateKey];
                     return (
                 <div
                 
@@ -1109,7 +1115,13 @@ return (
                   className={`calendar-day ${day ? "" : "empty"} ${isSelected ? "selected-day" : ""}`}
                   
                 >
-                  {day}
+                  <>
+                    <span>{day}</span>
+
+                    {hasTasks && (
+                      <div className="calendar-dot"></div>
+                    )}
+                  </>
                   
                 </div>
                 );
