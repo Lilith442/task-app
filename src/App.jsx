@@ -96,7 +96,7 @@ function Item({
             </span>
 
             <span className="task-date">
-              Today
+              Bugün
             </span>
 
           </div>
@@ -104,6 +104,9 @@ function Item({
 
         <span className={`tag ${task.category}`}>
           {task.category}
+        </span>
+        <span className={`priority ${task.priority || "medium"}`}>
+          {task.priority || "medium"}
         </span>
       </div>
 
@@ -135,6 +138,9 @@ function App() {
   const [category, setCategory] = useState("genel");
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState(() => {
+    return new Date().toISOString().split("T")[0];
+  });
   const [filter, setFilter] = useState(() => {
   return localStorage.getItem("filterMode") || "all";
   });
@@ -350,13 +356,28 @@ useEffect(() => {
 
   await supabase
     .from("tasks")
-    .update({ status: newStatus })
+    .update({
+      status: newStatus,
+      completed: newStatus === "done",
+      completed_at:
+        newStatus === "done"
+          ? new Date().toISOString()
+          : null
+    })
     .eq("id", draggedTask.id);
 
   setTasks(prev =>
     prev.map(task =>
       task.id === draggedTask.id
-        ? { ...task, status: newStatus }
+        ? {
+        ...task,
+        status: newStatus,
+        completed: newStatus === "done",
+        completed_at:
+          newStatus === "done"
+            ? new Date().toISOString()
+            : null
+      }
         : task
     )
   );
@@ -366,19 +387,68 @@ useEffect(() => {
   setDraggedTask(null);
 };
 
+const changeDay = (amount) => {
+
+  const date = new Date(selectedDate);
+
+  date.setDate(date.getDate() + amount);
+
+  setSelectedDate(date.toISOString().split("T")[0]);
+
+};
+
+const goToToday = () => {
+
+  setSelectedDate(
+    new Date().toISOString().split("T")[0]
+  );
+
+};
+
+const formatDueDate = (date) => {
+  if (!date) return "No date";
+
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+
+  const taskDate = new Date(date);
+
+  const format = (d) => d.toISOString().split("T")[0];
+
+  if (format(taskDate) === format(today)) return "Today";
+
+  if (format(taskDate) === format(tomorrow)) return "Tomorrow";
+
+  if (taskDate < today && format(taskDate) !== format(today)) {
+    return "⚠️ Overdue";
+  }
+
+  return taskDate.toLocaleDateString("tr-TR", {
+    day: "numeric",
+    month: "short"
+  });
+};
+
   const toggleTask = async (id) => {
     const task = tasks.find(t => t.id === id);
     const newValue = !task.completed;
 
     await supabase
       .from("tasks")
-      .update({ completed: newValue,
-        completed_at: newValue ? new Date().toISOString() : null
-       })
+      .update({
+        completed: newValue,
+        completed_at: newValue ? new Date().toISOString() : null,
+        status: newValue ? "done" : "todo"
+      })
       .eq("id", id);
 
     let updated = tasks.map(t =>
-      t.id === id ? { ...t, completed: newValue } : t
+      t.id === id ? {
+  ...t,
+    completed: newValue,
+    status: newValue ? "done" : "todo"
+  } : t
     );
 
     updated.sort((a, b) => a.completed - b.completed);
@@ -492,6 +562,11 @@ const bestStreak = calculateBestStreak();
 
 const filteredTasks = tasks
   .filter(task => {
+      if (!task.due_date) return false;
+
+      return task.due_date === selectedDate;
+    })
+  .filter(task => {
     if (filter === "completed") return task.completed;
     if (filter === "active") return !task.completed;
     return true;
@@ -506,6 +581,16 @@ const filteredTasks = tasks
       : Math.round(
           (tasks.filter(t => t.completed).length / tasks.length) * 100
         );
+
+    const tasksByDate = tasks.reduce((acc, task) => {
+
+      if (!task.due_date) return acc;
+
+      acc[task.due_date] = (acc[task.due_date] || 0) + 1;
+
+      return acc;
+
+    }, {});
 
     const activeTasks = tasks.filter(t => !t.completed).length;
 
@@ -714,7 +799,7 @@ return (
             className="logout-btn"
             onClick={logout}
           >
-            Logout
+            Çıkış
           </button>
 
         </div>
@@ -728,6 +813,31 @@ return (
 
           <h1>Task App</h1>
 
+          <div className="date-navigation">
+          <button onClick={() => changeDay(-1)}>
+            ◀
+          </button>
+          <h3>
+            {new Date(selectedDate).toLocaleDateString("tr-TR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })}
+          </h3>
+
+          <button
+            className="today-btn"
+            onClick={goToToday}
+          >
+            Bugün
+          </button>
+
+          <button onClick={() => changeDay(1)}>
+            ▶
+          </button>
+
+        </div>
+
           <div className="streak-card">
             <div className="streak-fire">🔥</div>
 
@@ -740,9 +850,23 @@ return (
                   : "Bugün henüz görev tamamlanmadı"}
               </p>
               <p className="best-streak">
-                🏆 En İyi Seri: {bestStreak} Gün
+                🏆 En İyi Seri: {bestStreak} Gün {" "}
               </p>
             </div>
+          </div>
+
+          <div className="selected-date-info">
+
+            📅 Görüntülenen gün    
+
+            <strong>
+              {new Date(selectedDate).toLocaleDateString("tr-TR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+              })}
+            </strong>
+
           </div>
 
           <p style={{ opacity: 0.6 }}>
@@ -891,6 +1015,49 @@ return (
 
           </div>
 
+          <div className="calendar-card">
+
+            <h3>📅 Takvim </h3>
+
+            <h4>
+              {new Date(selectedDate).toLocaleDateString("tr-TR", {
+                month: "long",
+                year: "numeric"
+              })}
+            </h4>
+            <div className="calendar-weekdays">
+
+              <span>Pzt</span>
+
+              <span>Sal</span>
+
+              <span>Çar</span>
+
+              <span>Per</span>
+
+              <span>Cum</span>
+
+              <span>Cmt</span>
+
+              <span>Paz</span>
+
+            </div>
+            <div className="calendar-grid">
+
+              {Array.from({ length: 42 }).map((_, index) => (
+
+                <div
+                  key={index}
+                  className="calendar-day empty"
+                >
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
           <div className="weekly-card">
 
             <h3>📅 Weekly Activity</h3>
@@ -1029,6 +1196,7 @@ return (
                           <span className={`tag ${task.category}`}>
                             {task.category}
                           </span>
+                
 
                           <span className={`priority ${task.priority || "medium"}`}>
                             {task.priority || "medium"}
