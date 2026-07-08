@@ -1477,9 +1477,9 @@ body.dark .login-container {
 
 .calendar-dot{
 
-    width:7px;
+    width:8px;
 
-    height:7px;
+    height:8px;
 
     border-radius:50%;
 
@@ -1487,7 +1487,7 @@ body.dark .login-container {
 
     position:absolute;
 
-    bottom:8px;
+    bottom:12px;
 
     left:50%;
 

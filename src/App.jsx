@@ -1100,6 +1100,9 @@ return (
                       `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
                     const hasTasks = day && tasksByDate[dateKey];
+                    const isToday =
+                    day &&
+                    new Date().toISOString().split("T")[0] === dateKey;
                     return (
                 <div
                 
