@@ -566,6 +566,14 @@ const filteredTasks = tasks
 
       return task.due_date === selectedDate;
     })
+
+    .filter(task => {
+
+      if (!task.due_date) return false;
+
+      return task.due_date === selectedDate;
+
+    })
   .filter(task => {
     if (filter === "completed") return task.completed;
     if (filter === "active") return !task.completed;
@@ -591,6 +599,42 @@ const filteredTasks = tasks
       return acc;
 
     }, {});
+
+    const currentDate = new Date(selectedDate);
+
+    const currentMonth = currentDate.getMonth();
+
+    const currentYear = currentDate.getFullYear();
+
+    const firstDay = new Date(currentYear, currentMonth, 1);
+
+    const daysInMonth = new Date(
+      currentYear,
+      currentMonth + 1,
+      0
+    ).getDate();
+
+    const startDay = (firstDay.getDay() + 6) % 7;
+
+    const calendarDays = [];
+
+    for (let i = 0; i < startDay; i++) {
+
+      calendarDays.push(null);
+
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+
+      calendarDays.push(day);
+
+    }
+
+    while (calendarDays.length < 42) {
+
+      calendarDays.push(null);
+
+    }
 
     const activeTasks = tasks.filter(t => !t.completed).length;
 
@@ -1042,17 +1086,34 @@ return (
               <span>Paz</span>
 
             </div>
+
             <div className="calendar-grid">
-
-              {Array.from({ length: 42 }).map((_, index) => (
-
+              
+              {calendarDays.map((day, index) => {
+                const isSelected =
+                  day &&
+                  selectedDate ===
+                    `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                    return (
                 <div
+                
                   key={index}
-                  className="calendar-day empty"
-                >
-                </div>
+                  onClick={() => {
+                    if (!day) return;
 
-              ))}
+                    setSelectedDate(
+                      `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+                    );
+                  }}
+                                    
+                  className={`calendar-day ${day ? "" : "empty"} ${isSelected ? "selected-day" : ""}`}
+                  
+                >
+                  {day}
+                  
+                </div>
+                );
+              })}
 
             </div>
 

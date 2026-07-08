@@ -1441,10 +1441,32 @@ body.dark .login-container {
 
     transition:.25s;
 
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.calendar-day:hover{
+
+    transform: scale(1.05);
+
 }
 
 .calendar-day.empty{
 
     opacity:.25;
+
+}
+
+.selected-day{
+
+    background:var(--primary);
+
+    color:white;
+
+    font-weight:700;
+
+    transform:scale(1.05);
 
 }
