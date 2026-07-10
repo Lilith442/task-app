@@ -531,6 +531,27 @@ const formatDueDate = (date) => {
   return best;
 
 };
+
+const goToPreviousMonth = () => {
+
+  const date = new Date(selectedDate);
+
+  date.setMonth(date.getMonth() - 1);
+
+  setSelectedDate(date.toISOString().split("T")[0]);
+
+};
+
+const goToNextMonth = () => {
+
+  const date = new Date(selectedDate);
+
+  date.setMonth(date.getMonth() + 1);
+
+  setSelectedDate(date.toISOString().split("T")[0]);
+
+};
+
 const bestStreak = calculateBestStreak();
 
   const deleteTask = async (id) => {
@@ -1064,12 +1085,27 @@ return (
 
             <h3>📅 Takvim </h3>
 
+            <button
+              className="calendar-nav"
+              onClick={goToPreviousMonth}
+            >
+              ◀
+            </button>
+
             <h4>
               {new Date(selectedDate).toLocaleDateString("tr-TR", {
                 month: "long",
                 year: "numeric"
               })}
             </h4>
+
+            <button
+              className="calendar-nav"
+              onClick={goToNextMonth}
+            >
+              ▶
+            </button>
+            
             <div className="calendar-weekdays">
 
               <span>Pzt</span>
@@ -1115,7 +1151,10 @@ return (
                     );
                   }}
                                     
-                  className={`calendar-day ${day ? "" : "empty"} ${isSelected ? "selected-day" : ""}`}
+                  className={`calendar-day ${day ? "" : "empty"}
+                  ${isSelected ? "selected-day" : ""}
+                  ${isToday ? "today-day" : ""}
+                  `}
                   
                 >
                   <>
