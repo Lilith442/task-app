@@ -33,6 +33,14 @@ import WeeklyActivity from "./components/WeeklyActivity";
 
 import Stats from "./components/Stats";
 
+import Filters from "./components/Filters";
+
+import ViewSwitch from "./components/ViewSwitch";
+
+import Header from "./components/Header";
+
+import DeleteModal from "./components/DeleteModal";
+
 // 🔥 DRAG WRAPPER
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -761,75 +769,19 @@ return (
       </div>
     )}
 
-    {deleteId && (
-      <div className="modal-overlay">
+    <DeleteModal
+    deleteId={deleteId}
+    setDeleteId={setDeleteId}
+    deleteTask={deleteTask}
+    />
 
-        <div className="modal">
-
-          <h3>Görevi sil?</h3>
-
-          <p>Bu işlem geri alınamaz.</p>
-
-          <div className="modal-actions">
-
-            <button
-              className="cancel-btn"
-              onClick={() => setDeleteId(null)}
-            >
-              Vazgeç
-            </button>
-
-            <button
-              className="delete-btn"
-              onClick={async () => {
-                await deleteTask(deleteId);
-                setDeleteId(null);
-              }}
-            >
-              Sil
-            </button>
-
-          </div>
-        </div>
-      </div>
-    )}
-
-
-      <main className="main-content">
-        <div className="topbar">
-
-        <div className="topbar-left">
-          <div className="logo-circle">⚡</div>
-
-          <div>
-            <h3>Task-App</h3>
-            <p>Verimli Gün Planlama</p>
-          </div>
-        </div>
-
-        <div className="topbar-right">
-
-          <div className="user-box">
-            <div className="online-dot"></div>
-            <span>{user.email}</span>
-          </div>
-
-          <button
-            className="dark-toggle"
-            onClick={() => setDarkMode(!darkMode)}
-          >
-            🌙
-          </button>
-
-          <button
-            className="logout-btn"
-            onClick={logout}
-          >
-            Çıkış
-          </button>
-
-        </div>
-      </div>
+    <main className="main-content">
+    <Header
+        user={user}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+        logout={logout}
+    />
         <motion.div
           className="container"
           initial={{ opacity: 0, y: 40 }}
@@ -996,7 +948,7 @@ return (
             bestStreak={bestStreak}
 
         />
-        
+
           <div className="chart-card">
 
             <h3>Task Progress</h3>
@@ -1038,33 +990,19 @@ return (
             weeklyData={weeklyData}
           />
           
-          <div className="filters">
+          <Filters
 
-            <button onClick={() => setFilter("all")}>
-              Tümü
-            </button>
+            filter={filter}
+            setFilter={setFilter}
 
-            <button onClick={() => setFilter("active")}>
-              Aktif
-            </button>
+          />
 
-            <button onClick={() => setFilter("completed")}>
-              Tamamlanan
-            </button>
+          <ViewSwitch
 
-          </div>
+              view={view}
+              setView={setView}
 
-          <div className="view-switch">
-
-            <button onClick={() => setView("list")}>
-              📋 Liste
-            </button>
-
-            <button onClick={() => setView("board")}>
-              📌 Board
-            </button>
-
-          </div>
+          />
 
           {filteredTasks.length === 0 && (
             <motion.div
