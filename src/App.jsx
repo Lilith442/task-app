@@ -27,6 +27,12 @@ import {
   Tooltip
 } from "recharts";
 
+import Calendar from "./components/Calendar";
+
+import WeeklyActivity from "./components/WeeklyActivity";
+
+import Stats from "./components/Stats";
+
 // 🔥 DRAG WRAPPER
 function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -612,52 +618,6 @@ const filteredTasks = tasks
           (tasks.filter(t => t.completed).length / tasks.length) * 100
         );
 
-    const tasksByDate = tasks.reduce((acc, task) => {
-
-      if (!task.due_date) return acc;
-
-      acc[task.due_date] = (acc[task.due_date] || 0) + 1;
-
-      return acc;
-
-    }, {});
-
-    const currentDate = new Date(selectedDate);
-
-    const currentMonth = currentDate.getMonth();
-
-    const currentYear = currentDate.getFullYear();
-
-    const firstDay = new Date(currentYear, currentMonth, 1);
-
-    const daysInMonth = new Date(
-      currentYear,
-      currentMonth + 1,
-      0
-    ).getDate();
-
-    const startDay = (firstDay.getDay() + 6) % 7;
-
-    const calendarDays = [];
-
-    for (let i = 0; i < startDay; i++) {
-
-      calendarDays.push(null);
-
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-
-      calendarDays.push(day);
-
-    }
-
-    while (calendarDays.length < 42) {
-
-      calendarDays.push(null);
-
-    }
-
     const activeTasks = tasks.filter(t => !t.completed).length;
 
     const completedTasks = tasks.filter(t => t.completed).length;
@@ -1028,30 +988,15 @@ return (
           </p>
 
         </div>
-          <div className="stats-grid">
+        <Stats
 
-            <div className="stat-card">
-              <h3>{tasks.length}</h3>
-              <p>Total Tasks</p>
-            </div>
+            totalTasks={tasks.length}
+            completedTasks={completedTasks}
+            activeTasks={activeTasks}
+            bestStreak={bestStreak}
 
-            <div className="stat-card">
-              <h3>{tasks.filter(t => t.completed).length}</h3>
-              <p>Completed</p>
-            </div>
-
-            <div className="stat-card">
-              <h3>{tasks.filter(t => !t.completed).length}</h3>
-              <p>Active</p>
-            </div>
-
-            <div className="stat-card">
-              <h3>{bestStreak}</h3>
-              <p>Best Streak 🔥</p>
-            </div>
-
-          </div>
-
+        />
+        
           <div className="chart-card">
 
             <h3>Task Progress</h3>
@@ -1081,133 +1026,18 @@ return (
 
           </div>
 
-          <div className="calendar-card">
+          <Calendar
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              tasks={tasks}
+              goToPreviousMonth={goToPreviousMonth}
+              goToNextMonth={goToNextMonth}
+          />  
 
-            <h3>📅 Takvim </h3>
-
-            <button
-              className="calendar-nav"
-              onClick={goToPreviousMonth}
-            >
-              ◀
-            </button>
-
-            <h4>
-              {new Date(selectedDate).toLocaleDateString("tr-TR", {
-                month: "long",
-                year: "numeric"
-              })}
-            </h4>
-
-            <button
-              className="calendar-nav"
-              onClick={goToNextMonth}
-            >
-              ▶
-            </button>
-            
-            <div className="calendar-weekdays">
-
-              <span>Pzt</span>
-
-              <span>Sal</span>
-
-              <span>Çar</span>
-
-              <span>Per</span>
-
-              <span>Cum</span>
-
-              <span>Cmt</span>
-
-              <span>Paz</span>
-
-            </div>
-
-            <div className="calendar-grid">
-              
-              {calendarDays.map((day, index) => {
-                const isSelected =
-                  day &&
-                  selectedDate ===
-                    `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                    const dateKey =
-                      day &&
-                      `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-
-                    const hasTasks = day && tasksByDate[dateKey];
-                    const isToday =
-                    day &&
-                    new Date().toISOString().split("T")[0] === dateKey;
-                    return (
-                <div
-                
-                  key={index}
-                  onClick={() => {
-                    if (!day) return;
-
-                    setSelectedDate(
-                      `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-                    );
-                  }}
-                                    
-                  className={`calendar-day ${day ? "" : "empty"}
-                  ${isSelected ? "selected-day" : ""}
-                  ${isToday ? "today-day" : ""}
-                  `}
-                  
-                >
-                  <>
-                    <span>{day}</span>
-
-                    {hasTasks && (
-                      <div className="calendar-dot"></div>
-                    )}
-                  </>
-                  
-                </div>
-                );
-              })}
-
-            </div>
-
-          </div>
-
-          <div className="weekly-card">
-
-            <h3>📅 Weekly Activity</h3>
-
-            {weeklyData.map((item) => (
-
-              <div
-                key={item.day}
-                className="week-row"
-              >
-
-                <span className="week-day">
-                  {item.day}
-                </span>
-
-                <div className="week-bar">
-
-                  <div
-                    className="week-fill"
-                    style={{
-                      width: `${Math.min(item.count * 20, 100)}%`
-                    }}
-                  />
-
-                </div>
-
-                <span className="week-count">
-                  {item.count}
-                </span>
-
-              </div>
-
-            ))}
-
-          </div>
+          <WeeklyActivity
+            weeklyData={weeklyData}
+          />
+          
           <div className="filters">
 
             <button onClick={() => setFilter("all")}>
