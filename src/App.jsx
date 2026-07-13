@@ -2,17 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
-import {
-  DndContext,
-  closestCenter
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  useSortable,
-  arrayMove
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   PieChart,
@@ -32,6 +21,7 @@ import Toast from "./components/Toast";
 import TaskList from "./components/tasks/TaskList";
 import TaskItem from "./components/tasks/TaskItem";
 import SortableItem from "./components/tasks/SortableItem";
+import Board from "./components/tasks/Board";
 
 // 🔥 ITEM
 
@@ -911,198 +901,18 @@ return (
 
           {view === "board" ? (
 
-            <div className="board">
+            <Board
 
-              <div
-                className={`column ${activeColumn === "todo" ? "column-active" : ""}`}
+            filteredTasks={filteredTasks}
 
-                onDragEnter={() => setActiveColumn("todo")}
-                onDragLeave={() => setActiveColumn(null)}
+            activeColumn={activeColumn}
+            setActiveColumn={setActiveColumn}
 
-                onDragOver={(e) => e.preventDefault()}
+            setDraggedTask={setDraggedTask}
 
-                onDrop={() => {
-                  handleStatusDrop("todo");
-                  setActiveColumn(null);
-                }}
-              >
+            handleStatusDrop={handleStatusDrop}
 
-                <h3>
-                  📝 Todo
-                  <span className="count">
-                    ({filteredTasks.filter(task => task.status === "todo").length})
-                  </span>
-                </h3>
-
-                {filteredTasks.filter(task => task.status === "todo").length === 0 ? (
-
-                  <div className="empty-column">
-                    Task yok 🚀
-                  </div>
-
-                ) : (
-
-                  filteredTasks
-                    .filter(task => task.status === "todo")
-                    .map(task => (
-
-                      <motion.div
-                        key={task.id}
-                        className="task-card board-task"
-                        draggable
-                        onDragStart={() => setDraggedTask(task)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-
-                        <div className="board-task-top">
-                          <span>{task.text}</span>
-                        </div>
-
-                        <div className="board-task-bottom">
-
-                          <span className={`tag ${task.category}`}>
-                            {task.category}
-                          </span>
-                
-
-                          <span className={`priority ${task.priority || "medium"}`}>
-                            {task.priority || "medium"}
-                          </span>
-
-                        </div>
-
-                      </motion.div>
-
-                    ))
-
-                )}
-
-              </div>
-
-              <div
-                className={`column ${activeColumn === "doing" ? "column-active" : ""}`}
-
-                onDragEnter={() => setActiveColumn("doing")}
-                onDragLeave={() => setActiveColumn(null)}
-
-                onDragOver={(e) => e.preventDefault()}
-
-                onDrop={() => {
-                  handleStatusDrop("doing");
-                  setActiveColumn(null);
-                }}
-              >
-
-                <h3>⚡ Doing</h3>
-
-                {filteredTasks.filter(task => task.status === "doing").length === 0 ? (
-
-                  <div className="empty-column">
-                    Task yok 🚀
-                  </div>
-
-                ) : (
-
-                  filteredTasks
-                    .filter(task => task.status === "doing")
-                    .map(task => (
-
-                      <motion.div
-                        key={task.id}
-                        className="task-card board-task"
-                        draggable
-                        onDragStart={() => setDraggedTask(task)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-
-                        <div className="board-task-top">
-                          <span>{task.text}</span>
-                        </div>
-
-                        <div className="board-task-bottom">
-
-                          <span className={`tag ${task.category}`}>
-                            {task.category}
-                          </span>
-
-                          <span className={`priority ${task.priority || "medium"}`}>
-                            {task.priority || "medium"}
-                          </span>
-
-                        </div>
-
-                      </motion.div>
-
-                    ))
-
-                )}
-
-              </div>
-
-              <div
-                className={`column ${activeColumn === "done" ? "column-active" : ""}`}
-
-                onDragEnter={() => setActiveColumn("done")}
-                onDragLeave={() => setActiveColumn(null)}
-
-                onDragOver={(e) => e.preventDefault()}
-
-                onDrop={() => {
-                  handleStatusDrop("done");
-                  setActiveColumn(null);
-                }}
-              >
-
-                <h3>✅ Done</h3>
-
-                {filteredTasks.filter(task => task.status === "done").length === 0 ? (
-
-                  <div className="empty-column">
-                    Task yok 🚀
-                  </div>
-
-                ) : (
-
-                  filteredTasks
-                    .filter(task => task.status === "done")
-                    .map(task => (
-
-                      <motion.div
-                        key={task.id}
-                        className="task-card board-task"
-                        draggable
-                        onDragStart={() => setDraggedTask(task)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-
-                        <div className="board-task-top">
-                          <span>{task.text}</span>
-                        </div>
-
-                        <div className="board-task-bottom">
-
-                          <span className={`tag ${task.category}`}>
-                            {task.category}
-                          </span>
-
-                          <span className={`priority ${task.priority || "medium"}`}>
-                            {task.priority || "medium"}
-                          </span>
-
-                        </div>
-
-                      </motion.div>
-
-                    ))
-
-                )}
-
-              </div>
-
-            </div>
+          />
 
           ) : (
 
