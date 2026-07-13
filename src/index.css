@@ -1506,3 +1506,9 @@ body.dark .login-container {
     border:2px solid #36d399;
 
 }
+
+.task-repeat {
+  font-size: 12px;
+  color: #4f9da6;
+  margin-top: 4px;
+}

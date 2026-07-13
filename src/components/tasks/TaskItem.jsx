@@ -53,7 +53,17 @@ function TaskItem({
             <span className="task-date">
               Bugün
             </span>
-
+            {task.repeat_type !== "none" && (
+              <span className="task-repeat">
+                🔁 {
+                  task.repeat_type === "daily"
+                    ? "Her Gün"
+                    : task.repeat_type === "weekly"
+                    ? "Haftalık"
+                    : "2 Günde Bir"
+                }
+              </span>
+            )}
           </div>
         )}
 

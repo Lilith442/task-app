@@ -31,6 +31,7 @@ function App() {
   const [category, setCategory] = useState("genel");
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
+  const [repeatType, setRepeatType] = useState("none");
   const [selectedDate, setSelectedDate] = useState(() => {
     return new Date().toISOString().split("T")[0];
   });
@@ -208,6 +209,7 @@ useEffect(() => {
           text: input,
           category,
           priority,
+          repeat_type: repeatType,
           user_id: user.id,
           position: tasks.length,
           status: "todo",
@@ -219,6 +221,7 @@ useEffect(() => {
     setTasks([...tasks, data[0]]);
     setInput("");
     setDueDate("");
+    setRepeatType("none");
     setLoading(false);
 
     showToast("Görev eklendi ✅", "success");
@@ -769,6 +772,28 @@ return (
               onChange={(e) => setDueDate(e.target.value)}
               className="date-input"
             />
+            <select
+              value={repeatType}
+              onChange={(e) => setRepeatType(e.target.value)}
+            >
+
+              <option value="none">
+                Tek Sefer
+              </option>
+
+              <option value="daily">
+                Her Gün
+              </option>
+
+              <option value="weekly">
+                Haftalık
+              </option>
+
+              <option value="every2days">
+                2 Günde Bir
+              </option>
+
+            </select>
             <button onClick={addTask}>
               {loading ? "..." : "Ekle"}
             </button>

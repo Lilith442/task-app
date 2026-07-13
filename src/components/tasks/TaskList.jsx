@@ -1,11 +1,14 @@
 import { DndContext, closestCenter } from "@dnd-kit/core";
+
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+
 import { AnimatePresence } from "framer-motion";
 
 import SortableItem from "./SortableItem";
+
 
 function TaskList({
 
@@ -20,40 +23,47 @@ function TaskList({
   saveEdit,
   setDeleteId
 
-}) {    <DndContext
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
+}) {
 
-              <SortableContext
-                items={filteredTasks.map(t => t.id)}
-                strategy={verticalListSortingStrategy}
-              >
+  return (
 
-                <AnimatePresence>
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
 
-                  {filteredTasks.map(task => (
+      <SortableContext
+        items={filteredTasks.map(t => t.id)}
+        strategy={verticalListSortingStrategy}
+      >
 
-                    <SortableItem
-                      key={task.id}
-                      task={task}
-                      toggleTask={toggleTask}
-                      deleteTask={deleteTask}
-                      editingId={editingId}
-                      editText={editText}
-                      setEditText={setEditText}
-                      setEditingId={setEditingId}
-                      saveEdit={saveEdit}
-                      setDeleteId={setDeleteId}
-                    />
+        <AnimatePresence>
 
-                  ))}
+          {filteredTasks.map(task => (
 
-                </AnimatePresence>
+            <SortableItem
+              key={task.id}
+              task={task}
+              toggleTask={toggleTask}
+              deleteTask={deleteTask}
+              editingId={editingId}
+              editText={editText}
+              setEditText={setEditText}
+              setEditingId={setEditingId}
+              saveEdit={saveEdit}
+              setDeleteId={setDeleteId}
+            />
 
-              </SortableContext>
+          ))}
 
-            </DndContext>
+        </AnimatePresence>
+
+      </SortableContext>
+
+    </DndContext>
+
+  );
+
 }
 
 export default TaskList;
