@@ -29,111 +29,11 @@ import ViewSwitch from "./components/ViewSwitch";
 import Header from "./components/Header";
 import DeleteModal from "./components/DeleteModal";
 import Toast from "./components/Toast";
-
-// 🔥 DRAG WRAPPER
-function SortableItem(props) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.task.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition
-  };
-
-  return (
-    <div ref={setNodeRef} style={style}>
-      <Item
-        {...props}
-        dragHandleProps={{ ...attributes, ...listeners }}
-      />
-    </div>
-  );
-}
+import TaskList from "./components/tasks/TaskList";
+import TaskItem from "./components/tasks/TaskItem";
+import SortableItem from "./components/tasks/SortableItem";
 
 // 🔥 ITEM
-function Item({
-  task,
-  toggleTask,
-  deleteTask,
-  editingId,
-  editText,
-  setEditText,
-  setEditingId,
-  saveEdit,
-  dragHandleProps,
-  setDeleteId
-}) {
-  return (
-    <motion.div className="task-card"
-    layout
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.8 }}
-    transition={{ duration: 0.2 }}
-    >
-      <div className="task-left">
-        <span
-          className="drag-handle"
-          {...dragHandleProps}
-          style={{ cursor: "grab", marginRight: 8 }}
-        >
-          ☰
-        </span>
-
-        <input
-          type="checkbox"
-          checked={!!task.completed}
-          onChange={() => toggleTask(task.id)}
-        />
-
-        {editingId === task.id ? (
-          <input
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-          />
-        ) : (
-          <div className="task-content">
-
-            <span className={task.completed ? "done task-title" : "task-title"}>
-              {task.text}
-            </span>
-
-            <span className="task-date">
-              Bugün
-            </span>
-
-          </div>
-        )}
-
-        <span className={`tag ${task.category}`}>
-          {task.category}
-        </span>
-        <span className={`priority ${task.priority || "medium"}`}>
-          {task.priority || "medium"}
-        </span>
-      </div>
-
-      <div className="task-actions">
-        {editingId === task.id ? (
-          <button onClick={() => saveEdit(task.id)}>Kaydet</button>
-        ) : (
-          <button
-            onClick={() => {
-              setEditingId(task.id);
-              setEditText(task.text);
-            }}
-          >
-            Düzenle
-          </button>
-        )}
-
-        <button onClick={() => setDeleteId(task.id)}>
-          Sil
-      </button>
-      </div>
-    </motion.div>
-  );
-}
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -1206,41 +1106,24 @@ return (
 
           ) : (
 
-            <DndContext
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
+            <TaskList
 
-              <SortableContext
-                items={filteredTasks.map(t => t.id)}
-                strategy={verticalListSortingStrategy}
-              >
+              filteredTasks={filteredTasks}
+              handleDragEnd={handleDragEnd}
 
-                <AnimatePresence>
+              toggleTask={toggleTask}
+              deleteTask={deleteTask}
 
-                  {filteredTasks.map(task => (
+              editingId={editingId}
+              editText={editText}
 
-                    <SortableItem
-                      key={task.id}
-                      task={task}
-                      toggleTask={toggleTask}
-                      deleteTask={deleteTask}
-                      editingId={editingId}
-                      editText={editText}
-                      setEditText={setEditText}
-                      setEditingId={setEditingId}
-                      saveEdit={saveEdit}
-                      setDeleteId={setDeleteId}
-                    />
+              setEditText={setEditText}
+              setEditingId={setEditingId}
 
-                  ))}
+              saveEdit={saveEdit}
+              setDeleteId={setDeleteId}
 
-                </AnimatePresence>
-
-              </SortableContext>
-
-            </DndContext>
-
+            />
           )}
 
         </motion.div>
