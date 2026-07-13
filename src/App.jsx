@@ -2,23 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
-
 import {
   DndContext,
   closestCenter
 } from "@dnd-kit/core";
-
 import {
   SortableContext,
   verticalListSortingStrategy,
   useSortable,
   arrayMove
 } from "@dnd-kit/sortable";
-
 import { CSS } from "@dnd-kit/utilities";
-
 import { motion, AnimatePresence } from "framer-motion";
-
 import {
   PieChart,
   Pie,
@@ -26,20 +21,14 @@ import {
   ResponsiveContainer,
   Tooltip
 } from "recharts";
-
 import Calendar from "./components/Calendar";
-
 import WeeklyActivity from "./components/WeeklyActivity";
-
 import Stats from "./components/Stats";
-
 import Filters from "./components/Filters";
-
 import ViewSwitch from "./components/ViewSwitch";
-
 import Header from "./components/Header";
-
 import DeleteModal from "./components/DeleteModal";
+import Toast from "./components/Toast";
 
 // 🔥 DRAG WRAPPER
 function SortableItem(props) {
@@ -763,11 +752,7 @@ const last30Days = Array.from({ length: 30 }, (_, i) => {
 return (
   <div className="app-layout">
 
-    {toast.message && (
-      <div className={`toast ${toast.type}`}>
-        {toast.message}
-      </div>
-    )}
+    <Toast toast={toast} />
 
     <DeleteModal
     deleteId={deleteId}

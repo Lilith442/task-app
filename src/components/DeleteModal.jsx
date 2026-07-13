@@ -16,7 +16,7 @@ function DeleteModal({
 
         <h3>Görevi sil?</h3>
 
-        <p>Bu işlem ge  ri alınamaz.</p>
+        <p>Bu işlem geri alınamaz.</p>
 
         <div className="modal-actions">
 
