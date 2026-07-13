@@ -22,6 +22,7 @@ import TaskList from "./components/tasks/TaskList";
 import TaskItem from "./components/tasks/TaskItem";
 import SortableItem from "./components/tasks/SortableItem";
 import Board from "./components/tasks/Board";
+import { checkRecurringTasks } from "./utils/recurringTasks";
 
 // 🔥 ITEM
 
@@ -193,6 +194,18 @@ useEffect(() => {
 
 }, [user]);
 
+useEffect(() => {
+
+  if (tasks.length === 0) return;
+
+  checkRecurringTasks({
+  tasks,
+  user,
+  supabase
+});
+
+}, [tasks]);
+
   // ➕ ADD
   const addTask = async () => {
     if (!input.trim()) {
@@ -226,6 +239,26 @@ useEffect(() => {
 
     showToast("Görev eklendi ✅", "success");
   };
+
+  const addSubtask = async (taskId, text) => {
+
+  const { error } = await supabase
+    .from("subtasks")
+    .insert([
+      {
+        task_id: taskId,
+        text,
+        completed: false
+      }
+    ]);
+
+  if (error) {
+    console.error(error);
+  } else {
+    console.log("✅ Alt görev eklendi");
+  }
+
+};
 
   // 🔄 DRAG
   const handleDragEnd = (event) => {
@@ -957,7 +990,7 @@ return (
 
               saveEdit={saveEdit}
               setDeleteId={setDeleteId}
-
+              addSubtask={addSubtask}
             />
           )}
 

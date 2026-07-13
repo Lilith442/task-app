@@ -11,8 +11,8 @@ function TaskItem({
   setEditingId,
   saveEdit,
   dragHandleProps,
-  setDeleteId
-
+  setDeleteId,
+  addSubtask
 }) {
 
   return (
@@ -92,6 +92,13 @@ function TaskItem({
         <button onClick={() => setDeleteId(task.id)}>
           Sil
       </button>
+
+      <button
+        onClick={() => addSubtask(task.id, "İlk Alt Görev")}
+      >
+        +
+      </button>
+
       </div>
     </motion.div>
   );

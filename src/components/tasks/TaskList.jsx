@@ -21,7 +21,8 @@ function TaskList({
   setEditText,
   setEditingId,
   saveEdit,
-  setDeleteId
+  setDeleteId,
+  addSubtask
 
 }) {
 
@@ -52,6 +53,7 @@ function TaskList({
               setEditingId={setEditingId}
               saveEdit={saveEdit}
               setDeleteId={setDeleteId}
+              addSubtask={addSubtask}
             />
 
           ))}
