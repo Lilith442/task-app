@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import "./Header.css";
 function Header({
     user,

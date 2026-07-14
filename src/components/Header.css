@@ -1,41 +1,43 @@
-.top-left {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  background: #4f9da6;
-  color: white;
-  cursor: pointer;
-  z-index: 1000;
+.top-left,
+.top-right{
+    position:fixed;
+
+    top:20px;
+
+    padding:10px 14px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#4f9da6;
+    color:white;
+
+    cursor:pointer;
+
+    z-index:1000;
+
+    transition:.2s;
 }
 
-.top-right {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  background: #4f9da6;
-  color: white;
-  cursor: pointer;
-  z-index: 1000;
+.top-left{
+    left:20px;
+}
+
+.top-right{
+    right:20px;
 }
 
 .top-left:hover,
 .top-right:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(0,0,0,.2);
+  opacity:.95;
 }
 
 .topbar {
-  width: 92%;
-  max-width: 1200px;
+  width:min(1200px,92%);
 
-  margin: 20px auto 0;
-  margin-bottom: 30px;
+  margin:20px auto 30px;
   
   display: flex;
   justify-content: space-between;
@@ -62,6 +64,7 @@
   height: 50px;
 
   border-radius: 50%;
+  flex-shrink:0;
 
   display: flex;
   align-items: center;
@@ -98,6 +101,8 @@
 
   padding: 10px 14px;
   border-radius: 12px;
+
+  min-width:0;
 }
 
 .online-dot {
@@ -108,6 +113,7 @@
   background: #32d74b;
 
   box-shadow: 0 0 10px #32d74b;
+  animation:pulse 2s infinite;
 }
 
 .dark-toggle {
@@ -124,4 +130,59 @@
 
 .logout-btn:hover {
   background: #c9302c;
+  transform:translateY(-2px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+    .topbar{
+
+        width:calc(100% - 32px);
+
+        margin:16px auto;
+
+        padding:16px;
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:16px;
+
+    }
+
+    .topbar-left{
+
+        width:100%;
+
+    }
+
+    .topbar-right{
+
+        width:100%;
+
+        justify-content:space-between;
+
+        flex-wrap:wrap;
+
+    }
+
+    .user-box{
+
+        flex:1;
+
+        min-width:0;
+
+        overflow:hidden;
+
+        text-overflow:ellipsis;
+
+        white-space:nowrap;
+
+    }
+
 }
