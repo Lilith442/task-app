@@ -22,12 +22,13 @@ function TaskList({
   setEditingId,
   saveEdit,
   setDeleteId,
-  addSubtask
+  addSubtask,
+  subtasks
 
 }) {
 
   return (
-
+    
     <DndContext
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
@@ -54,6 +55,7 @@ function TaskList({
               saveEdit={saveEdit}
               setDeleteId={setDeleteId}
               addSubtask={addSubtask}
+              subtasks={subtasks}
             />
 
           ))}
@@ -63,6 +65,7 @@ function TaskList({
       </SortableContext>
 
     </DndContext>
+    
 
   );
 

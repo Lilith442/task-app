@@ -12,9 +12,14 @@ function TaskItem({
   saveEdit,
   dragHandleProps,
   setDeleteId,
-  addSubtask
+  addSubtask,
+  subtasks
 }) {
+  const taskSubtasks = subtasks.filter(
 
+      subtask => subtask.task_id === task.id
+
+  );
   return (
     <motion.div className="task-card"
     layout
@@ -49,6 +54,19 @@ function TaskItem({
             <span className={task.completed ? "done task-title" : "task-title"}>
               {task.text}
             </span>
+            
+            {taskSubtasks.map(subtask => (
+
+                <div
+                    key={subtask.id}
+                    className="subtask-item"
+                >
+
+                    • {subtask.text}
+
+                </div>
+
+            ))}
 
             <span className="task-date">
               Bugün
@@ -94,7 +112,15 @@ function TaskItem({
       </button>
 
       <button
-        onClick={() => addSubtask(task.id, "İlk Alt Görev")}
+        onClick={() => {
+
+        const text = prompt("Alt görev");
+
+        if (!text) return;
+
+        addSubtask(task.id, text);
+
+      }}
       >
         +
       </button>

@@ -28,6 +28,7 @@ import { checkRecurringTasks } from "./utils/recurringTasks";
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [subtasks, setSubtasks] = useState([]);
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("genel");
   const [priority, setPriority] = useState("medium");
@@ -173,7 +174,7 @@ const fetchSubtasks = async () => {
     console.error(error);
     return;
   }
-
+  setSubtasks(data || []);
   console.log("📋 Subtasks:", data);
 
 };
@@ -198,7 +199,9 @@ useEffect(() => {
 
       () => {
         fetchTasks();
-        fetchSubtasks();
+        fetchSubtasks(
+          
+        );
       }
     )
 
@@ -274,11 +277,8 @@ const addSubtask = async (taskId, text) => {
   console.log("DATA:", data);
   console.log("ERROR:", error);
 
-  if (error) {
-    console.error(error);
-  } else {
-    console.log("✅ Alt görev eklendi");
-  }
+  if (error)
+    await fetchSubtasks();
 
 };
 
@@ -1012,7 +1012,9 @@ return (
 
               saveEdit={saveEdit}
               setDeleteId={setDeleteId}
+
               addSubtask={addSubtask}
+              subtasks={subtasks}
             />
           )}
 
