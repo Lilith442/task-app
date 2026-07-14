@@ -1,0 +1,20 @@
+/* filtre */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #4f9da6;
+  color: white;
+  cursor: pointer;
+}
+
+.filters button.active {
+  background: #0f5c63;
+}

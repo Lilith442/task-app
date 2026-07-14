@@ -23,6 +23,10 @@ import TaskItem from "./components/tasks/TaskItem";
 import SortableItem from "./components/tasks/SortableItem";
 import Board from "./components/tasks/Board";
 import { checkRecurringTasks } from "./utils/recurringTasks";
+import "./components/Login.css";
+import "./styles/Theme.css";
+import "./styles/Layout.css";
+import "./components/Search.css";
 
 // 🔥 ITEM
 

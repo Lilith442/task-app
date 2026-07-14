@@ -1,0 +1,101 @@
+
+/* LOGIN WRAPPER */
+/* ===== LOGIN UPGRADE ===== */
+
+.login-container {
+    max-width: 380px;
+    margin: 160px auto;
+    padding: 40px 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: fadeIn 0.5s ease;
+    text-align: center;
+}
+/* HEADER */
+.login-header h2 {
+    margin: 10px 0 5px;
+    color: #0f5c63;
+}
+
+.login-header p {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+/* AVATAR */
+.avatar {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: linear-gradient(135deg, #4f9da6, #0f5c63);
+                      color: white;
+
+                      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+                    }
+
+                    /* FORM */
+                    .login-form {
+                      margin-top: 25px;
+                    }
+
+                    /* INPUT */
+                    .login-form input {
+                      width: 90%;
+                      padding: 12px;
+                      border-radius: 12px;
+                      border: none;
+                      margin-bottom: 15px;
+
+                      outline: none;
+
+                      background: rgba(255,255,255,0.9);
+                      transition: 0.2s;
+                    }
+
+                    .login-form input:focus {
+                      transform: scale(1.02);
+                      box-shadow: 0 0 0 2px #4f9da6;
+                    }
+
+                    /* BUTTONS */
+                    .login-form button {
+                      width: 100%;
+                      padding: 12px;
+                      border-radius: 12px;
+                      border: none;
+                      margin-top: 10px;
+                      cursor: pointer;
+                      font-weight: 500;
+                    }
+
+                    /* PRIMARY */
+                    .login-form .primary {
+                      background: linear-gradient(135deg, #4f9da6, #0f5c63);
+                      color: white;
+                      transition: 0.2s;
+                    }
+
+                    .login-form .primary:hover {
+                      transform: translateY(-2px);
+                      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                    }
+
+                    /* SECONDARY */
+                    .login-form .secondary {
+                      background: transparent;
+                      color: #0f5c63;
+                    }
+
+                    /* MESSAGE */
+                    .login-message {
+                      font-size: 13px;
+                      margin-bottom: 10px;
+                      color: #0f5c63;
+                    }

@@ -1,3 +1,5 @@
+import "./DeleteModal.css";
+
 function DeleteModal({
 
   deleteId,

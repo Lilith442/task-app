@@ -1,0 +1,36 @@
+body.dark{
+  background:linear-gradient(to bottom,#1e1e1e,#121212);
+  color:#f1f1f1;
+}
+
+body.dark .container{
+  background:rgba(255,255,255,.05);
+}
+
+body.dark .task-card{
+  background:rgba(255,255,255,.08);
+}
+
+body.dark input,
+body.dark select{
+  background:rgba(255,255,255,.1);
+  color:white;
+}
+
+body.dark option{
+  background:#2d2d2d;
+  color:white;
+}
+
+body.dark button{
+  background:#0f5c63;
+  color:white;
+}
+
+body.dark .tag{
+  background:#0f5c63;
+}
+
+body.dark .login-container{
+  background:rgba(255,255,255,.05);
+}

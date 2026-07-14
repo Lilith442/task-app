@@ -1,0 +1,150 @@
+/* task kart */
+.task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: rgba(255,255,255,0.9);
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
+  animation: fadeIn 0.3s ease;
+
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* sol taraf */
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-actions{
+  display: flex;
+  gap: 8px;
+}
+
+.task-actions button {
+  background: #4f9da6;
+  color: white;
+  margin-left: 5px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.subtask-progress {
+  margin: 8px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #0f5c63;
+  transition: 0.3s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.toggle-subtasks-btn{
+
+    border:none;
+    background:none;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    margin:10px 0;
+
+}
+
+/* tag */
+.tag {
+  background: #4f9da6;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.task-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.task-date {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.done {
+text-decoration: line-through;
+opacity: 0.6;
+transition: 0.2s;
+}
+
+.drag-handle {
+cursor: grab;
+opacity: 0.5;
+transition: 0.2s;
+}
+
+.drag-handle:hover {
+opacity: 1;
+}
+
+.tag.genel { 
+ background: #4f9da6; 
+}
+.tag.iş { 
+background: #f4a261;
+}
+.tag.kişisel { 
+background: #2a9d8f; 
+}

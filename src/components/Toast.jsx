@@ -1,3 +1,5 @@
+import "./Toast.css";
+
 function Toast({ toast }) {
 
   if (!toast.message) return null;

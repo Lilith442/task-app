@@ -1,3 +1,5 @@
+import "./Filters.css";
+
 function Filters({
     filter,
     setFilter

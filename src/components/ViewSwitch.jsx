@@ -1,3 +1,5 @@
+import "./ViewSwitch.css";
+
 function ViewSwitch({
     view,
     setView
