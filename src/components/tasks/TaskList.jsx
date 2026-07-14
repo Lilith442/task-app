@@ -23,7 +23,8 @@ function TaskList({
   saveEdit,
   setDeleteId,
   addSubtask,
-  subtasks
+  subtasks,
+  toggleSubtask
 
 }) {
 
@@ -56,6 +57,7 @@ function TaskList({
               setDeleteId={setDeleteId}
               addSubtask={addSubtask}
               subtasks={subtasks}
+              toggleSubtask={toggleSubtask}
             />
 
           ))}

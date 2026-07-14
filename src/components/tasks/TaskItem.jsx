@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 function TaskItem({
@@ -13,13 +14,32 @@ function TaskItem({
   dragHandleProps,
   setDeleteId,
   addSubtask,
-  subtasks
+  subtasks,
+  toggleSubtask
 }) {
+
+  const [showSubtasks, setShowSubtasks] = useState(true);
+  const [subtaskText, setSubtaskText] = useState("");
   const taskSubtasks = subtasks.filter(
 
       subtask => subtask.task_id === task.id
 
   );
+
+  const completedSubtasks =
+    taskSubtasks.filter(
+        subtask => subtask.completed
+    ).length;
+
+  const progress =
+      taskSubtasks.length === 0
+          ? 0
+          : Math.round(
+                completedSubtasks /
+                taskSubtasks.length *
+                100
+            );
+
   return (
     <motion.div className="task-card"
     layout
@@ -54,19 +74,82 @@ function TaskItem({
             <span className={task.completed ? "done task-title" : "task-title"}>
               {task.text}
             </span>
-            
-            {taskSubtasks.map(subtask => (
+
+            <div className="subtask-progress">
+
+              <div className="progress-bar">
 
                 <div
-                    key={subtask.id}
-                    className="subtask-item"
+                  className="progress-fill"
+                  style={{
+                    width: `${progress}%`
+                  }}
+                />
+
+              </div>
+
+              <span>{progress}% tamamlandı</span>
+
+            </div>
+
+            <button
+              className="toggle-subtasks-btn"
+              onClick={() => setShowSubtasks(!showSubtasks)}
+            >
+
+              {showSubtasks ? "▼" : "▶"} Alt Görevler ({taskSubtasks.length})
+
+            </button>
+
+            <div className="subtask-input">
+
+              <input
+                value={subtaskText}
+                onChange={(e) => setSubtaskText(e.target.value)}
+                placeholder="Alt görev ekle..."
+              />
+
+              <button
+                onClick={() => {
+
+                  if (!subtaskText.trim()) return;
+
+                  addSubtask(task.id, subtaskText);
+
+                  setSubtaskText("");
+
+                }}
+              >
+                +
+              </button>
+
+            </div>
+
+            
+            {showSubtasks && (
+
+              taskSubtasks.map(subtask => (
+
+                <div
+                  key={subtask.id}
+                  className="subtask-item"
                 >
 
-                    • {subtask.text}
+                  <input
+                    type="checkbox"
+                    checked={subtask.completed}
+                    onChange={() =>
+                      toggleSubtask(subtask.id, subtask.completed)
+                    }
+                  />
+
+                  <span>{subtask.text}</span>
 
                 </div>
 
-            ))}
+              ))
+
+            )}
 
             <span className="task-date">
               Bugün
@@ -109,20 +192,6 @@ function TaskItem({
 
         <button onClick={() => setDeleteId(task.id)}>
           Sil
-      </button>
-
-      <button
-        onClick={() => {
-
-        const text = prompt("Alt görev");
-
-        if (!text) return;
-
-        addSubtask(task.id, text);
-
-      }}
-      >
-        +
       </button>
 
       </div>

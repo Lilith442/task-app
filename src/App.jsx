@@ -277,8 +277,30 @@ const addSubtask = async (taskId, text) => {
   console.log("DATA:", data);
   console.log("ERROR:", error);
 
-  if (error)
-    await fetchSubtasks();
+  if (error) {
+  console.error(error);
+  return;
+  }
+
+  await fetchSubtasks();
+
+  };
+
+  const toggleSubtask = async (id, completed) => {
+
+  const { error } = await supabase
+    .from("subtasks")
+    .update({
+      completed: !completed
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  await fetchSubtasks();
 
 };
 
@@ -1015,6 +1037,7 @@ return (
 
               addSubtask={addSubtask}
               subtasks={subtasks}
+              toggleSubtask={toggleSubtask}
             />
           )}
 
