@@ -12,8 +12,11 @@
     font-size:15px;
 
     display:flex;
+
     align-items:center;
     gap:8px;
+
+    flex-wrap:wrap;
 }
 
 .selected-date-info strong{
@@ -31,6 +34,20 @@
     background:var(--card);
 
     box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+
+}
+
+.calendar-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 14px 28px rgba(0,0,0,.08);
 
 }
 
@@ -98,11 +115,15 @@
 
     background:rgba(255,255,255,.05);
 
-    transition:.25s;
-
     cursor: pointer;
 
-    transition: .2s;
+    user-select:none;
+
+    flex-shrink:0;
+
+    transition:
+    transform .2s ease,
+    background .2s ease;
 
 }
 
@@ -132,6 +153,8 @@
 
     transform:scale(1.05);
 
+    transition:.2s ease;
+
 }
 
 .calendar-day{
@@ -156,10 +179,51 @@
 
     transform:translateX(-50%);
 
+    box-shadow:
+        0 0 8px rgba(79,157,166,.45);
+
 }
 
 .today-day{
 
     border:2px solid #36d399;
+    font-weight:700;
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+    .calendar-card{
+
+        padding:18px;
+
+    }
+
+    .calendar-weekdays,
+    .calendar-grid{
+
+        gap:6px;
+
+    }
+
+    .calendar-day{
+
+        border-radius:10px;
+
+        font-size:13px;
+
+    }
+
+    .selected-date-info{
+
+        padding:12px 14px;
+
+        font-size:14px;
+
+    }
 
 }

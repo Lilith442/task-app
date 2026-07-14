@@ -13,8 +13,49 @@
   background: #4f9da6;
   color: white;
   cursor: pointer;
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.filters button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,.12);
+
 }
 
 .filters button.active {
   background: #0f5c63;
+  box-shadow:
+  0 6px 16px rgba(15,92,99,.25);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+    .filters{
+
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+        gap:8px;
+
+    }
+
+    .filters button{
+
+        flex:1;
+
+        min-width:120px;
+
+    }
+
 }
