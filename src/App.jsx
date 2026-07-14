@@ -163,6 +163,21 @@ const fetchTasks = async () => {
   setLoading(false);
 };
 
+const fetchSubtasks = async () => {
+
+  const { data, error } = await supabase
+    .from("subtasks")
+    .select("*");
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  console.log("📋 Subtasks:", data);
+
+};
+
   // 📦 FETCH + REALTIME
 useEffect(() => {
   if (!user) return;
@@ -183,6 +198,7 @@ useEffect(() => {
 
       () => {
         fetchTasks();
+        fetchSubtasks();
       }
     )
 
@@ -240,9 +256,11 @@ useEffect(() => {
     showToast("Görev eklendi ✅", "success");
   };
 
-  const addSubtask = async (taskId, text) => {
+const addSubtask = async (taskId, text) => {
 
-  const { error } = await supabase
+  console.log("🚀 addSubtask çalıştı", taskId, text);
+
+  const { data, error } = await supabase
     .from("subtasks")
     .insert([
       {
@@ -250,7 +268,11 @@ useEffect(() => {
         text,
         completed: false
       }
-    ]);
+    ])
+    .select();
+
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
   if (error) {
     console.error(error);
