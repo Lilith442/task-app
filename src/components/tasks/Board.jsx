@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import "./Board.css";
 
 function Board({
   filteredTasks,

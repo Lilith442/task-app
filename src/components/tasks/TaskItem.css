@@ -38,21 +38,23 @@
 }
 
 /* sol taraf */
-.task-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.task-left{
+display:flex;
+align-items:flex-start;
+gap:14px;
+width:100%;
 }
 
 .task-actions{
   display: flex;
+  align-items:center;
   gap: 8px;
+  flex-wrap:wrap;
 }
 
 .task-actions button {
   background: #4f9da6;
   color: white;
-  margin-left: 5px;
   border: none;
   font-size: 13px;
   font-weight: 500;
@@ -77,25 +79,12 @@
 .progress-fill {
   height: 100%;
   background: #0f5c63;
-  transition: 0.3s ease;
+  transition: width .35s ease;
 }
 
 .progress-text {
   font-size: 12px;
   opacity: 0.7;
-}
-
-.toggle-subtasks-btn{
-
-    border:none;
-    background:none;
-
-    cursor:pointer;
-
-    font-weight:600;
-
-    margin:10px 0;
-
 }
 
 /* tag */
@@ -105,12 +94,16 @@
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 12px;
+  font-weight:600;
+  letter-spacing:.2px;
 }
 
 .task-content {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
+  flex:1;
+  min-width:0;
 }
 
 .task-title {
@@ -147,4 +140,151 @@ background: #f4a261;
 }
 .tag.kişisel { 
 background: #2a9d8f; 
+}
+
+.task-repeat {
+  font-size: 12px;
+  color: #4f9da6;
+  margin-top: 4px;
+}
+
+.subtask-input{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+
+    width:100%;
+}
+
+.subtask-input input{
+    flex:1;
+    padding:8px 10px;
+    border-radius:8px;
+}
+
+.subtask-input button{
+    padding:8px 14px;
+}
+
+.subtask-list{
+    max-height:220px;
+    overflow-y:auto;
+}
+
+.toggle-subtasks-btn{
+    margin:10px 0;
+    padding:10px 14px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#eef7f8;
+    color:#0f5c63;
+
+    cursor:pointer;
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.toggle-subtasks-btn:hover{
+    background:#dceff1;
+}
+
+/* PRIORITY */
+
+.priority {
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: white;
+
+  text-transform: capitalize;
+}
+
+.priority.high {
+  background: linear-gradient(135deg, #ff4d6d, #c9184a);
+
+  box-shadow:
+    0 4px 12px rgba(255,77,109,0.35);
+}
+
+.priority.medium {
+  background: linear-gradient(135deg, #f4a261, #e76f51);
+
+  box-shadow:
+    0 4px 12px rgba(244,162,97,0.35);
+}
+
+.priority.low {
+  background: linear-gradient(135deg, #4ea8de, #5390d9);
+
+  box-shadow:
+    0 4px 12px rgba(78,168,222,0.35);
+}
+
+/* =========================
+   📱 RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+    .task-card{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:18px;
+
+        padding:18px;
+
+    }
+
+    .task-left{
+
+        width:100%;
+
+        gap:12px;
+
+    }
+
+    .task-content{
+
+        width:100%;
+
+    }
+
+    .task-actions{
+
+        width:100%;
+
+        justify-content:flex-end;
+
+    }
+
+    .subtask-input{
+
+        flex-direction:column;
+
+    }
+
+    .subtask-input input{
+
+        width:100%;
+
+        box-sizing:border-box;
+
+    }
+
+    .subtask-input button{
+
+        width:100%;
+
+    }
+
 }

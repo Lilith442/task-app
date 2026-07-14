@@ -27,6 +27,7 @@ import "./components/Login.css";
 import "./styles/Theme.css";
 import "./styles/Layout.css";
 import "./components/Search.css";
+import "./styles/Responsive.css";
 
 // 🔥 ITEM
 
