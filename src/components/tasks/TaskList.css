@@ -1,0 +1,21 @@
+/* =========================
+   TASK LIST
+========================= */
+
+.task-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+    .task-list{
+        gap:12px;
+    }
+
+}
