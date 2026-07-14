@@ -1,5 +1,6 @@
 .search-box{
   margin:18px 0;
+  position:relative;
 }
 
 .search-box input{
@@ -16,9 +17,18 @@
 
   background:rgba(255,255,255,.9);
 
-  transition:.25s;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
 
   font-size:15px;
+
+}
+
+.search-box input:hover{
+
+    background:rgba(255,255,255,.96);
 
 }
 
@@ -26,6 +36,34 @@
 
   transform:scale(1.01);
 
-  box-shadow:0 0 0 2px #4f9da6;
+  box-shadow:0 0 0 2px var(--secondary);
+
+}
+
+.search-box input::placeholder{
+
+    color:var(--text-light);
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+    .search-box{
+
+        margin:16px 0;
+
+    }
+
+    .search-box input{
+
+        font-size:14px;
+
+        padding:11px 12px;
+
+    }
 
 }

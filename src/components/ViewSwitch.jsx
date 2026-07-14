@@ -12,7 +12,7 @@ function ViewSwitch({
         </button>
 
         <button onClick={() => setView("board")}>
-            📌 Board
+            🗂️ Board
         </button>
 
     </div>

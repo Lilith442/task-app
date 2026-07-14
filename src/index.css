@@ -1,4 +1,13 @@
 /*index.css*/
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
 
 :root{
 
@@ -18,17 +27,54 @@
 
   --white:#ffffff;
 
+  --radius-sm:10px;
+
+  --radius-md:16px;
+
+  --radius-lg:24px;
+
+  --shadow-sm:0 6px 20px rgba(0,0,0,.06);
+
+  --shadow-md:0 10px 30px rgba(0,0,0,.10);
+
+  --shadow-lg:0 20px 60px rgba(0,0,0,.15);
+
+  --transition:.25s ease;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
 }
 
 body {
   margin: 0;
+
   font-family: Arial, sans-serif;
 
   background: linear-gradient(135deg, #d98c66, #e6c3a3);
+
+  color:var(--text);
+
   min-height: 100vh;
+
   background-attachment: fixed;
 
   overflow-x: hidden;
+
+  transition:
+        background .3s ease,
+        color .3s ease;
+}
+
+::selection{
+
+    background:var(--secondary);
+
+    color:white;
+
 }
 
 body.dark{
@@ -51,91 +97,46 @@ body.dark{
 
 }
 
-/* container */
-.container {
-  width: 100%;
-  max-width: 600px;
+::-webkit-scrollbar{
 
-  margin: 40px auto 80px;
+    width:10px;
 
-  padding: 30px;
-
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px);
-
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.18);
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* başlık */
-h1 {
-  text-align: center;
-  color: #0f5c63;
+::-webkit-scrollbar-track{
+
+    background:transparent;
+
 }
 
-/* input alanı */
-.input-group {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  flex-wrap: wrap;
+::-webkit-scrollbar-thumb{
+
+    background:var(--secondary);
+
+    border-radius:999px;
+
 }
 
-.input-group input {
-  flex: 2;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  background: rgba(255,255,255,0.85);
-  transition: all 0.25s ease;
-}
+::-webkit-scrollbar-thumb:hover{
 
-.input-group select {
-  padding: 10px;
-  border-radius: 8px;
-}
+    background:var(--primary);
 
-.input-group button {
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  background: #4f9da6;
-  color: white;
-  cursor: pointer;
-}
-
-input::placeholder {
-  opacity: 0.6;
-}
-
-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px #4f9da6;
-}
-
-.date-input{
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background:white;
-  font-size:15px;
-  width:140px;
 }
 
 /* butonlar */
 
 button {
   background: #4f9da6;
+  font:inherit;
   color: white;
   border: none;
   padding: 8px 14px;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
 }
 
 button:hover {
@@ -199,72 +200,3 @@ button:active {
   opacity: 0.7;
   margin-top: 8px;
 }
-
-  .user-box {
-    flex: 1;
-
-    min-width: 0;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-  }
-
-  /* INPUTS */
-
-  .input-group {
-    flex-direction: column;
-  }
-
-  .input-group input,
-  .input-group select,
-  .input-group button {
-    width: 90%;
-  }
-
-  .search-box input {
-    width: 100%;
-  }
-
-  /* FILTERS */
-
-  .filters,
-  .view-switch {
-    flex-wrap: wrap;
-  }
-
-  /* TASK CARD */
-
-  .task-actions {
-    width: 100%;
-
-    justify-content: flex-end;
-
-    flex-wrap: wrap;
-  }
-
-  /* BOARD */
-
-  .board {
-    grid-template-columns: 1fr;
-  }
-
-  .column {
-    min-height: auto;
-  }
-
-  /* STATS */
-
-  .stat-card {
-    padding: 18px;
-  }
-
-  /* CHART */
-
-  .chart-card {
-    padding: 16px;
-    overflow-x: auto;
-  }
-

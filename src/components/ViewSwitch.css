@@ -2,5 +2,48 @@
   display: flex;
   justify-content: center;
   gap: 10px;
+  flex-wrap:wrap;
   margin-bottom: 20px;
+}
+
+.view-switch button{
+
+    min-width:120px;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.view-switch button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,.12);
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+    .view-switch{
+
+        gap:8px;
+
+    }
+
+    .view-switch button{
+
+        flex:1;
+
+        min-width:120px;
+
+    }
+
 }

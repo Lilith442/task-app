@@ -1,6 +1,9 @@
 body.dark{
   background:linear-gradient(to bottom,#1e1e1e,#121212);
   color:#f1f1f1;
+  transition:
+        background .3s ease,
+        color .3s ease;
 }
 
 body.dark .container{
@@ -9,12 +12,14 @@ body.dark .container{
 
 body.dark .task-card{
   background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.08);
 }
 
 body.dark input,
 body.dark select{
   background:rgba(255,255,255,.1);
   color:white;
+  border:1px solid rgba(255,255,255,.08);
 }
 
 body.dark option{
@@ -23,8 +28,8 @@ body.dark option{
 }
 
 body.dark button{
-  background:#0f5c63;
-  color:white;
+  background:var(--primary);
+  color:var(--text);
 }
 
 body.dark .tag{
@@ -33,4 +38,11 @@ body.dark .tag{
 
 body.dark .login-container{
   background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+body.dark input::placeholder{
+
+    color:#bdbdbd;
+
 }
