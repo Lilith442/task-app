@@ -10,7 +10,7 @@ function Header({
         <div className="topbar">
 
         <div className="topbar-left">
-          <div className="logo-circle">⚡</div>
+          <div className="logo-circle">🧭</div>
 
           <div>
             <h3>Task-App</h3>
