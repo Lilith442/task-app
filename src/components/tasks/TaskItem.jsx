@@ -1,5 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import {
+  GripVertical,
+  Pencil,
+  Trash2,
+  CalendarDays,
+  Repeat,
+  ChevronDown,
+  ChevronRight,
+  Plus,
+} from "lucide-react";
 import "./TaskItem.css";
 
 function TaskItem({
@@ -52,14 +62,20 @@ function TaskItem({
             className="drag-handle"
             {...dragHandleProps}
           >
-            ☰
+            <GripVertical size={20} />
           </span>
 
-          <input
-            type="checkbox"
-            checked={!!task.completed}
-            onChange={() => toggleTask(task.id)}
-          />
+          <label className="task-checkbox">
+
+            <input
+                type="checkbox"
+                checked={!!task.completed}
+                onChange={() => toggleTask(task.id)}
+            />
+
+            <span className="checkmark"></span>
+
+          </label>
 
           {editingId === task.id ? (
             <input
@@ -74,8 +90,14 @@ function TaskItem({
 
         </div>
 
-        <span className={`priority ${task.priority || "medium"}`}>
-          {task.priority || "medium"}
+        <span className={`priority ${task.priority}`}>
+
+            {task.priority === "high" && "🔴 High"}
+
+            {task.priority === "medium" && "🟡 Medium"}
+
+            {task.priority === "low" && "🔵 Low"}
+
         </span>
 
       </div>
@@ -93,22 +115,37 @@ function TaskItem({
 
         </div>
 
-        <span className="progress-text">
-          {progress}% tamamlandı
-        </span>
+        <div className="progress-info">
 
+            <span>
+                {progress}% tamamlandı
+            </span>
+
+            <span>
+
+                {completedSubtasks} / {taskSubtasks.length}
+
+            </span>
+
+        </div>
       </div>
 
       {/* ================= BODY ================= */}
 
       <div className="task-body">
 
-        <button
+       <button
           className="toggle-subtasks-btn"
           onClick={() => setShowSubtasks(!showSubtasks)}
         >
-          {showSubtasks ? "▼" : "▶"} Alt Görevler ({taskSubtasks.length})
-        </button>
+          {showSubtasks ? (
+              <ChevronDown size={18}/>
+          ) : (
+              <ChevronRight size={18}/>
+          )}
+
+          Alt Görevler ({taskSubtasks.length})
+      </button>
 
         {showSubtasks && (
 
@@ -158,7 +195,7 @@ function TaskItem({
 
             }}
           >
-            +
+            <Plus size={18}/>
           </button>
 
         </div>
@@ -176,14 +213,18 @@ function TaskItem({
           </span>
 
           <span className="task-date">
-            📅 Bugün
+
+            <CalendarDays size={14}/>
+
+            Bugün
+
           </span>
 
           {task.repeat_type !== "none" && (
 
             <span className="task-repeat">
 
-              🔁{" "}
+              <Repeat size={14}/>{" "}
 
               {task.repeat_type === "daily"
                 ? "Her Gün"
@@ -215,7 +256,10 @@ function TaskItem({
 
               }}
             >
-              Düzenle
+              <>
+                {" "}<Pencil size={16}/>{" "}
+                Düzenle
+            </>
             </button>
 
           )}
@@ -223,7 +267,10 @@ function TaskItem({
           <button
             onClick={() => setDeleteId(task.id)}
           >
-            Sil
+            <>
+                <Trash2 size={16}/>{" "}
+                Sil
+            </>
           </button>
 
         </div>

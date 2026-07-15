@@ -14,6 +14,12 @@
 .board-task {
   margin-bottom: 14px;
 
+  padding: 18px;
+
+  border-radius:18px;
+
+  min-height:170px;
+
   cursor: grab;
 
   background: rgba(255,255,255,0.92);
@@ -30,14 +36,19 @@
   overflow: hidden;
 
   display:flex;
+
+  justify-content:space-between;
   flex-direction:column;
 }
 
 .board-task-top {
   margin-bottom: 14px;
 
-  font-size: 15px;
-  font-weight: 500;
+  color:var (--primary-text-color);
+
+  font-size:18px;
+
+  font-weight:700;
 
   line-height: 1.4;
 }
@@ -53,10 +64,10 @@
 }
 
 .board-task:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
 
   box-shadow:
-    0 15px 30px rgba(0,0,0,0.12);
+    0 18px 35px rgba(0,0,0,.12);
 
   border: 1px solid rgba(79,157,166,0.5);
 }
@@ -71,7 +82,7 @@
 
   border-radius: 18px;
 
-  padding: 18px;
+  padding:22px;
 
   min-height: 350px;
 
@@ -89,10 +100,14 @@
 }
 
 .column h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
+  display:flex;
+  justify-content:space-between;
 
-  font-size: 18px;
+  align-items:center;
+  margin-top: 0;
+  margin-bottom: 24px;
+
+  font-size: 22px;
 }
 
 .column-active {
@@ -111,7 +126,7 @@
 }
 
 .empty-column {
-  min-height:120px;
+  min-height:180px;
 
   display: flex;
   align-items: center;
@@ -119,11 +134,19 @@
 
   border: 2px dashed rgba(255,255,255,0.15);
 
-  border-radius: 14px;
+  border-radius: 18px;
 
   opacity: 0.5;
 
   font-size: 14px;
+
+  transition:.25s;
+}
+
+.empty-column:hover{
+
+    border-color:#4f9da6;
+
 }
 
 /* =========================
@@ -156,9 +179,11 @@
 
     .board-task-bottom{
 
-        flex-wrap:wrap;
+      margin-top:auto;
 
-        gap:10px;
+      flex-wrap:wrap;
+
+      gap:10px;
 
     }
 
