@@ -41,13 +41,16 @@ function TaskItem({
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.2 }}
     >
-      {/* HEADER */}
+
+      {/* ================= HEADER ================= */}
+
       <div className="task-header">
+
         <div className="task-header-left">
+
           <span
             className="drag-handle"
             {...dragHandleProps}
-            style={{ cursor: "grab" }}
           >
             ☰
           </span>
@@ -68,23 +71,37 @@ function TaskItem({
               {task.text}
             </h3>
           )}
+
         </div>
+
+        <span className={`priority ${task.priority || "medium"}`}>
+          {task.priority || "medium"}
+        </span>
+
       </div>
 
-      {/* BODY */}
-      <div className="task-body">
-        <div className="subtask-progress">
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{
-                width: `${progress}%`,
-              }}
-            />
-          </div>
+      {/* ================= PROGRESS ================= */}
 
-          <span>{progress}% tamamlandı</span>
+      <div className="task-progress">
+
+        <div className="progress-bar">
+
+          <div
+            className="progress-fill"
+            style={{ width: `${progress}%` }}
+          />
+
         </div>
+
+        <span className="progress-text">
+          {progress}% tamamlandı
+        </span>
+
+      </div>
+
+      {/* ================= BODY ================= */}
+
+      <div className="task-body">
 
         <button
           className="toggle-subtasks-btn"
@@ -94,12 +111,16 @@ function TaskItem({
         </button>
 
         {showSubtasks && (
+
           <div className="subtask-list">
+
             {taskSubtasks.map((subtask) => (
+
               <div
                 key={subtask.id}
                 className="subtask-item"
               >
+
                 <input
                   type="checkbox"
                   checked={subtask.completed}
@@ -109,12 +130,17 @@ function TaskItem({
                 />
 
                 <span>{subtask.text}</span>
+
               </div>
+
             ))}
+
           </div>
+
         )}
 
         <div className="subtask-input">
+
           <input
             value={subtaskText}
             onChange={(e) => setSubtaskText(e.target.value)}
@@ -123,66 +149,87 @@ function TaskItem({
 
           <button
             onClick={() => {
+
               if (!subtaskText.trim()) return;
 
               addSubtask(task.id, subtaskText);
 
               setSubtaskText("");
+
             }}
           >
             +
           </button>
+
         </div>
+
       </div>
 
-      {/* FOOTER */}
+      {/* ================= FOOTER ================= */}
+
       <div className="task-footer">
+
         <div className="task-meta">
+
           <span className={`tag ${task.category}`}>
             {task.category}
           </span>
 
-          <span className={`priority ${task.priority || "medium"}`}>
-            {task.priority || "medium"}
-          </span>
-
           <span className="task-date">
-            Bugün
+            📅 Bugün
           </span>
 
           {task.repeat_type !== "none" && (
+
             <span className="task-repeat">
+
               🔁{" "}
+
               {task.repeat_type === "daily"
                 ? "Her Gün"
                 : task.repeat_type === "weekly"
                 ? "Haftalık"
                 : "2 Günde Bir"}
+
             </span>
+
           )}
+
         </div>
 
         <div className="task-actions">
+
           {editingId === task.id ? (
+
             <button onClick={() => saveEdit(task.id)}>
               Kaydet
             </button>
+
           ) : (
+
             <button
               onClick={() => {
+
                 setEditingId(task.id);
                 setEditText(task.text);
+
               }}
             >
               Düzenle
             </button>
+
           )}
 
-          <button onClick={() => setDeleteId(task.id)}>
+          <button
+            onClick={() => setDeleteId(task.id)}
+          >
             Sil
           </button>
+
         </div>
+
       </div>
+
     </motion.div>
   );
 }
