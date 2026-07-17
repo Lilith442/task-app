@@ -27,6 +27,7 @@ import "./components/Login.css";
 import "./styles/Theme.css";
 import "./styles/Layout.css";
 import "./components/Search.css";
+import DashboardSection from "./components/DashboardSection";
 
 // 🔥 ITEM
 
@@ -742,7 +743,7 @@ return (
         logout={logout}
     />
         <motion.div
-          className="container"
+          className={`container ${view === "board" ? "board-container" : ""}`}
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -750,76 +751,21 @@ return (
 
           <h1>Task App</h1>
 
-          <div className="date-navigation">
-          <button onClick={() => changeDay(-1)}>
-            ◀
-          </button>
-          <h3>
-            {new Date(selectedDate).toLocaleDateString("tr-TR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric"
-            })}
-          </h3>
+          <DashboardSection
+            selectedDate={selectedDate}
+            changeDay={changeDay}
+            goToToday={goToToday}
 
-          <button
-            className="today-btn"
-            onClick={goToToday}
-          >
-            Bugün
-          </button>
+            streak={streak}
+            bestStreak={bestStreak}
 
-          <button onClick={() => changeDay(1)}>
-            ▶
-          </button>
+            tasks={tasks}
+            percent={percent}
 
-        </div>
-
-          <div className="streak-card">
-            <div className="streak-fire">🔥</div>
-
-            <div>
-              <h3>{streak} Günlük Seri</h3>
-
-              <p>
-                {streak > 0
-                  ? "Bugün görev tamamlandı ✅"
-                  : "Bugün henüz görev tamamlanmadı"}
-              </p>
-              <p className="best-streak">
-                🏆 En İyi Seri: {bestStreak} Gün {" "}
-              </p>
-            </div>
-          </div>
-
-          <div className="selected-date-info">
-
-            📅 Görüntülenen gün    
-
-            <strong>
-              {new Date(selectedDate).toLocaleDateString("tr-TR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric"
-              })}
-            </strong>
-
-          </div>
-
-          <p style={{ opacity: 0.6 }}>
-            {tasks.length} görev • {tasks.filter(t => !t.completed).length} aktif
-          </p>
-
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: percent + "%" }}
-            />
-          </div>
-
-          <p className="progress-text">
-            %{percent} tamamlandı
-          </p>
+            todayCompleted={todayCompleted}
+            dailyGoal={dailyGoal}
+            goalPercent={goalPercent}
+          />
 
           <div className="input-group mobile-sticky">
 
@@ -891,36 +837,7 @@ return (
             />
 
           </div>
-          <div className="daily-goal-card">
-
-          <div className="goal-header">
-
-            <h3>🎯 Günlük Hedef</h3>
-
-            <span>
-              {todayCompleted} / {dailyGoal}
-            </span>
-
-          </div>
-
-          <div className="goal-progress">
-
-            <div
-              className="goal-progress-fill"
-              style={{ width: `${goalPercent}%` }}
-            />
-
-          </div>
-
-          <p>
-
-            {goalPercent === 100
-              ? "🎉 Harika! Günlük hedefini tamamladın."
-              : `Bugünkü hedef için ${dailyGoal - todayCompleted} görev kaldı.`}
-
-          </p>
-
-        </div>
+          
         <Stats
 
             totalTasks={tasks.length}
