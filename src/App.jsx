@@ -3,16 +3,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip
-} from "recharts";
-import Calendar from "./components/Calendar";
-import WeeklyActivity from "./components/WeeklyActivity";
-import Stats from "./components/Stats";
 import Filters from "./components/Filters";
 import ViewSwitch from "./components/ViewSwitch";
 import Header from "./components/Header";
@@ -28,6 +18,9 @@ import "./styles/Theme.css";
 import "./styles/Layout.css";
 import "./components/Search.css";
 import DashboardSection from "./components/DashboardSection";
+import TaskForm from "./components/TaskForm";
+import ToolbarSection from "./components/ToolbarSection";
+import { useCalendarNavigation } from "./hooks/useCalendarNavigation";
 
 // 🔥 ITEM
 
@@ -365,23 +358,15 @@ const addSubtask = async (taskId, text) => {
   setDraggedTask(null);
 };
 
-const changeDay = (amount) => {
-
-  const date = new Date(selectedDate);
-
-  date.setDate(date.getDate() + amount);
-
-  setSelectedDate(date.toISOString().split("T")[0]);
-
-};
-
-const goToToday = () => {
-
-  setSelectedDate(
-    new Date().toISOString().split("T")[0]
-  );
-
-};
+const {
+    changeDay,
+    goToToday,
+    goToPreviousMonth,
+    goToNextMonth,
+} = useCalendarNavigation(
+    selectedDate,
+    setSelectedDate
+);
 
 const formatDueDate = (date) => {
   if (!date) return "No date";
@@ -507,26 +492,6 @@ const formatDueDate = (date) => {
   }
 
   return best;
-
-};
-
-const goToPreviousMonth = () => {
-
-  const date = new Date(selectedDate);
-
-  date.setMonth(date.getMonth() - 1);
-
-  setSelectedDate(date.toISOString().split("T")[0]);
-
-};
-
-const goToNextMonth = () => {
-
-  const date = new Date(selectedDate);
-
-  date.setMonth(date.getMonth() + 1);
-
-  setSelectedDate(date.toISOString().split("T")[0]);
 
 };
 
@@ -765,142 +730,56 @@ return (
             todayCompleted={todayCompleted}
             dailyGoal={dailyGoal}
             goalPercent={goalPercent}
-          />
 
-          <div className="input-group mobile-sticky">
-
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && addTask()}
-              placeholder="Görev ekle"
-            />
-
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="genel">Genel</option>
-              <option value="iş">İş</option>
-              <option value="kişisel">Kişisel</option>
-            </select>
-
-            <select
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-            >
-              <option value="low">Düşük öncelik</option>
-              <option value="medium">Orta</option>
-              <option value="high">Acil</option>
-            </select>
-            <input
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              className="date-input"
-            />
-            <select
-              value={repeatType}
-              onChange={(e) => setRepeatType(e.target.value)}
-            >
-
-              <option value="none">
-                Tek Sefer
-              </option>
-
-              <option value="daily">
-                Her Gün
-              </option>
-
-              <option value="weekly">
-                Haftalık
-              </option>
-
-              <option value="every2days">
-                2 Günde Bir
-              </option>
-
-            </select>
-            <button onClick={addTask}>
-              {loading ? "..." : "Ekle"}
-            </button>
-
-          </div>
-
-          <div className="search-box">
-
-            <input
-              type="text"
-              placeholder="Görev Ara"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-
-          </div>
-          
-        <Stats
-
-            totalTasks={tasks.length}
             completedTasks={completedTasks}
             activeTasks={activeTasks}
-            bestStreak={bestStreak}
 
+            chartData={chartData}
+            COLORS={COLORS}
+
+            goToPreviousMonth={goToPreviousMonth}
+            goToNextMonth={goToNextMonth}
+
+            setSelectedDate={setSelectedDate}
+
+            weeklyData={weeklyData}
         />
 
-          <div className="chart-card">
+        <TaskForm
 
-            <h3>Task Progress</h3>
+          input={input}
+          setInput={setInput}
 
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
+          category={category}
+          setCategory={setCategory}
 
-                <Pie
-                  data={chartData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  dataKey="value"
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={index}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
+          priority={priority}
+          setPriority={setPriority}
 
-                <Tooltip />
+          dueDate={dueDate}
+          setDueDate={setDueDate}
 
-              </PieChart>
-            </ResponsiveContainer>
+          repeatType={repeatType}
+          setRepeatType={setRepeatType}
 
-          </div>
+          addTask={addTask}
 
-          <Calendar
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-              tasks={tasks}
-              goToPreviousMonth={goToPreviousMonth}
-              goToNextMonth={goToNextMonth}
-          />  
+          loading={loading}
 
-          <WeeklyActivity
-            weeklyData={weeklyData}
-          />
-          
-          <Filters
+      />
 
-            filter={filter}
-            setFilter={setFilter}
+      <ToolbarSection
 
-          />
+          search={search}
+          setSearch={setSearch}
 
-          <ViewSwitch
+          filter={filter}
+          setFilter={setFilter}
 
-              view={view}
-              setView={setView}
+          view={view}
+          setView={setView}
 
-          />
+      />
 
           {filteredTasks.length === 0 && (
             <motion.div

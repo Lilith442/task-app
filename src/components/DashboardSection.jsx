@@ -13,32 +13,33 @@ import WeeklyActivity from "./WeeklyActivity";
 import Stats from "./Stats";
 
 function DashboardSection({
-  selectedDate,
-  changeDay,
-  goToToday,
+    selectedDate,
+    setSelectedDate,
 
-  streak,
-  bestStreak,
+    changeDay,
+    goToToday,
 
-  tasks,
-  percent,
+    streak,
+    bestStreak,
 
-  todayCompleted,
-  dailyGoal,
-  goalPercent,
+    tasks,
 
-  completedTasks,
-  activeTasks,
+    percent,
 
-  chartData,
-  COLORS,
+    todayCompleted,
+    dailyGoal,
+    goalPercent,
 
-  goToPreviousMonth,
-  goToNextMonth,
+    completedTasks,
+    activeTasks,
 
-  setSelectedDate,
+    chartData,
+    COLORS,
 
-  weeklyData,
+    goToPreviousMonth,
+    goToNextMonth,
+
+    weeklyData,
 }) {
   return (
   <>
@@ -89,15 +90,15 @@ function DashboardSection({
 
     <div className="selected-date-info">
 
-            📅 Görüntülenen gün    
+        📅 Görüntülenen gün    
 
-            <strong>
-              {new Date(selectedDate).toLocaleDateString("tr-TR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric"
-              })}
-            </strong>
+        <strong>
+            {new Date(selectedDate).toLocaleDateString("tr-TR", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+            })}
+        </strong>
 
     </div>
 
@@ -145,6 +146,56 @@ function DashboardSection({
             </p>
     
     </div>
+
+    <Stats
+    
+        totalTasks={tasks.length}
+        completedTasks={completedTasks}
+        activeTasks={activeTasks}
+        bestStreak={bestStreak}
+    
+    />
+
+    <div className="chart-card">
+    
+        <h3>Task Progress</h3>
+    
+        <ResponsiveContainer width="100%" height={220}>
+            <PieChart>
+    
+                <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="value"
+                >
+                      {chartData.map((entry, index) => (
+                        <Cell
+                          key={index}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                </Pie>
+    
+                <Tooltip />
+    
+            </PieChart>
+        </ResponsiveContainer>
+    
+    </div>
+
+    <Calendar
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        tasks={tasks}
+        goToPreviousMonth={goToPreviousMonth}
+        goToNextMonth={goToNextMonth}
+     />
+
+    <WeeklyActivity
+        weeklyData={weeklyData}
+    />
   </>
 );
 }
