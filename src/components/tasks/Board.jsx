@@ -97,26 +97,7 @@ function Board({
                     <h4>{task.text}</h4>
 
                   </div>
-                  <div className="board-progress">
-
-                    <div className="board-progress-bar">
-
-                        <div
-                            className="board-progress-fill"
-                            style={{
-                                width: `${progress}%`,
-                            }}
-                        />
-
-                    </div>
-
-                    <span className="board-progress-text">
-
-                        {progress}%
-
-                    </span>
-
-                </div>
+                
                   <div className="board-task-bottom">
 
                     <span className={`tag ${task.category}`}>

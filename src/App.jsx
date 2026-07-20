@@ -33,7 +33,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [subtasks, setSubtasks] = useState([]);
   const [input, setInput] = useState("");
-  const [category, setCategory] = useState("genel");
+  const [category, setCategory] = useState("Genel");
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
   const [repeatType, setRepeatType] = useState("none");

@@ -36,9 +36,9 @@ function TaskForm({
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="genel">Genel</option>
-              <option value="iş">İş</option>
-              <option value="kişisel">Kişisel</option>
+              <option value="Genel">Genel</option>
+              <option value="İş">İş</option>
+              <option value="Kişisel">Kişisel</option>
             </select>
 
             <select
