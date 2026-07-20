@@ -21,6 +21,11 @@ import DashboardSection from "./components/DashboardSection";
 import TaskForm from "./components/TaskForm";
 import ToolbarSection from "./components/ToolbarSection";
 import { useCalendarNavigation } from "./hooks/useCalendarNavigation";
+import ProgressOverview from "./components/ProgressOverview";
+import DailyGoalCard from "./components/DailyGoalCard";
+import Stats from "./components/Stats";
+import ChartCard from "./components/ChartCard";
+import WeeklyActivity from "./components/WeeklyActivity";
 
 // 🔥 ITEM
 
@@ -716,70 +721,82 @@ return (
 
           <h1>Task App</h1>
 
-          <DashboardSection
-            selectedDate={selectedDate}
-            changeDay={changeDay}
-            goToToday={goToToday}
+          <div className="dashboard-layout">
 
-            streak={streak}
-            bestStreak={bestStreak}
+            <div className="dashboard-left">
 
-            tasks={tasks}
-            percent={percent}
+                <DashboardSection
+                selectedDate={selectedDate}
+                changeDay={changeDay}
+                goToToday={goToToday}
 
-            todayCompleted={todayCompleted}
-            dailyGoal={dailyGoal}
-            goalPercent={goalPercent}
+                streak={streak}
+                bestStreak={bestStreak}
 
-            completedTasks={completedTasks}
-            activeTasks={activeTasks}
+                tasks={tasks}
+                percent={percent}
 
-            chartData={chartData}
-            COLORS={COLORS}
+                todayCompleted={todayCompleted}
+                dailyGoal={dailyGoal}
+                goalPercent={goalPercent}
 
-            goToPreviousMonth={goToPreviousMonth}
-            goToNextMonth={goToNextMonth}
+                completedTasks={completedTasks}
+                activeTasks={activeTasks}
 
-            setSelectedDate={setSelectedDate}
+                chartData={chartData}
+                COLORS={COLORS}
 
-            weeklyData={weeklyData}
-        />
+                goToPreviousMonth={goToPreviousMonth}
+                goToNextMonth={goToNextMonth}
 
-        <TaskForm
+                setSelectedDate={setSelectedDate}
 
-          input={input}
-          setInput={setInput}
+                weeklyData={weeklyData}
+            />
 
-          category={category}
-          setCategory={setCategory}
+            </div>
 
-          priority={priority}
-          setPriority={setPriority}
+            <div className="dashboard-right">
 
-          dueDate={dueDate}
-          setDueDate={setDueDate}
+                <TaskForm
 
-          repeatType={repeatType}
-          setRepeatType={setRepeatType}
+                  input={input}
+                  setInput={setInput}
 
-          addTask={addTask}
+                  category={category}
+                  setCategory={setCategory}
 
-          loading={loading}
+                  priority={priority}
+                  setPriority={setPriority}
 
-      />
+                  dueDate={dueDate}
+                  setDueDate={setDueDate}
 
-      <ToolbarSection
+                  repeatType={repeatType}
+                  setRepeatType={setRepeatType}
 
-          search={search}
-          setSearch={setSearch}
+                  addTask={addTask}
 
-          filter={filter}
-          setFilter={setFilter}
+                  loading={loading}
 
-          view={view}
-          setView={setView}
+              />
 
-      />
+                <ToolbarSection
+
+                  search={search}
+                  setSearch={setSearch}
+
+                  filter={filter}
+                  setFilter={setFilter}
+
+                  view={view}
+                  setView={setView}
+
+              />
+
+            </div>
+
+        </div>
 
           {filteredTasks.length === 0 && (
             <motion.div
@@ -840,6 +857,37 @@ return (
               toggleSubtask={toggleSubtask}
             />
           )}
+
+          <ProgressOverview
+            tasks={tasks}
+            percent={percent}
+          />
+
+          <DailyGoalCard
+            todayCompleted={todayCompleted}
+            dailyGoal={dailyGoal}
+            goalPercent={goalPercent}
+          />
+
+          <Stats
+            totalTasks={tasks.length}
+            completedTasks={completedTasks}
+            activeTasks={activeTasks}
+            bestStreak={bestStreak}
+          />
+
+       <div className="analytics-grid">
+
+          <ChartCard
+              chartData={chartData}
+              COLORS={COLORS}
+          />
+
+          <WeeklyActivity
+              weeklyData={weeklyData}
+          />
+
+      </div>
 
         </motion.div>
 

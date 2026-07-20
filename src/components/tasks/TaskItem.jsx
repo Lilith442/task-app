@@ -26,7 +26,7 @@ function TaskItem({
   subtasks,
   toggleSubtask,
 }) {
-  const [showSubtasks, setShowSubtasks] = useState(true);
+  const [showSubtasks, setShowSubtasks] = useState(false);
   const [subtaskText, setSubtaskText] = useState("");
 
   const taskSubtasks = subtasks.filter(
