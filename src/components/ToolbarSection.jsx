@@ -1,5 +1,6 @@
 import Filters from "./Filters";
 import ViewSwitch from "./ViewSwitch";
+import "./ToolbarSection.css";
 
 function ToolbarSection({
 
@@ -16,7 +17,7 @@ function ToolbarSection({
 
     return (
 
-        <>
+        <div className="toolbar-section">
         <div className="search-box">
         
             <input
@@ -41,7 +42,7 @@ function ToolbarSection({
                 setView={setView}
             
             />
-        </>
+        </div>
 
     );
 

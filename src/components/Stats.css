@@ -65,12 +65,16 @@
 
 .streak-card {
   display: flex;
+
   align-items: center;
+
   gap: 14px;
 
   margin: 20px 0;
+  
+  margin-bottom:32px;
 
-  padding: 16px;
+  padding: 22px;
 
   border-radius: 18px;
 
@@ -95,7 +99,14 @@
 }
 
 .streak-fire {
-  font-size: 34px;
+  display: flex;
+
+  font-size:52px;
+
+  align-items:center;
+
+  justify-content:center;
+
   flex-shrink:0;
 }
 
@@ -113,6 +124,58 @@
   margin-top: 8px;
   font-size: 13px;
   opacity: 0.75;
+}
+
+.streak-content{
+
+    flex:1;
+
+}
+
+.streak-label{
+
+    display:block;
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    color:var(--text-light);
+
+    margin-bottom:4px;
+
+}
+
+.streak-number{
+
+    margin:0;
+
+    font-size:34px;
+
+    color:var(--primary);
+
+    line-height:1.1;
+
+}
+
+.streak-message{
+
+    margin-top:10px;
+
+    color:var(--text-light);
+
+}
+
+.streak-divider{
+
+    margin:14px 0;
+
+    height:1px;
+
+    background:rgba(0,0,0,.08);
+
 }
 
 .daily-goal-card {

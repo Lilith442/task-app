@@ -1,12 +1,17 @@
 .view-switch {
   display: flex;
+
   justify-content: center;
-  gap: 10px;
+
+  gap: 12px;
+
   flex-wrap:wrap;
+
   margin-bottom: 20px;
 }
 
 .view-switch button{
+    flex: 1;
 
     min-width:120px;
 

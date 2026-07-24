@@ -41,20 +41,23 @@
 @media (max-width:768px){
 
     .filters{
+      display: flex;
 
-        flex-wrap:wrap;
+      flex-wrap:wrap;
 
-        justify-content:center;
+      justify-content:stretch;
 
-        gap:8px;
+      gap:12px;
 
     }
 
     .filters button{
 
-        flex:1;
+      flex:1;
 
-        min-width:120px;
+      min-width:120px;
+
+      padding:10px 14px;
 
     }
 

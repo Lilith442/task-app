@@ -9,15 +9,23 @@ function StreakCard({
         🔥
       </div>
 
-      <div>
+      <div className="streak-content">
 
-        <h3>{streak} Günlük Seri</h3>
+        <span className="streak-label">
+          Daily Streak
+        </span>
 
-        <p>
+        <h2 className="streak-number">
+          {streak} Gün
+        </h2>
+
+        <p className="streak-message">
           {streak > 0
             ? "Bugün görev tamamlandı ✅"
-            : "Bugün henüz görev tamamlanmadı"}
+            : "İlk görevin seni bekliyor 🚀"}
         </p>
+
+        <div className="streak-divider"></div>
 
         <p className="best-streak">
           🏆 En İyi Seri: {bestStreak} Gün

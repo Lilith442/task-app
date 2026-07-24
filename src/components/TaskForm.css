@@ -1,0 +1,125 @@
+/* =========================
+   TASK FORM
+========================= */
+.input-group {
+  display: flex;
+
+  gap: 12px;
+
+  margin: 0;
+
+  flex-wrap: wrap;
+}
+
+.input-group input {
+  flex: 2;
+
+  min-width: 220px;
+
+  padding:13px 16px;
+
+  border-radius: 14px;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 15px;
+
+  background:rgba(255,255,255,.9);
+
+  transition: all 0.25s ease;
+}
+
+.input-group select {
+    min-width:140px;
+
+    padding:13px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:white;
+}
+
+.input-group button {
+  padding: 13px 22px;
+
+  border-radius: 14px;
+
+  font-weight: 400;
+
+  border: none;
+
+  background: #4f9da6;
+
+  color: white;
+
+  cursor: pointer;
+}
+
+input::placeholder {
+  opacity: 0.6;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #4f9da6;
+}
+
+.date-input{
+  padding:13px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:white;
+
+  font-size:15px;
+
+  width:170px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:768px){
+
+    .input-group{
+
+        display:grid;
+
+        grid-template-columns:1fr;
+
+        gap:12px;
+
+    }
+
+    .input-group input,
+
+    .input-group select,
+
+    .date-input,
+
+    .input-group button{
+
+        width:100%;
+
+        min-width:0;
+
+    }
+
+    .input-group button{
+
+        margin-top:6px;
+
+        height:48px;
+
+        font-size:15px;
+
+    }
+
+}
