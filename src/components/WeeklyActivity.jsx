@@ -1,5 +1,6 @@
 import React from "react";
 import "./WeeklyActivity.css";
+import { BarChart3 } from "lucide-react";
 
 function WeeklyActivity({
 
@@ -10,7 +11,7 @@ function WeeklyActivity({
 
           <div className="weekly-card">
 
-            <h3>📅 Weekly Activity</h3>
+            <h3><BarChart3 size={22}/> Haftalık Aktivite</h3>
 
             {weeklyData.map((item) => (
 

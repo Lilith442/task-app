@@ -28,13 +28,18 @@
 }
 
 .chart-card h3 {
-  font-size:22px;
+display:flex;
+align-items:center;
+justify-content:center;
 
-  margin-bottom:16px;
+gap:10px;
+font-size:22px;
 
-  color:#0f5c63;
+margin-bottom:16px;
 
-  text-align:left;
+color:#0f5c63;
+
+text-align:left;
 }
 
 .weekly-card{
@@ -65,6 +70,10 @@
 }
 
 .weekly-card h3{
+display:flex;
+align-items:center;
+
+gap:10px;
 font-size:22px;
 
 margin-bottom:18px;

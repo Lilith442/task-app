@@ -1,5 +1,6 @@
 import React from "react";
 import "./Calendar.css";
+import { CalendarDays } from "lucide-react";
 
 function Calendar({
 
@@ -51,30 +52,37 @@ while (calendarDays.length < 42) {
 }
   return (
     
-              <div className="calendar-card">
+  <div className="calendar-card">
     
-                <h3>📅 Takvim </h3>
-    
-                <button
-                  className="calendar-nav"
-                  onClick={goToPreviousMonth}
-                >
-                  ◀
-                </button>
-    
-                <h4>
-                  {new Date(selectedDate).toLocaleDateString("tr-TR", {
-                    month: "long",
-                    year: "numeric"
-                  })}
-                </h4>
-    
-                <button
-                  className="calendar-nav"
-                  onClick={goToNextMonth}
-                >
-                  ▶
-                </button>
+      <h3>
+    <CalendarDays size={22}/>
+          Takvim
+      </h3>
+
+      <div className="calendar-header">
+
+          <button
+              className="calendar-nav"
+              onClick={goToPreviousMonth}
+          >
+              ‹
+          </button>
+
+          <h4>
+              {new Date(selectedDate).toLocaleDateString("tr-TR",{
+                  month:"long",
+                  year:"numeric"
+              })}
+          </h4>
+
+          <button
+              className="calendar-nav"
+              onClick={goToNextMonth}
+          >
+              ›
+          </button>
+
+      </div>
     
                 <div className="calendar-weekdays">
     

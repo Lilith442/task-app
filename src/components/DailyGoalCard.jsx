@@ -1,3 +1,5 @@
+import { Target } from "lucide-react";
+
 function DailyGoalCard({
   todayCompleted,
   dailyGoal,
@@ -7,7 +9,7 @@ function DailyGoalCard({
     <div className="daily-goal-card">
 
       <div className="goal-header">
-        <h3>🎯 Günlük Hedef</h3>
+        <h3><Target size={22}/> Günlük Hedef</h3>
 
         <span>
           {todayCompleted} / {dailyGoal}

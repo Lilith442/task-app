@@ -1,3 +1,5 @@
+import { Flame, Trophy } from "lucide-react";
+
 function StreakCard({
   streak,
   bestStreak,
@@ -6,7 +8,7 @@ function StreakCard({
     <div className="streak-card">
 
       <div className="streak-fire">
-        🔥
+        <Flame size={54} strokeWidth={2.3}/>
       </div>
 
       <div className="streak-content">
@@ -28,7 +30,8 @@ function StreakCard({
         <div className="streak-divider"></div>
 
         <p className="best-streak">
-          🏆 En İyi Seri: {bestStreak} Gün
+          <Trophy size={15}/>
+           {" "} En İyi Seri: {bestStreak} Gün
         </p>
 
       </div>

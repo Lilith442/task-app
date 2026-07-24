@@ -26,6 +26,7 @@ import DailyGoalCard from "./components/DailyGoalCard";
 import Stats from "./components/Stats";
 import ChartCard from "./components/ChartCard";
 import WeeklyActivity from "./components/WeeklyActivity";
+import StreakCard from "./components/StreakCard";
 
 // 🔥 ITEM
 
@@ -721,6 +722,11 @@ return (
 
           <h1>Task App</h1>
 
+          <StreakCard
+            streak={streak}
+            bestStreak={bestStreak}
+          />
+
           <div className="dashboard-layout">
 
             <div className="dashboard-left">
@@ -781,22 +787,20 @@ return (
 
               />
 
-                <ToolbarSection
-
-                  search={search}
-                  setSearch={setSearch}
-
-                  filter={filter}
-                  setFilter={setFilter}
-
-                  view={view}
-                  setView={setView}
-
-              />
-
             </div>
 
         </div>
+
+        <ToolbarSection
+
+          search={search}
+          setSearch={setSearch}
+          filter={filter}
+          setFilter={setFilter}
+          view={view}
+          setView={setView}
+
+        />
 
           {filteredTasks.length === 0 && (
             <motion.div

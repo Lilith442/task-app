@@ -5,12 +5,13 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { PieChart as PieChartIcon } from "lucide-react";
 
 function ChartCard({ chartData, COLORS }) {
   return (
     <div className="chart-card">
 
-      <h3>📊 Görev Dağılımı</h3>
+      <h3><PieChartIcon size={22}/> Görev Dağılımı</h3>
 
       <ResponsiveContainer width="100%" height={160}>
 

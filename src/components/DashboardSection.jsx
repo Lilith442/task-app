@@ -1,5 +1,4 @@
 import Calendar from "./Calendar";
-import StreakCard from "./StreakCard";
 
 function DashboardSection({
     selectedDate,
@@ -15,12 +14,7 @@ function DashboardSection({
 }) {
   return (
     <>
-      <StreakCard
-        streak={streak}
-        bestStreak={bestStreak}
-      />
-
-      <Calendar
+     <Calendar
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         tasks={tasks}
