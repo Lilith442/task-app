@@ -790,40 +790,32 @@ return (
             </div>
 
         </div>
+          <div className="tasks-section">
 
-        <div className="tasks-section">
+            <div className="tasks-header">
 
-          <div className="tasks-title">
+              <div className="tasks-title">
 
-            <h2>📝 Görevlerim</h2>
+                <h2>📝 Görevlerim</h2>
 
-            <p>
-              Görevlerinizi bulun, düzenleyin ve yönetin.
-            </p>
+                <p>
+                  Görevlerinizi bulun, filtreleyin ve yönetin.
+                </p>
+
+              </div>
+
+            </div>
+
+            <ToolbarSection
+              search={search}
+              setSearch={setSearch}
+              filter={filter}
+              setFilter={setFilter}
+              view={view}
+              setView={setView}
+            />
 
           </div>
-
-          <ToolbarSection
-            search={search}
-            setSearch={setSearch}
-            filter={filter}
-            setFilter={setFilter}
-            view={view}
-            setView={setView}
-          />
-
-        </div>
-
-        <ToolbarSection
-
-          search={search}
-          setSearch={setSearch}
-          filter={filter}
-          setFilter={setFilter}
-          view={view}
-          setView={setView}
-
-        />
 
           {filteredTasks.length === 0 && (
             <motion.div

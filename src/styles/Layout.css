@@ -79,9 +79,13 @@ h1 {
 
 .tasks-section{
 
-    margin-top:40px;
+    margin-top:36px;
 
     margin-bottom:28px;
+
+    padding-top:24px;
+
+    border-top:1px solid rgba(255,255,255,.25);
 
 }
 
@@ -89,7 +93,7 @@ h1 {
 
     display:flex;
 
-    align-items:center;
+    align-items:flex-end;
 
     justify-content:space-between;
 
@@ -107,12 +111,6 @@ h1 {
 
 }
 
-.tasks-section{
-
-    margin-top:40px;
-
-}
-
 .tasks-title{
 
     margin-bottom:22px;
@@ -125,11 +123,15 @@ h1 {
 
     font-size:30px;
 
-    margin-bottom:6px;
+    font-weight:700;
+
+    margin: 0;
 
 }
 
 .tasks-title p{
+
+    margin-top:6px;
 
     color:var(--text-light);
 

@@ -10,6 +10,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
+  margin-bottom:0;
   background: #4f9da6;
   color: white;
   cursor: pointer;
@@ -45,7 +46,7 @@
 
       flex-wrap:wrap;
 
-      justify-content:stretch;
+      justify-content:flex-start;
 
       gap:12px;
 
