@@ -107,6 +107,36 @@ h1 {
 
 }
 
+.tasks-section{
+
+    margin-top:40px;
+
+}
+
+.tasks-title{
+
+    margin-bottom:22px;
+
+}
+
+.tasks-title h2{
+
+    color:var(--primary);
+
+    font-size:30px;
+
+    margin-bottom:6px;
+
+}
+
+.tasks-title p{
+
+    color:var(--text-light);
+
+    font-size:15px;
+
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
