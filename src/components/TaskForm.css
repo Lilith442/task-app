@@ -1,126 +1,143 @@
 /* =========================
    TASK FORM
 ========================= */
-.input-group {
-  display: flex;
 
-  gap: 12px;
-
-  margin: 0;
-
+.task-form-card{
   margin-top: 33px;
 
-  flex-wrap: wrap;
+    background:rgba(255,255,255,.14);
+
+    border:1px solid rgba(255,255,255,.22);
+
+    border-radius:22px;
+
+    padding:24px;
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
 }
 
-.input-group input {
-  flex: 2;
+.task-form-header{
 
-  min-width: 220px;
+    margin-bottom:22px;
 
-  padding:13px 16px;
-
-  border-radius: 14px;
-
-  border: none;
-
-  outline: none;
-
-  font-size: 15px;
-
-  background:rgba(255,255,255,.9);
-
-  transition: all 0.25s ease;
 }
 
-.input-group select {
-    min-width:140px;
+.task-form-header h3{
 
-    padding:13px;
+    margin:0;
+
+    font-size:24px;
+
+    color:var(--primary);
+
+}
+
+.task-form-header p{
+
+    margin-top:6px;
+
+    color:var(--text-light);
+
+}
+
+/* ========================= */
+
+.input-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.input-group input,
+
+.input-group select,
+
+.date-input{
+
+    width:100%;
+
+    padding:13px 16px;
 
     border:none;
 
     border-radius:14px;
 
-    background:white;
+    font-size:15px;
+
+    background:rgba(255,255,255,.92);
+
+    transition:.25s;
+
 }
 
-.input-group button {
-  padding: 13px 22px;
+.input-group input:focus,
 
-  border-radius: 14px;
+.input-group select:focus,
 
-  font-weight: 400;
+.date-input:focus{
 
-  border: none;
+    outline:none;
 
-  background: #4f9da6;
+    box-shadow:0 0 0 3px rgba(79,157,166,.18);
 
-  color: white;
-
-  cursor: pointer;
 }
 
-input::placeholder {
-  opacity: 0.6;
+.form-row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:14px;
+
 }
 
-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px #4f9da6;
+.input-group button{
+
+    width:100%;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:var(--secondary);
+
+    color:white;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
 }
 
-.date-input{
-  padding:13px;
+.input-group button:hover{
 
-  border:none;
+    transform:translateY(-2px);
 
-  border-radius:14px;
+    background:var(--primary);
 
-  background:white;
-
-  font-size:15px;
-
-  width:170px;
 }
 
 /* =========================
    MOBILE
 ========================= */
 
-@media (max-width:768px){
+@media(max-width:768px){
 
-    .input-group{
-
-        display:grid;
+    .form-row{
 
         grid-template-columns:1fr;
-
-        gap:12px;
-
-    }
-
-    .input-group input,
-
-    .input-group select,
-
-    .date-input,
-
-    .input-group button{
-
-        width:100%;
-
-        min-width:0;
-
-    }
-
-    .input-group button{
-
-        margin-top:6px;
-
-        height:48px;
-
-        font-size:15px;
 
     }
 

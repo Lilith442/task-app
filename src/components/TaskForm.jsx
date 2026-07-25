@@ -25,65 +25,77 @@ function TaskForm({
 
     return (
 
-        <div className="input-group mobile-sticky">
+        <div className="task-form-card">
 
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && addTask()}
-              placeholder="Görev ekle"
-            />
+            <div className="task-form-header">
 
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="Genel">Genel</option>
-              <option value="İş">İş</option>
-              <option value="Kişisel">Kişisel</option>
-            </select>
+                <h3>✨ Yeni Görev</h3>
 
-            <select
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-            >
-              <option value="low">Düşük öncelik</option>
-              <option value="medium">Orta</option>
-              <option value="high">Acil</option>
-            </select>
-            <input
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              className="date-input"
-            />
-            <select
-              value={repeatType}
-              onChange={(e) => setRepeatType(e.target.value)}
-            >
+                <p>
+                    Yeni bir görev oluştur ve planlamaya başla.
+                </p>
 
-              <option value="none">
-                Tek Sefer
-              </option>
+            </div>
 
-              <option value="daily">
-                Her Gün
-              </option>
+            <div className="input-group">
 
-              <option value="weekly">
-                Haftalık
-              </option>
+                <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && addTask()}
+                    placeholder="Görev ekle"
+                />
 
-              <option value="every2days">
-                2 Günde Bir
-              </option>
+                <div className="form-row">
 
-            </select>
-            <button onClick={addTask}>
-              {loading ? "..." : "Ekle"}
-            </button>
+                    <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                    >
+                        <option value="Genel">Genel</option>
+                        <option value="İş">İş</option>
+                        <option value="Kişisel">Kişisel</option>
+                    </select>
 
-          </div>
+                    <select
+                        value={priority}
+                        onChange={(e) => setPriority(e.target.value)}
+                    >
+                        <option value="low">Düşük</option>
+                        <option value="medium">Orta</option>
+                        <option value="high">Yüksek</option>
+                    </select>
+
+                </div>
+
+                <input
+                    type="date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    className="date-input"
+                />
+
+                <div className="form-row">
+
+                    <select
+                        value={repeatType}
+                        onChange={(e) => setRepeatType(e.target.value)}
+                    >
+                        <option value="none">Tek Sefer</option>
+                        <option value="daily">Her Gün</option>
+                        <option value="weekly">Haftalık</option>
+                        <option value="every2days">2 Günde Bir</option>
+                    </select>
+
+                    <button onClick={addTask}>
+                        {loading ? "..." : "✨ Ekle"}
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
 
     );
 
