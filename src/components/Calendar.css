@@ -147,7 +147,7 @@ background .2s ease;
 
 .calendar-day:hover{
 
-translateY(-2px) scale(1.04);
+transform: translateY(-2px) scale(1.04);
 
 }
 
