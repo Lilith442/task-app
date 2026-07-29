@@ -11,8 +11,7 @@ function TaskForm({
     priority,
     setPriority,
 
-    dueDate,
-    setDueDate,
+    selectedDate,
 
     repeatType,
     setRepeatType,
@@ -22,6 +21,16 @@ function TaskForm({
     loading,
 
 }) {
+
+    const formattedSelectedDate = new Date(selectedDate).toLocaleDateString(
+        "tr-TR",
+        {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        }
+    );
 
     return (
 
@@ -68,12 +77,25 @@ function TaskForm({
 
                 </div>
 
-                <input
-                    type="date"
-                    value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
-                    className="date-input"
-                />
+                <div className="selected-date-card">
+
+                    <span className="date-icon">
+                        📅
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            {formattedSelectedDate}
+                        </strong>
+                        {" "}
+                        <small>
+                            Görev bu tarihe eklenecek
+                        </small>
+
+                    </div>
+
+                </div>
 
                 <div className="form-row">
 

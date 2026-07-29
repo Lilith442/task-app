@@ -36,7 +36,6 @@ function App() {
   const [input, setInput] = useState("");
   const [category, setCategory] = useState("Genel");
   const [priority, setPriority] = useState("medium");
-  const [dueDate, setDueDate] = useState("");
   const [repeatType, setRepeatType] = useState("none");
   const [selectedDate, setSelectedDate] = useState(() => {
     return new Date().toISOString().split("T")[0];
@@ -249,14 +248,13 @@ useEffect(() => {
           user_id: user.id,
           position: tasks.length,
           status: "todo",
-          due_date: dueDate || null,
+          due_date: selectedDate,
         }
       ])
       .select();
 
     setTasks([...tasks, data[0]]);
     setInput("");
-    setDueDate("");
     setRepeatType("none");
     setLoading(false);
 
@@ -775,8 +773,7 @@ return (
                   priority={priority}
                   setPriority={setPriority}
 
-                  dueDate={dueDate}
-                  setDueDate={setDueDate}
+                  selectedDate={selectedDate}
 
                   repeatType={repeatType}
                   setRepeatType={setRepeatType}
@@ -785,7 +782,7 @@ return (
 
                   loading={loading}
 
-              />
+                />
 
             </div>
 
