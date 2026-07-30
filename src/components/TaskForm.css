@@ -129,6 +129,88 @@
 
 }
 
+.selected-date-card{
+
+    background:rgba(79,157,166,.08);
+
+    border:1px solid rgba(79,157,166,.18);
+
+    border-radius:18px;
+
+    padding:18px;
+
+}
+
+.date-header{
+
+    display:flex;
+
+    gap:14px;
+
+    align-items:center;
+
+}
+
+.date-header strong{
+
+    display:block;
+
+    color:var(--primary);
+
+}
+
+.date-header small{
+
+    opacity:.65;
+
+}
+
+.date-icon{
+
+    font-size:28px;
+
+}
+
+.date-stats{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:18px;
+
+    font-size:14px;
+
+}
+
+.mini-progress{
+
+    margin-top:14px;
+
+    height:8px;
+
+    border-radius:999px;
+
+    background:#e5e7eb;
+
+    overflow:hidden;
+
+}
+
+.mini-progress-fill{
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        #4f9da6,
+        #0f5c63
+    );
+
+    transition:.4s;
+
+}
+
 /* =========================
    MOBILE
 ========================= */

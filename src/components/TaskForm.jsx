@@ -12,6 +12,7 @@ function TaskForm({
     setPriority,
 
     selectedDate,
+    tasks,
 
     repeatType,
     setRepeatType,
@@ -31,6 +32,21 @@ function TaskForm({
             year: "numeric",
         }
     );
+
+    const selectedTasks = tasks.filter(
+    (task) => task.due_date === selectedDate
+        );
+
+        const completedTasks = selectedTasks.filter(
+            (task) => task.completed
+        ).length;
+
+        const progress =
+            selectedTasks.length === 0
+                ? 0
+                : Math.round(
+                    (completedTasks / selectedTasks.length) * 100
+                );
 
     return (
 
@@ -79,19 +95,46 @@ function TaskForm({
 
                 <div className="selected-date-card">
 
-                    <span className="date-icon">
-                        📅
-                    </span>
+                    <div className="date-header">
 
-                    <div>
+                        <span className="date-icon">
+                            📅
+                        </span>
 
-                        <strong>
-                            {formattedSelectedDate}
-                        </strong>
-                        {" "}
-                        <small>
-                            Görev bu tarihe eklenecek
-                        </small>
+                        <div>
+
+                            <strong>
+                                {formattedSelectedDate}
+                            </strong>
+
+                            <small>
+                                Görev bu tarihe eklenecek
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div className="date-stats">
+
+                        <span>
+                            📌 {selectedTasks.length} görev
+                        </span>
+
+                        <span>
+                            ✅ {completedTasks} tamamlandı
+                        </span>
+
+                    </div>
+
+                    <div className="mini-progress">
+
+                        <div
+                            className="mini-progress-fill"
+                            style={{
+                                width: `${progress}%`,
+                            }}
+                        />
 
                     </div>
 

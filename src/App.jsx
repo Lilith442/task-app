@@ -27,6 +27,7 @@ import Stats from "./components/Stats";
 import ChartCard from "./components/ChartCard";
 import WeeklyActivity from "./components/WeeklyActivity";
 import StreakCard from "./components/StreakCard";
+import { useDashboardStats } from "./hooks/useDashboardStats";
 
 // 🔥 ITEM
 
@@ -372,6 +373,13 @@ const {
     setSelectedDate
 );
 
+const {
+  selectedTasks,
+  completedTasks,
+  activeTasks,
+  percent,
+} = useDashboardStats(tasks, selectedDate);
+
 const formatDueDate = (date) => {
   if (!date) return "No date";
 
@@ -535,14 +543,6 @@ const filteredTasks = tasks
       return task.due_date === selectedDate;
     })
 
-    .filter(task => {
-
-      if (!task.due_date) return false;
-
-      return task.due_date === selectedDate;
-
-    })
-
   .filter(task => {
     if (filter === "completed") return task.completed;
     if (filter === "active") return !task.completed;
@@ -551,18 +551,7 @@ const filteredTasks = tasks
   .filter(task =>
     task.text.toLowerCase().includes(search.toLowerCase())
   );
-
-  const percent =
-    tasks.length === 0
-      ? 0
-      : Math.round(
-          (tasks.filter(t => t.completed).length / tasks.length) * 100
-        );
-
-    const activeTasks = tasks.filter(t => !t.completed).length;
-
-    const completedTasks = tasks.filter(t => t.completed).length;
-
+  
     const dailyGoal = 5;
 
     const todayCompleted = tasks.filter(task => {
@@ -763,7 +752,6 @@ return (
             <div className="dashboard-right">
 
                 <TaskForm
-
                   input={input}
                   setInput={setInput}
 
@@ -775,14 +763,15 @@ return (
 
                   selectedDate={selectedDate}
 
+                  tasks={tasks}
+
                   repeatType={repeatType}
                   setRepeatType={setRepeatType}
 
                   addTask={addTask}
 
                   loading={loading}
-
-                />
+              />
 
             </div>
 
