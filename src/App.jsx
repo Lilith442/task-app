@@ -3,14 +3,10 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 import { motion, AnimatePresence } from "framer-motion";
-import Filters from "./components/Filters";
-import ViewSwitch from "./components/ViewSwitch";
 import Header from "./components/Header";
 import DeleteModal from "./components/DeleteModal";
 import Toast from "./components/Toast";
 import TaskList from "./components/tasks/TaskList";
-import TaskItem from "./components/tasks/TaskItem";
-import SortableItem from "./components/tasks/SortableItem";
 import Board from "./components/tasks/Board";
 import { checkRecurringTasks } from "./utils/recurringTasks";
 import "./components/Login.css";
@@ -28,6 +24,7 @@ import ChartCard from "./components/ChartCard";
 import WeeklyActivity from "./components/WeeklyActivity";
 import StreakCard from "./components/StreakCard";
 import { useDashboardStats } from "./hooks/useDashboardStats";
+import { useTaskFilters } from "./hooks/useTaskFilters";
 
 // 🔥 ITEM
 
@@ -238,7 +235,7 @@ useEffect(() => {
 
     setLoading(true);
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("tasks")
       .insert([
         {
@@ -364,13 +361,13 @@ const addSubtask = async (taskId, text) => {
 };
 
 const {
-    changeDay,
-    goToToday,
-    goToPreviousMonth,
-    goToNextMonth,
+  changeDay,
+  goToToday,
+  goToPreviousMonth,
+  goToNextMonth,
 } = useCalendarNavigation(
-    selectedDate,
-    setSelectedDate
+  selectedDate,
+  setSelectedDate
 );
 
 const {
@@ -378,7 +375,20 @@ const {
   completedTasks,
   activeTasks,
   percent,
+  chartData,
+  COLORS,
+  streak,
+  bestStreak,
 } = useDashboardStats(tasks, selectedDate);
+
+const dailyGoal = selectedTasks.length;
+
+const selectedCompleted = completedTasks;
+
+const goalPercent =
+  dailyGoal === 0
+    ? 0
+    : Math.round((selectedCompleted / dailyGoal) * 100);
 
 const formatDueDate = (date) => {
   if (!date) return "No date";
@@ -430,85 +440,6 @@ const formatDueDate = (date) => {
     setTasks(updated);
   };
 
-  const calculateStreak = () => {
-  const completedDates = tasks
-    .filter(task => task.completed_at)
-    .map(task => {
-      const date = new Date(task.completed_at);
-
-      return date.toISOString().split("T")[0];
-    });
-
-  const uniqueDays = [...new Set(completedDates)].sort().reverse();
-
-  let streak = 0;
-
-  const today = new Date();
-
-  for (let i = 0; i < uniqueDays.length; i++) {
-
-    const checkDate = new Date(today);
-
-    checkDate.setDate(today.getDate() - i);
-
-    const formatted = checkDate.toISOString().split("T")[0];
-
-    if (uniqueDays.includes(formatted)) {
-      streak++;
-    } else {
-      break;
-    }
-
-  }
-
-  return streak;
-};
-
-  const streak = calculateStreak();
-
-  const calculateBestStreak = () => {
-
-  const completedDates = tasks
-    .filter(task => task.completed_at)
-    .map(task => {
-      const date = new Date(task.completed_at);
-
-      return date.toISOString().split("T")[0];
-    });
-
-  const uniqueDays = [...new Set(completedDates)].sort();
-
-  if (uniqueDays.length === 0) return 0;
-
-  let best = 1;
-  let current = 1;
-
-  for (let i = 1; i < uniqueDays.length; i++) {
-
-    const previous = new Date(uniqueDays[i - 1]);
-    const currentDate = new Date(uniqueDays[i]);
-
-    const diff =
-      (currentDate - previous) / (1000 * 60 * 60 * 24);
-
-    if (diff === 1) {
-      current++;
-    } else {
-      current = 1;
-    }
-
-    if (current > best) {
-      best = current;
-    }
-
-  }
-
-  return best;
-
-};
-
-const bestStreak = calculateBestStreak();
-
   const deleteTask = async (id) => {
     if (!confirm("Silmek istediğine emin misin?")) return;
 
@@ -536,52 +467,13 @@ const bestStreak = calculateBestStreak();
     showToast("Güncellendi ✏️");
   };
 
-const filteredTasks = tasks
-  .filter(task => {
-      if (!task.due_date) return false;
+const filteredTasks = useTaskFilters({
+  tasks,
+  selectedDate,
+  filter,
+  search,
+});
 
-      return task.due_date === selectedDate;
-    })
-
-  .filter(task => {
-    if (filter === "completed") return task.completed;
-    if (filter === "active") return !task.completed;
-    return true;
-  })
-  .filter(task =>
-    task.text.toLowerCase().includes(search.toLowerCase())
-  );
-  
-    const dailyGoal = 5;
-
-    const todayCompleted = tasks.filter(task => {
-      if (!task.completed_at) return false;
-
-      const today = new Date().toISOString().split("T")[0];
-      const completedDate = new Date(task.completed_at)
-        .toISOString()
-        .split("T")[0];
-
-      return today === completedDate;
-    }).length;
-
-    const goalPercent = Math.min(
-      100,
-      Math.round((todayCompleted / dailyGoal) * 100)
-    );
-        
-  const chartData = [
-  {
-    name: "Completed",
-    value: tasks.filter(t => t.completed).length
-  },
-  {
-    name: "Active",
-    value: tasks.filter(t => !t.completed).length
-  }
-];
-
-const COLORS = ["#0f5c63", "#4f9da6"];
 const weekDays = [
   "Pzt",
   "Sal",
@@ -729,7 +621,7 @@ return (
                 tasks={tasks}
                 percent={percent}
 
-                todayCompleted={todayCompleted}
+                todayCompleted={selectedCompleted}
                 dailyGoal={dailyGoal}
                 goalPercent={goalPercent}
 
@@ -869,7 +761,7 @@ return (
           />
 
           <DailyGoalCard
-            todayCompleted={todayCompleted}
+            todayCompleted={selectedCompleted}
             dailyGoal={dailyGoal}
             goalPercent={goalPercent}
           />
