@@ -32,6 +32,34 @@ export function useDashboardStats(tasks, selectedDate) {
 
   const COLORS = ["#0f5c63", "#4f9da6"];
 
+  const weekDays = [
+  "Pzt",
+  "Sal",
+  "Çar",
+  "Per",
+  "Cum",
+  "Cmt",
+  "Paz",
+];
+
+const weeklyData = weekDays.map((day, index) => {
+  const count = tasks.filter(task => {
+    if (!task.completed_at) return false;
+
+    const completedDay = new Date(task.completed_at).getDay();
+
+    const convertedDay =
+      completedDay === 0 ? 6 : completedDay - 1;
+
+    return convertedDay === index;
+  }).length;
+
+  return {
+    day,
+    count,
+  };
+});
+
   const calculateStreak = () => {
     const completedDates = tasks
       .filter(task => task.completed_at)
@@ -118,5 +146,6 @@ export function useDashboardStats(tasks, selectedDate) {
     COLORS,
     streak,
     bestStreak,
+    weeklyData,
   };
 }

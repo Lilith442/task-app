@@ -379,6 +379,7 @@ const {
   COLORS,
   streak,
   bestStreak,
+  weeklyData,
 } = useDashboardStats(tasks, selectedDate);
 
 const dailyGoal = selectedTasks.length;
@@ -473,33 +474,7 @@ const filteredTasks = useTaskFilters({
   filter,
   search,
 });
-
-const weekDays = [
-  "Pzt",
-  "Sal",
-  "Çar",
-  "Per",
-  "Cum",
-  "Cmt",
-  "Paz"
-];
-
-const weeklyData = weekDays.map((day, index) => {
-  const count = tasks.filter(task => {
-    if (!task.completed_at) return false;
-
-    const completedDay = new Date(task.completed_at).getDay();
-
-    const convertedDay = completedDay === 0 ? 6 : completedDay - 1;
-
-    return convertedDay === index;
-  }).length;
-
-  return {
-    day,
-    count
-  };
-});
+  
 
 const last30Days = Array.from({ length: 30 }, (_, i) => {
 
