@@ -220,18 +220,19 @@ useEffect(() => {
 
 useEffect(() => {
 
-  if (tasks.length === 0) return;
+  if (!user || tasks.length === 0) return;
 
   checkRecurringTasks({
-  tasks,
-  user,
-  supabase
-});
+    tasks,
+    user,
+    supabase,
+  });
 
-}, [tasks]);
+}, [tasks, user]);
 
   // ➕ ADD TASK
-  const addTask = async () => {
+ const addTask = async () => {
+
   if (!input.trim()) {
     showToast("Görev boş olamaz ⚠️", "warning");
     return;
@@ -239,23 +240,27 @@ useEffect(() => {
 
   setLoading(true);
 
-  const { data, error } = await supabase
-    .from("tasks")
-    .insert([
-      {
-        text: input,
-        category,
-        priority,
-        repeat_type: repeatType,
-        user_id: user.id,
-        position: tasks.length,
-        status: "todo",
-        due_date: selectedDate,
-      }
-    ])
-    .select();
+  const tasksToInsert = [];
 
-  setTasks([...tasks, data[0]]);
+  const startDate = new Date(selectedDate);
+
+  const createTask = (date) => ({
+    text: input,
+    category,
+    priority,
+    repeat_type: repeatType,
+    user_id: user.id,
+    status: "todo",
+    completed: false,
+    due_date: date.toISOString().split("T")[0],
+    position: tasks.length + tasksToInsert.length,
+    last_generated_date: date.toISOString().split("T")[0],
+  });
+if (repeatType === "none") {
+
+    tasksToInsert.push(createTask(startDate));
+
+}
   setInput("");
   setRepeatType("none");
   setLoading(false);
