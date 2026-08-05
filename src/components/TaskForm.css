@@ -3,19 +3,32 @@
 ========================= */
 
 .task-form-card{
-  margin-top: 33px;
+    margin-top: 33px;
 
-    background:rgba(255,255,255,.14);
+    background:linear-gradient(
+      180deg,
+      rgba(79,157,166,.18),
+      rgba(255,255,255,.12)
+    );
 
-    border:1px solid rgba(255,255,255,.22);
+    border:1px solid rgba(79,157,166,.25);
 
     border-radius:22px;
 
-    padding:24px;
+    padding:20px;
 
-    backdrop-filter:blur(12px);
+    backdrop-filter:blur(18px);
 
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    box-shadow:0 15px 35px rgba(15,92,99,.10);
+
+}
+
+.task-form-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 20px 40px rgba(15,92,99,.10);
 
 }
 
@@ -51,7 +64,7 @@
 
     flex-direction:column;
 
-    gap:16px;
+    gap:12px;
 
 }
 
@@ -131,13 +144,15 @@
 
 .selected-date-card{
 
-    background:rgba(79,157,166,.08);
+    background:rgba(255,255,255,.28);
 
-    border:1px solid rgba(79,157,166,.18);
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(79,157,166,.22);
 
     border-radius:18px;
 
-    padding:18px;
+    padding:14px;
 
 }
 

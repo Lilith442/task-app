@@ -150,23 +150,27 @@ const showToast = (message, type = "success") => {
     setUser(null);
     setTasks([]);
   };
-  
 
-const fetchTasks = async () => {
+  const fetchTasks = async () => {
   setLoading(true);
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tasks")
     .select("*")
     .eq("user_id", user.id)
     .order("position", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    setLoading(false);
+    return;
+  }
 
   setTasks(data || []);
   setLoading(false);
 };
 
 const fetchSubtasks = async () => {
-
   const { data, error } = await supabase
     .from("subtasks")
     .select("*");
@@ -175,10 +179,10 @@ const fetchSubtasks = async () => {
     console.error(error);
     return;
   }
-  setSubtasks(data || []);
-  console.log("📋 Subtasks:", data);
 
+  setSubtasks(data || []);
 };
+  
 
   // 📦 FETCH + REALTIME
 useEffect(() => {
@@ -226,38 +230,38 @@ useEffect(() => {
 
 }, [tasks]);
 
-  // ➕ ADD
+  // ➕ ADD TASK
   const addTask = async () => {
-    if (!input.trim()) {
+  if (!input.trim()) {
     showToast("Görev boş olamaz ⚠️", "warning");
     return;
-    }
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    const { data, error } = await supabase
-      .from("tasks")
-      .insert([
-        {
-          text: input,
-          category,
-          priority,
-          repeat_type: repeatType,
-          user_id: user.id,
-          position: tasks.length,
-          status: "todo",
-          due_date: selectedDate,
-        }
-      ])
-      .select();
+  const { data, error } = await supabase
+    .from("tasks")
+    .insert([
+      {
+        text: input,
+        category,
+        priority,
+        repeat_type: repeatType,
+        user_id: user.id,
+        position: tasks.length,
+        status: "todo",
+        due_date: selectedDate,
+      }
+    ])
+    .select();
 
-    setTasks([...tasks, data[0]]);
-    setInput("");
-    setRepeatType("none");
-    setLoading(false);
+  setTasks([...tasks, data[0]]);
+  setInput("");
+  setRepeatType("none");
+  setLoading(false);
 
-    showToast("Görev eklendi ✅", "success");
-  };
+  showToast("Görev eklendi ✅", "success");
+};
 
 const addSubtask = async (taskId, text) => {
 
@@ -585,35 +589,15 @@ return (
 
             <div className="dashboard-left">
 
-                <DashboardSection
-                selectedDate={selectedDate}
-                changeDay={changeDay}
-                goToToday={goToToday}
+              <DashboardSection
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
 
-                streak={streak}
-                bestStreak={bestStreak}
+                  tasks={tasks}
 
-                tasks={tasks}
-                percent={percent}
-
-                todayCompleted={selectedCompleted}
-                dailyGoal={dailyGoal}
-                goalPercent={goalPercent}
-
-                completedTasks={completedTasks}
-                activeTasks={activeTasks}
-
-                chartData={chartData}
-                COLORS={COLORS}
-
-                goToPreviousMonth={goToPreviousMonth}
-                goToNextMonth={goToNextMonth}
-
-                setSelectedDate={setSelectedDate}
-
-                weeklyData={weeklyData}
-            />
-
+                  goToPreviousMonth={goToPreviousMonth}
+                  goToNextMonth={goToNextMonth}
+              />
             </div>
 
             <div className="dashboard-right">
@@ -634,9 +618,7 @@ return (
 
                   repeatType={repeatType}
                   setRepeatType={setRepeatType}
-
                   addTask={addTask}
-
                   loading={loading}
               />
 
@@ -729,9 +711,8 @@ return (
               toggleSubtask={toggleSubtask}
             />
           )}
-
           <ProgressOverview
-            tasks={tasks}
+            tasks={selectedTasks}
             percent={percent}
           />
 
@@ -742,24 +723,30 @@ return (
           />
 
           <Stats
-            totalTasks={tasks.length}
+            totalTasks={selectedTasks.length}
             completedTasks={completedTasks}
             activeTasks={activeTasks}
             bestStreak={bestStreak}
           />
 
-       <div className="analytics-grid">
-
-          <ChartCard
+          <div className="analytics-grid">
+            <ChartCard
               chartData={chartData}
               COLORS={COLORS}
-          />
+            />
 
-          <WeeklyActivity
+            <WeeklyActivity
               weeklyData={weeklyData}
+            />
+          </div>
+
+          <Stats
+            totalTasks={selectedTasks.length}
+            completedTasks={completedTasks}
+            activeTasks={activeTasks}
+            bestStreak={bestStreak}
           />
 
-      </div>
 
         </motion.div>
 

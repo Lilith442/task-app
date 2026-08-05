@@ -4,24 +4,37 @@ function DashboardSection({
     selectedDate,
     setSelectedDate,
 
-    streak,
-    bestStreak,
-
     tasks,
+
+    percent,
+
+    selectedTasks,
+
+    selectedCompleted,
+
+    dailyGoal,
+
+    goalPercent,
+
+    chartData,
+
+    COLORS,
+
+    weeklyData,
 
     goToPreviousMonth,
     goToNextMonth,
 }) {
   return (
     <>
-     <Calendar
+    <Calendar
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         tasks={tasks}
         goToPreviousMonth={goToPreviousMonth}
         goToNextMonth={goToNextMonth}
-      />
-    </>
+    />
+  </>
   );
 }
 

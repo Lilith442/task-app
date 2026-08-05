@@ -51,7 +51,7 @@ h1 {
 
     gap:32px;
 
-    align-items:start;
+    align-items:stretch;
 
     margin-bottom:32px;
 
@@ -63,7 +63,7 @@ h1 {
 
     flex-direction:column;
 
-    gap:22px;
+    height:100%;
 
 }
 
@@ -73,7 +73,7 @@ h1 {
 
     flex-direction:column;
 
-    gap:20px;
+    height:100%;
 
 }
 
