@@ -261,6 +261,54 @@ if (repeatType === "none") {
     tasksToInsert.push(createTask(startDate));
 
 }
+
+if (repeatType === "daily") {
+
+  for (let i = 0; i < 30; i++) {
+
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + i);
+
+    tasksToInsert.push(createTask(date));
+  }
+
+}
+
+if (repeatType === "weekly") {
+
+  for (let i = 0; i < 12; i++) {
+
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + i * 7);
+
+    tasksToInsert.push(createTask(date));
+  }
+
+}
+
+if (repeatType === "every2days") {
+
+  for (let i = 0; i < 30; i++) {
+
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + i * 2);
+
+    tasksToInsert.push(createTask(date));
+  }
+
+}
+const { data, error } = await supabase
+  .from("tasks")
+  .insert(tasksToInsert)
+  .select();
+
+if (error) {
+  console.error(error);
+  setLoading(false);
+  return;
+}
+
+setTasks(prev => [...prev, ...data]);
   setInput("");
   setRepeatType("none");
   setLoading(false);
