@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./DeleteModal.css";
 
 function DeleteModal({
@@ -6,8 +7,10 @@ function DeleteModal({
   setDeleteId,
   deleteTask
 
-}) {
+}) 
 
+{
+const [deleteMode, setDeleteMode] = useState("single");
   if (!deleteId) return null;
 
   return (
@@ -18,7 +21,41 @@ function DeleteModal({
 
         <h3>Görevi sil?</h3>
 
-        <p>Bu işlem geri alınamaz.</p>
+        <p>Nasıl silmek istiyorsun?</p>
+
+        <div className="delete-options">
+
+          <label>
+            <input
+              type="radio"
+              value="single"
+              checked={deleteMode === "single"}
+              onChange={(e) => setDeleteMode(e.target.value)}
+            />
+            Sadece bu görev
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              value="future"
+              checked={deleteMode === "future"}
+              onChange={(e) => setDeleteMode(e.target.value)}
+            />
+            Bu ve sonraki görevler
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              value="series"
+              checked={deleteMode === "series"}
+              onChange={(e) => setDeleteMode(e.target.value)}
+            />
+            Tüm seri
+          </label>
+
+        </div>
 
         <div className="modal-actions">
 
@@ -32,7 +69,7 @@ function DeleteModal({
           <button
             className="delete-btn"
             onClick={async () => {
-              await deleteTask(deleteId);
+              await deleteTask(deleteId, deleteMode);
               setDeleteId(null);
             }}
           >

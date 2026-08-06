@@ -244,6 +244,11 @@ useEffect(() => {
 
   const startDate = new Date(selectedDate);
 
+  const recurringGroupId =
+  repeatType === "none"
+    ? null
+    : crypto.randomUUID();
+
   const createTask = (date) => ({
     text: input,
     category,
@@ -255,6 +260,7 @@ useEffect(() => {
     due_date: date.toISOString().split("T")[0],
     position: tasks.length + tasksToInsert.length,
     last_generated_date: date.toISOString().split("T")[0],
+    recurring_group_id: recurringGroupId,
   });
 if (repeatType === "none") {
 
@@ -498,15 +504,47 @@ const formatDueDate = (date) => {
     setTasks(updated);
   };
 
-  const deleteTask = async (id) => {
-    if (!confirm("Silmek istediğine emin misin?")) return;
+const deleteTask = async (id, deleteMode = "single") => {
 
-    await supabase.from("tasks").delete().eq("id", id);
-    setTasks(tasks.filter(t => t.id !== id));
+  const task = tasks.find((t) => t.id === id);
+
+  if (!task) return;
+
+  if (deleteMode === "single") {
+
+    await supabase
+      .from("tasks")
+      .delete()
+      .eq("id", id);
+
+    setTasks(prev => prev.filter(t => t.id !== id));
 
     showToast("Görev silindi 🗑", "warning");
-  };
 
+    return;
+  }
+
+  if (deleteMode === "series") {
+
+  await supabase
+    .from("tasks")
+    .delete()
+    .eq("recurring_group_id", task.recurring_group_id);
+
+  setTasks(prev =>
+    prev.filter(
+      t =>
+        t.recurring_group_id !==
+        task.recurring_group_id
+    )
+  );
+
+  showToast("Görev serisi silindi 🗑", "warning");
+
+  return;
+}
+
+};
   const saveEdit = async (id) => {
     await supabase
       .from("tasks")
