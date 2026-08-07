@@ -12,12 +12,12 @@ export const en = {
   },
 
   streak: {
-    title: "DAILY STREAK",
-    waiting: "Your first task is waiting 🚀",
-    best: "Best Streak",
-    day: "Day",
-    days: "Days",
-  },
+  title: "DAILY STREAK",
+  waiting: "Your first task is waiting 🚀",
+  completed: "Task completed today ✅",
+  best: "Best Streak",
+  day: "Day",
+},
 
   calendar: {
     title: "Calendar",
@@ -32,6 +32,9 @@ export const en = {
     daily: "Daily",
     weekly: "Weekly",
     every2days: "Every 2 Days",
+    dateInfo: "Task will be added to this date",
+    tasks: "tasks",
+    completed: "completed",
   },
 
   tasks: {
@@ -53,4 +56,16 @@ export const en = {
     cancel: "Cancel",
     add: "Add",
   },
+
+  categories: {
+    general: "General",
+    work: "Work",
+    personal: "Personal",
+},
+
+priority: {
+    low: "Low",
+    medium: "Medium",
+    high: "High",
+},
 };

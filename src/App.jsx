@@ -713,6 +713,7 @@ return (
           <StreakCard
             streak={streak}
             bestStreak={bestStreak}
+            texts={texts}
           />
 
           <WelcomePanel
@@ -759,6 +760,9 @@ return (
                   setRepeatType={setRepeatType}
                   addTask={addTask}
                   loading={loading}
+
+                  texts={texts}
+                  language={language}
               />
 
             </div>

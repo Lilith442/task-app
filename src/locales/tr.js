@@ -11,13 +11,13 @@ export const tr = {
     overdueTasks: "Geciken Görev",
   },
 
-  streak: {
-    title: "DAILY STREAK",
-    waiting: "İlk görevin seni bekliyor 🚀",
-    best: "En İyi Seri",
-    day: "Gün",
-    days: "Gün",
-  },
+streak: {
+  title: "GÜNLÜK SERİ",
+  waiting: "İlk görevin seni bekliyor 🚀",
+  completed: "Bugün görev tamamlandı ✅",
+  best: "En İyi Seri",
+  day: "Gün",
+},
 
   calendar: {
     title: "Takvim",
@@ -32,6 +32,9 @@ export const tr = {
     daily: "Her Gün",
     weekly: "Haftalık",
     every2days: "2 Günde Bir",
+    dateInfo: "Görev bu tarihe eklenecek",
+    tasks: "görev",
+    completed: "tamamlandı",
   },
 
   tasks: {
@@ -53,4 +56,16 @@ export const tr = {
     cancel: "Vazgeç",
     add: "Ekle",
   },
+
+  categories: {
+    general: "Genel",
+    work: "İş",
+    personal: "Kişisel",
+},
+
+priority: {
+    low: "Düşük",
+    medium: "Orta",
+    high: "Yüksek",
+},
 };

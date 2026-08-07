@@ -20,11 +20,13 @@ function TaskForm({
     addTask,
 
     loading,
+    texts,
+    language,
 
 }) {
 
     const formattedSelectedDate = new Date(selectedDate).toLocaleDateString(
-        "tr-TR",
+    language === "tr" ? "tr-TR" : "en-US",
         {
             weekday: "long",
             day: "numeric",
@@ -54,10 +56,10 @@ function TaskForm({
 
             <div className="task-form-header">
 
-                <h3>✨ Yeni Görev</h3>
+                <h3>✨ {texts.taskForm.title}</h3>
 
                 <p>
-                    Yeni bir görev oluştur ve planlamaya başla.
+                    {texts.taskForm.subtitle}
                 </p>
 
             </div>
@@ -68,7 +70,7 @@ function TaskForm({
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && addTask()}
-                    placeholder="Görev ekle"
+                    placeholder={texts.taskForm.placeholder}
                 />
 
                 <div className="form-row">
@@ -77,18 +79,34 @@ function TaskForm({
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                     >
-                        <option value="Genel">Genel</option>
-                        <option value="İş">İş</option>
-                        <option value="Kişisel">Kişisel</option>
+                        <option value="Genel">
+                            {texts.categories.general}
+                        </option>
+
+                        <option value="İş">
+                            {texts.categories.work}
+                        </option>
+
+                        <option value="Kişisel">
+                            {texts.categories.personal}
+                        </option>
                     </select>
 
                     <select
                         value={priority}
                         onChange={(e) => setPriority(e.target.value)}
                     >
-                        <option value="low">Düşük</option>
-                        <option value="medium">Orta</option>
-                        <option value="high">Yüksek</option>
+                        <option value="low">
+                            {texts.priority.low}
+                        </option>
+
+                        <option value="medium">
+                            {texts.priority.medium}
+                        </option>
+
+                        <option value="high">
+                            {texts.priority.high}
+                        </option>
                     </select>
 
                 </div>
@@ -108,7 +126,7 @@ function TaskForm({
                             </strong>
 
                             <small>
-                                Görev bu tarihe eklenecek
+                                {texts.taskForm.dateInfo}
                             </small>
 
                         </div>
@@ -118,11 +136,11 @@ function TaskForm({
                     <div className="date-stats">
 
                         <span>
-                            📌 {selectedTasks.length} görev
+                            📌 {selectedTasks.length} {texts.taskForm.tasks}
                         </span>
 
                         <span>
-                            ✅ {completedTasks} tamamlandı
+                            ✅ {completedTasks} {texts.taskForm.completed}
                         </span>
 
                     </div>
@@ -146,14 +164,25 @@ function TaskForm({
                         value={repeatType}
                         onChange={(e) => setRepeatType(e.target.value)}
                     >
-                        <option value="none">Tek Sefer</option>
-                        <option value="daily">Her Gün</option>
-                        <option value="weekly">Haftalık</option>
-                        <option value="every2days">2 Günde Bir</option>
+                        <option value="none">
+                            {texts.taskForm.once}
+                        </option>
+
+                        <option value="daily">
+                            {texts.taskForm.daily}
+                        </option>
+
+                        <option value="weekly">
+                            {texts.taskForm.weekly}
+                        </option>
+
+                        <option value="every2days">
+                            {texts.taskForm.every2days}
+                        </option>
                     </select>
 
                     <button onClick={addTask}>
-                        {loading ? "..." : "✨ Ekle"}
+                        {loading ? "..." : texts.taskForm.add}
                     </button>
 
                 </div>

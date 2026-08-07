@@ -18,10 +18,6 @@ function WelcomePanel({
           <p>{todayText}</p>
         </div>
 
-        <div className="welcome-badge">
-          🎯 %{goalPercent}
-        </div>
-
       </div>
 
       <div className="welcome-stats">
