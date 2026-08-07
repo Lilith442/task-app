@@ -26,6 +26,7 @@ function TaskItem({
   addSubtask,
   subtasks,
   toggleSubtask,
+  texts,
 }) {
   const [showSubtasks, setShowSubtasks] = useState(false);
   const [subtaskText, setSubtaskText] = useState("");
@@ -93,11 +94,11 @@ function TaskItem({
 
         <span className={`priority ${task.priority}`}>
 
-            {task.priority === "high" && "🔴 High"}
+          {task.priority === "high" && texts.taskItem.priority.high}
 
-            {task.priority === "medium" && "🟡 Medium"}
+          {task.priority === "medium" && texts.taskItem.priority.medium}
 
-            {task.priority === "low" && "🔵 Low"}
+          {task.priority === "low" && texts.taskItem.priority.low}
 
         </span>
 
@@ -119,7 +120,7 @@ function TaskItem({
         <div className="progress-info">
 
             <span>
-                {progress}% tamamlandı
+                {progress}% {texts.taskItem.completed}
             </span>
 
             <span>
@@ -145,7 +146,7 @@ function TaskItem({
               <ChevronRight size={18}/>
           )}
 
-          Alt Görevler ({taskSubtasks.length})
+          {texts.taskItem.subtasks} ({taskSubtasks.length})
       </button>
 
         {showSubtasks && (
@@ -182,7 +183,7 @@ function TaskItem({
           <input
             value={subtaskText}
             onChange={(e) => setSubtaskText(e.target.value)}
-            placeholder="Alt görev ekle..."
+            placeholder={texts.taskItem.addSubtask}
           />
 
           <button
@@ -217,7 +218,7 @@ function TaskItem({
 
             <CalendarDays size={14}/>
 
-            Bugün
+            {texts.taskItem.today}
 
           </span>
 
@@ -228,10 +229,13 @@ function TaskItem({
               <Repeat size={14}/>{" "}
 
               {task.repeat_type === "daily"
-                ? "Her Gün"
+                ? texts.taskItem.repeat.daily
+
                 : task.repeat_type === "weekly"
-                ? "Haftalık"
-                : "2 Günde Bir"}
+
+                ? texts.taskItem.repeat.weekly
+
+                : texts.taskItem.repeat.every2days}
 
             </span>
 
@@ -244,7 +248,7 @@ function TaskItem({
           {editingId === task.id ? (
 
             <button onClick={() => saveEdit(task.id)}>
-              Kaydet
+              {texts.taskItem.save}
             </button>
 
           ) : (
@@ -259,7 +263,7 @@ function TaskItem({
             >
               <>
                 {" "}<Pencil size={16}/>{" "}
-                Düzenle
+                {texts.taskItem.edit}
             </>
             </button>
 
@@ -270,7 +274,7 @@ function TaskItem({
           >
             <>
                 <Trash2 size={16}/>{" "}
-                Sil
+                {texts.taskItem.delete}
             </>
           </button>
 

@@ -28,7 +28,8 @@ function TaskList({
   setDeleteId,
   addSubtask,
   subtasks,
-  toggleSubtask
+  toggleSubtask,
+  texts,
 
 }) {
 
@@ -62,6 +63,7 @@ function TaskList({
               addSubtask={addSubtask}
               subtasks={subtasks}
               toggleSubtask={toggleSubtask}
+              texts={texts}
             />
 
           ))}

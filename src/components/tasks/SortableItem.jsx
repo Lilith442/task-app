@@ -29,9 +29,10 @@ function SortableItem(props) {
 
       <TaskItem
         {...props}
+        texts={props.texts}
         dragHandleProps={{
           ...attributes,
-          ...listeners
+          ...listeners,
         }}
       />
 

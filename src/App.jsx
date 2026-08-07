@@ -855,6 +855,8 @@ return (
               addSubtask={addSubtask}
               subtasks={subtasks}
               toggleSubtask={toggleSubtask}
+
+              texts={texts}
             />
           )}
           <ProgressOverview
