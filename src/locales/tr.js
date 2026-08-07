@@ -110,4 +110,18 @@ deleteModal: {
   cancel: "Vazgeç",
   delete: "Sil",
 },
+
+board: {
+  todo: "📝 Yapılacak",
+  doing: "⚡ Yapılıyor",
+  done: "✅ Tamamlandı",
+  empty: "Görev yok 🚀",
+
+  priority: {
+    high: "🔴 Yüksek",
+    medium: "🟡 Orta",
+    low: "🔵 Düşük",
+  },
+},
+
 };

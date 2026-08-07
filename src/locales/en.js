@@ -110,4 +110,17 @@ deleteModal: {
   cancel: "Cancel",
   delete: "Delete",
 },
+
+board: {
+  todo: "📝 Todo",
+  doing: "⚡ Doing",
+  done: "✅ Done",
+  empty: "No tasks 🚀",
+
+  priority: {
+    high: "🔴 High",
+    medium: "🟡 Medium",
+    low: "🔵 Low",
+  },
+},
 };

@@ -9,35 +9,41 @@ function Board({
   setActiveColumn,
   setDraggedTask,
   handleStatusDrop,
+
+  texts,
 }) {
 
-  const columns = [
-    {
-      id: "todo",
-      title: "📝 Todo",
-    },
-    {
-      id: "doing",
-      title: "⚡ Doing",
-    },
-    {
-      id: "done",
-      title: "✅ Done",
-    },
-  ];
+const columns = [
+  {
+    id: "todo",
+    title: texts.board.todo,
+  },
+  {
+    id: "doing",
+    title: texts.board.doing,
+  },
+  {
+    id: "done",
+    title: texts.board.done,
+  },
+];
 
-  const getPriorityLabel = (priority = "medium") => {
+const getPriorityLabel = (priority = "medium") => {
+
     switch (priority.toLowerCase()) {
-      case "high":
-        return "🔴 High";
 
-      case "low":
-        return "🔵 Low";
+        case "high":
+            return texts.board.priority.high;
 
-      default:
-        return "🟡 Medium";
+        case "low":
+            return texts.board.priority.low;
+
+        default:
+            return texts.board.priority.medium;
+
     }
-  };
+
+};
 
   return (
     <div className="board">
@@ -77,7 +83,7 @@ function Board({
             {tasks.length === 0 ? (
 
               <div className="empty-column">
-                Task yok 🚀
+                {texts.board.empty}
               </div>
 
             ) : (

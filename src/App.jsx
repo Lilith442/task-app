@@ -832,6 +832,8 @@ return (
 
             handleStatusDrop={handleStatusDrop}
 
+            texts={texts}
+
           />
 
           ) : (
