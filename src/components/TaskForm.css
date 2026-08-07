@@ -238,4 +238,22 @@
 
     }
 
+    .input-group select{
+
+    height:52px;
+
+    }
+
+    .input-group button{
+
+    height:54px;
+
+    }
+
+    .selected-date-card{
+
+    padding:20px;
+
+    }
+
 }

@@ -4,7 +4,10 @@ function Header({
     user,
     darkMode,
     setDarkMode,
-    logout
+    logout,
+    language,
+    setLanguage,
+    texts,
 }) {
   return (
         <div className="topbar">
@@ -14,7 +17,7 @@ function Header({
 
           <div>
             <h3>Task-App</h3>
-            <p>Verimli Gün Planlama</p>
+            <p>{texts.header.subtitle}</p>
           </div>
         </div>
 
@@ -32,11 +35,29 @@ function Header({
                 {darkMode ? "☀️" : "🌙"}
             </button>
 
+            <div className="language-switch">
+
+              <button
+                className={language === "tr" ? "active" : ""}
+                onClick={() => setLanguage("tr")}
+              >
+                TR
+              </button>
+
+              <button
+                className={language === "en" ? "active" : ""}
+                onClick={() => setLanguage("en")}
+              >
+                EN
+              </button>
+
+            </div>
+
           <button
             className="logout-btn"
             onClick={logout}
           >
-            Çıkış
+            {texts.header.logout}
           </button>
 
         </div>

@@ -133,6 +133,44 @@
   transform:translateY(-2px);
 }
 
+.language-switch{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+}
+
+.language-switch button{
+
+    width:42px;
+
+    height:36px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,.12);
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.language-switch button.active{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
 /* =========================
    RESPONSIVE
 ========================= */

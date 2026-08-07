@@ -1,0 +1,145 @@
+.welcome-panel{
+
+    margin:24px 0 28px;
+
+    padding:24px;
+
+    border-radius:22px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(79,157,166,.16),
+        rgba(15,92,99,.08)
+    );
+
+    border:1px solid rgba(79,157,166,.15);
+
+    box-shadow:0 12px 28px rgba(0,0,0,.08);
+
+}
+
+.welcome-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.welcome-top h2{
+
+    margin:0;
+
+    color:var(--primary);
+
+    font-size:28px;
+
+}
+
+.welcome-top p{
+
+    margin-top:8px;
+
+    color:var(--text-light);
+
+}
+
+.welcome-badge{
+
+    width:82px;
+
+    height:82px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:700;
+
+    font-size:20px;
+
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #4f9da6,
+        #0f5c63
+    );
+
+}
+
+.welcome-stats{
+
+    margin-top:26px;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:18px;
+
+}
+
+.welcome-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.45);
+
+}
+
+.welcome-item span{
+
+    font-size:30px;
+
+}
+
+.welcome-item strong{
+
+    display:block;
+
+    font-size:20px;
+
+    color:var(--primary);
+
+}
+
+.welcome-item small{
+
+    color:var(--text-light);
+
+}
+
+@media(max-width:768px){
+
+    .welcome-top{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .welcome-stats{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

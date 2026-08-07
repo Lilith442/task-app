@@ -24,7 +24,10 @@ function DashboardSection({
 
     goToPreviousMonth,
     goToNextMonth,
-}) {
+
+})
+{
+
   return (
     <>
     <Calendar

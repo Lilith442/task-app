@@ -25,6 +25,9 @@ import WeeklyActivity from "./components/WeeklyActivity";
 import StreakCard from "./components/StreakCard";
 import { useDashboardStats } from "./hooks/useDashboardStats";
 import { useTaskFilters } from "./hooks/useTaskFilters";
+import WelcomePanel from "./components/WelcomePanel";
+import { tr } from "./locales/tr";
+import { en } from "./locales/en";
 
 // 🔥 ITEM
 
@@ -62,6 +65,10 @@ function App() {
   });
   const [draggedTask, setDraggedTask] = useState(null);
   const [activeColumn, setActiveColumn] = useState(null);
+  const [language, setLanguage] = useState(() => {
+  return localStorage.getItem("language") || "tr";
+  });
+  const texts = language === "tr" ? tr : en;
   const [deleteId, setDeleteId] = useState(null);
 
   // 🌙 DARK MODE
@@ -84,6 +91,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem("searchText", search);
   }, [search]);
+
+  useEffect(() => {
+  localStorage.setItem("language", language);
+}, [language]);
 
   // 🔐 AUTH
   useEffect(() => {
@@ -685,6 +696,10 @@ return (
         darkMode={darkMode}
         setDarkMode={setDarkMode}
         logout={logout}
+        language={language}
+        
+        setLanguage={setLanguage}
+        texts={texts}
     />
         <motion.div
           className={`container ${view === "board" ? "board-container" : ""}`}
@@ -698,6 +713,15 @@ return (
           <StreakCard
             streak={streak}
             bestStreak={bestStreak}
+          />
+
+          <WelcomePanel
+              const greeting = {texts.welcome.title}
+              todayText={texts.welcome.subtitle}
+              todayTasks={selectedTasks.length}
+              overdueTasks={0}
+              goalPercent={goalPercent}
+              texts={texts}
           />
 
           <div className="dashboard-layout">

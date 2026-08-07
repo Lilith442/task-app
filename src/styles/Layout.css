@@ -172,9 +172,7 @@ h1 {
 @media (max-width:768px){
 
     .app-layout{
-
         min-height:100dvh;
-
     }
 
     .container{
@@ -185,10 +183,16 @@ h1 {
 
         margin:0;
 
+        padding:16px;
+
         border-radius:0;
 
-        padding:20px;
+        box-shadow:none;
+    }
 
+    h1{
+        font-size:40px;
+        margin-bottom:20px;
     }
 
     .dashboard-layout{
@@ -197,15 +201,52 @@ h1 {
 
         flex-direction:column;
 
-        gap:24px;
+        gap:20px;
 
     }
 
     .dashboard-left,
-
     .dashboard-right{
 
         width:100%;
+
+    }
+
+    .tasks-section{
+
+        margin-top:24px;
+
+        margin-bottom:20px;
+
+        padding-top:20px;
+
+    }
+
+    .tasks-title{
+
+        margin-bottom:14px;
+
+    }
+
+    .tasks-title h2{
+
+        font-size:26px;
+
+    }
+
+    .tasks-title p{
+
+        font-size:14px;
+
+    }
+
+    .tasks-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:12px;
 
     }
 
