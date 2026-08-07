@@ -46,3 +46,90 @@ body.dark input::placeholder{
     color:#bdbdbd;
 
 }
+/* =========================
+   CALENDAR DARK MODE
+========================= */
+
+body.dark .calendar-card{
+
+    background:#242424;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.35);
+
+}
+
+body.dark .calendar-card h3,
+body.dark .calendar-card h4{
+
+    color:#8bd8e0;
+
+}
+
+body.dark .calendar-weekdays{
+
+    color:#8bd8e0;
+
+}
+
+body.dark .calendar-day{
+
+    background:#333;
+
+    color:#f3f3f3;
+
+}
+
+body.dark .calendar-day:hover{
+
+    background:#3f3f3f;
+
+}
+
+body.dark .calendar-day.empty{
+
+    background:#2a2a2a;
+
+    opacity:.45;
+
+}
+
+body.dark .calendar-nav{
+
+    background:#353535;
+
+    color:#8bd8e0;
+
+}
+
+body.dark .calendar-nav:hover{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+body.dark .calendar-dot{
+
+    background:#57d6e7;
+
+    box-shadow:0 0 10px rgba(87,214,231,.45);
+
+}
+
+body.dark .today-day{
+
+    border:2px solid #57d6e7;
+
+}
+
+body.dark .selected-day{
+
+    background:var(--primary);
+
+    color:white;
+
+}
