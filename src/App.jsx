@@ -544,6 +544,30 @@ const deleteTask = async (id, deleteMode = "single") => {
   return;
 }
 
+if (deleteMode === "future") {
+
+  const futureTasks = tasks.filter(
+    (t) =>
+      t.recurring_group_id === task.recurring_group_id &&
+      t.due_date >= task.due_date
+  );
+
+  const ids = futureTasks.map((t) => t.id);
+
+  await supabase
+    .from("tasks")
+    .delete()
+    .in("id", ids);
+
+  setTasks((prev) =>
+    prev.filter((t) => !ids.includes(t.id))
+  );
+
+  showToast("Sonraki görevler silindi 🗑", "warning");
+
+  return;
+}
+
 };
   const saveEdit = async (id) => {
     await supabase
