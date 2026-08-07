@@ -21,6 +21,16 @@ streak: {
 
   calendar: {
     title: "Takvim",
+
+    weekdays: [
+        "Pzt",
+        "Sal",
+        "Çar",
+        "Per",
+        "Cum",
+        "Cmt",
+        "Paz",
+    ],
   },
 
   taskForm: {
@@ -67,5 +77,27 @@ priority: {
     low: "Düşük",
     medium: "Orta",
     high: "Yüksek",
+},
+
+taskItem: {
+  subtasks: "Alt Görevler",
+  addSubtask: "Alt görev ekle...",
+  completed: "tamamlandı",
+  today: "Bugün",
+  edit: "Düzenle",
+  save: "Kaydet",
+  delete: "Sil",
+
+  priority: {
+    high: "🔴 Yüksek",
+    medium: "🟡 Orta",
+    low: "🔵 Düşük",
+  },
+
+  repeat: {
+    daily: "Her Gün",
+    weekly: "Haftalık",
+    every2days: "2 Günde Bir",
+  },
 },
 };

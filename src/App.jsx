@@ -737,6 +737,9 @@ return (
 
                   goToPreviousMonth={goToPreviousMonth}
                   goToNextMonth={goToNextMonth}
+
+                  texts={texts}
+                  language={language}
               />
             </div>
 

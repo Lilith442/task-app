@@ -21,6 +21,16 @@ export const en = {
 
   calendar: {
     title: "Calendar",
+
+    weekdays: [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun",
+    ],
   },
 
   taskForm: {
@@ -67,5 +77,27 @@ priority: {
     low: "Low",
     medium: "Medium",
     high: "High",
+},
+
+taskItem: {
+  subtasks: "Subtasks",
+  addSubtask: "Add subtask...",
+  completed: "completed",
+  today: "Today",
+  edit: "Edit",
+  save: "Save",
+  delete: "Delete",
+
+  priority: {
+    high: "🔴 High",
+    medium: "🟡 Medium",
+    low: "🔵 Low",
+  },
+
+  repeat: {
+    daily: "Daily",
+    weekly: "Weekly",
+    every2days: "Every 2 Days",
+  },
 },
 };

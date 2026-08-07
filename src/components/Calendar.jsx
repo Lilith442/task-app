@@ -4,11 +4,13 @@ import { CalendarDays } from "lucide-react";
 
 function Calendar({
 
-    selectedDate,
-    setSelectedDate,
-    tasks,
-    goToPreviousMonth,
-    goToNextMonth
+  selectedDate,
+  setSelectedDate,
+  tasks,
+  goToPreviousMonth,
+  goToNextMonth,
+  texts,
+  language,
 
 }) {
 const tasksByDate = tasks.reduce((acc, task) => {
@@ -56,7 +58,7 @@ while (calendarDays.length < 42) {
     
       <h3>
     <CalendarDays size={22}/>
-          Takvim
+          {texts.calendar.title}
       </h3>
 
       <div className="calendar-header">
@@ -85,23 +87,16 @@ while (calendarDays.length < 42) {
       </div>
     
                 <div className="calendar-weekdays">
-    
-                  <span>Pzt</span>
-    
-                  <span>Sal</span>
-    
-                  <span>Çar</span>
-    
-                  <span>Per</span>
-    
-                  <span>Cum</span>
-    
-                  <span>Cmt</span>
-    
-                  <span>Paz</span>
-    
-                </div>
-    
+
+                  {texts.calendar.weekdays.map((day) => (
+
+                      <span key={day}>
+                          {day}
+                      </span>
+
+                  ))}
+
+              </div>
                 <div className="calendar-grid">
                   
                   {calendarDays.map((day, index) => {

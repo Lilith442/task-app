@@ -25,6 +25,9 @@ function DashboardSection({
     goToPreviousMonth,
     goToNextMonth,
 
+    texts,
+    language,
+
 })
 {
 
@@ -36,6 +39,9 @@ function DashboardSection({
         tasks={tasks}
         goToPreviousMonth={goToPreviousMonth}
         goToNextMonth={goToNextMonth}
+
+        texts={texts}
+        language={language}
     />
   </>
   );

@@ -26,7 +26,9 @@ function TaskForm({
 }) {
 
     const formattedSelectedDate = new Date(selectedDate).toLocaleDateString(
-    language === "tr" ? "tr-TR" : "en-US",
+    language === "tr"
+        ? "tr-TR"
+        : "en-US",
         {
             weekday: "long",
             day: "numeric",
