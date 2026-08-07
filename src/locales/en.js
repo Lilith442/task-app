@@ -100,4 +100,14 @@ taskItem: {
     every2days: "Every 2 Days",
   },
 },
+
+deleteModal: {
+  title: "Delete task?",
+  subtitle: "How would you like to delete it?",
+  single: "Only this task",
+  future: "This and future tasks",
+  series: "Entire series",
+  cancel: "Cancel",
+  delete: "Delete",
+},
 };

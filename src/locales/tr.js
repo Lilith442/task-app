@@ -100,4 +100,14 @@ taskItem: {
     every2days: "2 Günde Bir",
   },
 },
+
+deleteModal: {
+  title: "Görevi sil?",
+  subtitle: "Nasıl silmek istiyorsun?",
+  single: "Sadece bu görev",
+  future: "Bu ve sonraki görevler",
+  series: "Tüm seri",
+  cancel: "Vazgeç",
+  delete: "Sil",
+},
 };

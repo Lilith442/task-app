@@ -688,6 +688,7 @@ return (
     deleteId={deleteId}
     setDeleteId={setDeleteId}
     deleteTask={deleteTask}
+    texts={texts}
     />
 
     <main className="main-content">

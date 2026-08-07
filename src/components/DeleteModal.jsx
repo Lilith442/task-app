@@ -5,7 +5,8 @@ function DeleteModal({
 
   deleteId,
   setDeleteId,
-  deleteTask
+  deleteTask,
+  texts,
 
 }) 
 
@@ -19,9 +20,9 @@ const [deleteMode, setDeleteMode] = useState("single");
 
       <div className="modal">
 
-        <h3>Görevi sil?</h3>
+        <h3>{texts.deleteModal.title}</h3>
 
-        <p>Nasıl silmek istiyorsun?</p>
+        <p>{texts.deleteModal.subtitle}</p>
 
         <div className="delete-options">
 
@@ -32,7 +33,7 @@ const [deleteMode, setDeleteMode] = useState("single");
               checked={deleteMode === "single"}
               onChange={(e) => setDeleteMode(e.target.value)}
             />
-            Sadece bu görev
+            {texts.deleteModal.single}
           </label>
 
           <label>
@@ -42,7 +43,7 @@ const [deleteMode, setDeleteMode] = useState("single");
               checked={deleteMode === "future"}
               onChange={(e) => setDeleteMode(e.target.value)}
             />
-            Bu ve sonraki görevler
+            {texts.deleteModal.future}
           </label>
 
           <label>
@@ -52,7 +53,7 @@ const [deleteMode, setDeleteMode] = useState("single");
               checked={deleteMode === "series"}
               onChange={(e) => setDeleteMode(e.target.value)}
             />
-            Tüm seri
+            {texts.deleteModal.series}
           </label>
 
         </div>
@@ -63,7 +64,7 @@ const [deleteMode, setDeleteMode] = useState("single");
             className="cancel-btn"
             onClick={() => setDeleteId(null)}
           >
-            Vazgeç
+            {texts.deleteModal.cancel}
           </button>
 
           <button
@@ -73,7 +74,7 @@ const [deleteMode, setDeleteMode] = useState("single");
               setDeleteId(null);
             }}
           >
-            Sil
+            {texts.deleteModal.delete}
           </button>
 
         </div>
