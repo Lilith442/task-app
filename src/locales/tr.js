@@ -124,4 +124,31 @@ board: {
   },
 },
 
+login: {
+  title: "Tekrar Hoş Geldin 👋",
+  subtitle: "Devam etmek için giriş yap",
+  email: "Email adresin",
+  login: "Giriş Yap",
+  loginLoading: "Giriş yapılıyor...",
+  signup: "Kayıt Ol",
+  verifyMail: "📩 Mailini doğrula",
+  loginSuccess: "Giriş başarılı 🎉",
+  signupSuccess: "Kayıt başarılı 📩",
+},
+
+theme: {
+  dark: "🌙 Koyu",
+  light: "☀️ Açık",
+},
+
+toast: {
+  taskEmpty: "Görev boş olamaz ⚠️",
+  taskAdded: "Görev eklendi ✅",
+  taskMoved: "Taşındı",
+  taskDeleted: "Görev silindi 🗑",
+  seriesDeleted: "Görev serisi silindi 🗑",
+  futureDeleted: "Sonraki görevler silindi 🗑",
+  taskUpdated: "Güncellendi ✏️",
+},
+
 };

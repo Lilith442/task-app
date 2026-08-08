@@ -114,7 +114,6 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-// SADECE BU FONKSİYONU DEĞİŞTİR
 
 const showToast = (message, type = "success") => {
   setToast({ message, type });
@@ -135,8 +134,8 @@ const showToast = (message, type = "success") => {
     });
     if (error) setMessage(error.message);
     else {
-    setMessage("📩 Mailini doğrula");
-    showToast("Kayıt başarılı 📩" , "success");
+    setMessage(texts.login.verifyMail);
+    showToast(texts.login.signupSuccess, "success");
 }
   };
 
@@ -152,7 +151,7 @@ const showToast = (message, type = "success") => {
     if (error) setMessage(error.message);
     setLoading(false);
     if (!error) {
-    showToast("Giriş başarılı 🎉", "success");
+    showToast(texts.login.loginSuccess, "success");
     }
   };
 
@@ -245,7 +244,7 @@ useEffect(() => {
  const addTask = async () => {
 
   if (!input.trim()) {
-    showToast("Görev boş olamaz ⚠️", "warning");
+    showToast(texts.toast.taskEmpty, "warning");
     return;
   }
 
@@ -330,7 +329,7 @@ setTasks(prev => [...prev, ...data]);
   setRepeatType("none");
   setLoading(false);
 
-  showToast("Görev eklendi ✅", "success");
+  showToast(texts.toast.taskAdded, "success");
 };
 
 const addSubtask = async (taskId, text) => {
@@ -429,7 +428,7 @@ const addSubtask = async (taskId, text) => {
     )
   );
 
-  showToast(`Taşındı → ${newStatus} 🚀`);
+  showToast(`${texts.toast.taskMoved} → ${newStatus} 🚀`);
 
   setDraggedTask(null);
 };
@@ -530,7 +529,7 @@ const deleteTask = async (id, deleteMode = "single") => {
 
     setTasks(prev => prev.filter(t => t.id !== id));
 
-    showToast("Görev silindi 🗑", "warning");
+    showToast(texts.toast.taskDeleted, "warning");
 
     return;
   }
@@ -550,7 +549,7 @@ const deleteTask = async (id, deleteMode = "single") => {
     )
   );
 
-  showToast("Görev serisi silindi 🗑", "warning");
+  showToast(texts.toast.seriesDeleted, "warning");
 
   return;
 }
@@ -574,7 +573,7 @@ if (deleteMode === "future") {
     prev.filter((t) => !ids.includes(t.id))
   );
 
-  showToast("Sonraki görevler silindi 🗑", "warning");
+ showToast(texts.toast.futureDeleted, "warning");
 
   return;
 }
@@ -595,7 +594,7 @@ if (deleteMode === "future") {
     setEditingId(null);
     setEditText("");
 
-    showToast("Güncellendi ✏️");
+   showToast(texts.toast.taskUpdated);
   };
 
 const filteredTasks = useTaskFilters({
@@ -643,21 +642,49 @@ const last30Days = Array.from({ length: 30 }, (_, i) => {
   </div>
 )}
 
-      <button className="top-left" onClick={() => setDarkMode(!darkMode)}>
-        {darkMode ? "☀️ Light" : "🌙 Dark"}
+
+      <div className="login-top-controls">
+
+      <button
+        className="dark-toggle"
+        onClick={() => setDarkMode(!darkMode)}
+      >
+        {darkMode
+          ? texts.theme.light
+          : texts.theme.dark}
       </button>
+
+      <div className="language-switch">
+
+        <button
+          className={language === "tr" ? "active" : ""}
+          onClick={() => setLanguage("tr")}
+        >
+          TR
+        </button>
+
+        <button
+          className={language === "en" ? "active" : ""}
+          onClick={() => setLanguage("en")}
+        >
+          EN
+        </button>
+
+      </div>
+
+    </div>
 
       <div className="login-container">
 
         <div className="login-header">
           <div className="avatar">🚀</div>
-          <h2>Welcome back</h2>
-          <p>Devam etmek için giriş yap</p>
+          <h2>{texts.login.title}</h2>
+          <p>{texts.login.subtitle}</p>
         </div>
 
         <div className="login-form">
           <input
-            placeholder="Email adresin"
+            placeholder={texts.login.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -665,11 +692,13 @@ const last30Days = Array.from({ length: 30 }, (_, i) => {
           {message && <p className="login-message">{message}</p>}
 
           <button onClick={login} disabled={loading} className="primary">
-            {loading ? "Giriş yapılıyor..." : "Login"}
+            {loading
+              ? texts.login.loginLoading
+              : texts.login.login}
           </button>
 
           <button onClick={signUp} className="secondary">
-            Sign Up
+            {texts.login.signup}
           </button>
         </div>
 

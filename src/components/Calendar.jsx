@@ -71,10 +71,13 @@ while (calendarDays.length < 42) {
           </button>
 
           <h4>
-              {new Date(selectedDate).toLocaleDateString("tr-TR",{
-                  month:"long",
-                  year:"numeric"
-              })}
+            {new Date(selectedDate).toLocaleDateString(
+              language === "tr" ? "tr-TR" : "en-US",
+              {
+                month: "long",
+                year: "numeric",
+              }
+            )}
           </h4>
 
           <button

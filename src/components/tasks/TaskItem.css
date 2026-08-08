@@ -526,7 +526,7 @@
 
     border-radius:999px;
 
-    color:white;
+    color:var(--primary);
 
     font-size:12px;
 

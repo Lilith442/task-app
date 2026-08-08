@@ -119,6 +119,26 @@ color: #0f5c63;
 min-height:20px;
  }
 
+ .login-top-controls{
+    position:absolute;
+    top:20px;
+    left:20px;
+
+    display:flex;
+    align-items:center;
+    text-align:center;
+    gap:12px;
+}
+
+.dark-toggle {
+    width: 100px;
+}
+
+.login-top-controls .language-switch{
+    display:flex;
+    gap:8px;
+}
+
  /* =========================
    RESPONSIVE
 ========================= */

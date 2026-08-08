@@ -123,4 +123,31 @@ board: {
     low: "🔵 Low",
   },
 },
+
+login: {
+  title: "Welcome Back 👋",
+  subtitle: "Sign in to continue",
+  email: "Email address",
+  login: "Login",
+  loginLoading: "Signing in...",
+  signup: "Sign Up",
+  verifyMail: "📩 Check your email",
+  loginSuccess: "Login successful 🎉",
+  signupSuccess: "Account created 📩",
+},
+
+theme: {
+  dark: "🌙 Dark",
+  light: "☀️ Light",
+},
+
+toast: {
+  taskEmpty: "Task cannot be empty ⚠️",
+  taskAdded: "Task added ✅",
+  taskMoved: "Moved",
+  taskDeleted: "Task deleted 🗑",
+  seriesDeleted: "Task series deleted 🗑",
+  futureDeleted: "Future tasks deleted 🗑",
+  taskUpdated: "Updated ✏️",
+},
 };
