@@ -16,6 +16,9 @@ function ToolbarSection({
     view,
     setView,
 
+    texts,
+    language,
+
 }) {
 
     return (
@@ -25,7 +28,7 @@ function ToolbarSection({
         
             <input
                 type="text"
-                placeholder="Görev Ara"
+                placeholder={texts.toolbar.search}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
@@ -36,6 +39,7 @@ function ToolbarSection({
             
             filter={filter}
             setFilter={setFilter}
+            texts={texts}
             
         />
 
@@ -43,6 +47,7 @@ function ToolbarSection({
             
                 view={view}
                 setView={setView}
+                texts={texts}
             
             />
         </div>

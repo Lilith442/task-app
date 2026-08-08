@@ -428,7 +428,9 @@ const addSubtask = async (taskId, text) => {
     )
   );
 
-  showToast(`${texts.toast.taskMoved} → ${newStatus} 🚀`);
+  showToast(
+  `${texts.toast.taskMoved} → ${texts.toast.status[newStatus]} 🚀`
+);
 
   setDraggedTask(null);
 };
@@ -465,28 +467,40 @@ const goalPercent =
     : Math.round((selectedCompleted / dailyGoal) * 100);
 
 const formatDueDate = (date) => {
-  if (!date) return "No date";
+  if (!date) return texts.date.noDate;
 
   const today = new Date();
   const tomorrow = new Date();
+
   tomorrow.setDate(today.getDate() + 1);
 
   const taskDate = new Date(date);
 
-  const format = (d) => d.toISOString().split("T")[0];
+  const format = (d) =>
+    d.toISOString().split("T")[0];
 
-  if (format(taskDate) === format(today)) return "Today";
-
-  if (format(taskDate) === format(tomorrow)) return "Tomorrow";
-
-  if (taskDate < today && format(taskDate) !== format(today)) {
-    return "⚠️ Overdue";
+  if (format(taskDate) === format(today)) {
+    return texts.date.today;
   }
 
-  return taskDate.toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "short"
-  });
+  if (format(taskDate) === format(tomorrow)) {
+    return texts.date.tomorrow;
+  }
+
+  if (
+    taskDate < today &&
+    format(taskDate) !== format(today)
+  ) {
+    return texts.date.overdue;
+  }
+
+  return taskDate.toLocaleDateString(
+    language === "tr" ? "tr-TR" : "en-US",
+    {
+      day: "numeric",
+      month: "short",
+    }
+  );
 };
 
   const toggleTask = async (id) => {
@@ -747,7 +761,7 @@ return (
           />
 
           <WelcomePanel
-              const greeting = {texts.welcome.title}
+              greeting={texts.welcome.title}
               todayText={texts.welcome.subtitle}
               todayTasks={selectedTasks.length}
               overdueTasks={0}
@@ -807,11 +821,11 @@ return (
 
               <div className="tasks-title">
 
-                <h2>📝 Görevlerim</h2>
+                <h2>{texts.tasksSection.title}</h2>
 
-                <p>
-                  Görevlerinizi bulun, filtreleyin ve yönetin.
-                </p>
+                  <p>
+                    {texts.tasksSection.subtitle}
+                  </p>
 
               </div>
 
@@ -824,6 +838,8 @@ return (
               setFilter={setFilter}
               view={view}
               setView={setView}
+              texts={texts}
+              language={language}
             />
 
           </div>
@@ -839,10 +855,10 @@ return (
               ✨
             </div>
 
-            <h3>No tasks yet</h3>
+            <h3>{texts.tasksSection.emptyTitle}</h3>
 
             <p>
-              Add your first task and start building momentum.
+              {texts.tasksSection.emptySubtitle}
             </p>
 
           </motion.div>
@@ -894,12 +910,14 @@ return (
           <ProgressOverview
             tasks={selectedTasks}
             percent={percent}
+            texts={texts}
           />
 
           <DailyGoalCard
             todayCompleted={selectedCompleted}
             dailyGoal={dailyGoal}
             goalPercent={goalPercent}
+            texts={texts}
           />
 
           <Stats
@@ -907,27 +925,22 @@ return (
             completedTasks={completedTasks}
             activeTasks={activeTasks}
             bestStreak={bestStreak}
+            texts={texts}
           />
 
           <div className="analytics-grid">
             <ChartCard
               chartData={chartData}
               COLORS={COLORS}
+              texts={texts}
             />
 
             <WeeklyActivity
               weeklyData={weeklyData}
+              texts={texts}
+              language={language}
             />
           </div>
-
-          <Stats
-            totalTasks={selectedTasks.length}
-            completedTasks={completedTasks}
-            activeTasks={activeTasks}
-            bestStreak={bestStreak}
-          />
-
-
         </motion.div>
 
       </main>

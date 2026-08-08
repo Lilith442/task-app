@@ -130,10 +130,6 @@ min-height:20px;
     gap:12px;
 }
 
-.dark-toggle {
-    width: 100px;
-}
-
 .login-top-controls .language-switch{
     display:flex;
     gap:8px;

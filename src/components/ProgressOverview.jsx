@@ -1,11 +1,11 @@
-function ProgressOverview({ tasks, percent }) {
+function ProgressOverview({ tasks, percent, texts }) {
   const activeTasks = tasks.filter((task) => !task.completed).length;
 
   return (
     <div className="progress-overview">
 
       <p className="progress-summary">
-        {tasks.length} görev • {activeTasks} aktif
+        {tasks.length} {texts.progressOverview.tasks} • {activeTasks} {texts.progressOverview.active}
       </p>
 
       <div className="progress-bar">
@@ -18,7 +18,7 @@ function ProgressOverview({ tasks, percent }) {
       </div>
 
       <p className="progress-text">
-        %{percent} tamamlandı
+        %{percent} {texts.progressOverview.completed}
       </p>
 
     </div>

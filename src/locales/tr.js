@@ -149,6 +149,61 @@ toast: {
   seriesDeleted: "Görev serisi silindi 🗑",
   futureDeleted: "Sonraki görevler silindi 🗑",
   taskUpdated: "Güncellendi ✏️",
+
+  status: {
+  todo: "Yapılacak",
+  doing: "Yapılıyor",
+  done: "Tamamlandı",
+},
+},
+
+date: {
+  noDate: "Tarih yok",
+  today: "Bugün",
+  tomorrow: "Yarın",
+  overdue: "⚠️ Gecikti",
+},
+
+tasksSection: {
+  title: "📝 Görevlerim",
+  subtitle: "Görevlerinizi bulun, filtreleyin ve yönetin.",
+  emptyTitle: "Henüz görev yok",
+  emptySubtitle: "İlk görevini ekle ve ilerlemeye başla.",
+},
+
+toolbar: {
+  search: "Görev Ara",
+},
+
+filters: {
+  all: "Tümü",
+  active: "Aktif",
+  completed: "Tamamlanan",
+},
+
+viewSwitch: {
+  list: "📋 Liste",
+  board: "🗂️ Board",
+},
+
+progressOverview: {
+  tasks: "görev",
+  active: "aktif",
+  completed: "tamamlandı",
+},
+
+dailyGoal: {
+  title: "Günlük Hedef",
+  completed: "🎉 Harika! Günlük hedefini tamamladın.",
+  remainingPrefix: "Bugünkü hedef için",
+  remainingSuffix: "görev kaldı.",
+},
+
+stats: {
+  totalTasks: "Toplam Görev",
+  completed: "Tamamlanan",
+  active: "Aktif",
+  bestStreak: "En İyi Seri",
 },
 
 };

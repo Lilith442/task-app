@@ -149,5 +149,61 @@ toast: {
   seriesDeleted: "Task series deleted 🗑",
   futureDeleted: "Future tasks deleted 🗑",
   taskUpdated: "Updated ✏️",
+
+  status: {
+  todo: "Todo",
+  doing: "Doing",
+  done: "Done",
 },
+},
+
+date: {
+  noDate: "No date",
+  today: "Today",
+  tomorrow: "Tomorrow",
+  overdue: "⚠️ Overdue",
+},
+
+tasksSection: {
+  title: "📝 My Tasks",
+  subtitle: "Find, filter and manage your tasks.",
+  emptyTitle: "No tasks yet",
+  emptySubtitle: "Add your first task and start building momentum.",
+},
+
+toolbar: {
+  search: "Search tasks",
+},
+
+filters: {
+  all: "All",
+  active: "Active",
+  completed: "Completed",
+},
+
+viewSwitch: {
+  list: "📋 List",
+  board: "🗂️ Board",
+},
+
+progressOverview: {
+  tasks: "tasks",
+  active: "active",
+  completed: "completed",
+},
+
+dailyGoal: {
+  title: "Daily Goal",
+  completed: "🎉 Great! You completed your daily goal.",
+  remainingPrefix: "You have",
+  remainingSuffix: "tasks left for today's goal.",
+},
+
+stats: {
+  totalTasks: "Total Tasks",
+  completed: "Completed",
+  active: "Active",
+  bestStreak: "Best Streak",
+},
+
 };
