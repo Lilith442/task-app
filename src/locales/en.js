@@ -206,4 +206,24 @@ stats: {
   bestStreak: "Best Streak",
 },
 
+chart: {
+  title: "Task Distribution",
+  completed: "Completed",
+  active: "Active",
+},
+
+weekDays: [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun",
+],
+
+weeklyActivity: {
+  title: "Weekly Activity",
+},
+
 };

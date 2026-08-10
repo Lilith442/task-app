@@ -1,4 +1,4 @@
-export function useDashboardStats(tasks, selectedDate) {
+export function useDashboardStats(tasks, selectedDate, texts) {
   const selectedTasks = tasks.filter(
     task => task.due_date === selectedDate
   );
@@ -20,27 +20,19 @@ export function useDashboardStats(tasks, selectedDate) {
         );
 
   const chartData = [
-    {
-      name: "Completed",
-      value: completedTasks,
-    },
-    {
-      name: "Active",
-      value: activeTasks,
-    },
-  ];
+  {
+    name: texts.chart.completed,
+    value: completedTasks,
+  },
+  {
+    name: texts.chart.active,
+    value: activeTasks,
+  },
+];
 
   const COLORS = ["#0f5c63", "#4f9da6"];
 
-  const weekDays = [
-  "Pzt",
-  "Sal",
-  "Çar",
-  "Per",
-  "Cum",
-  "Cmt",
-  "Paz",
-];
+  const weekDays = texts.weekDays;
 
 const weeklyData = weekDays.map((day, index) => {
   const count = tasks.filter(task => {

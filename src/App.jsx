@@ -455,7 +455,7 @@ const {
   streak,
   bestStreak,
   weeklyData,
-} = useDashboardStats(tasks, selectedDate);
+} = useDashboardStats(tasks, selectedDate, texts);
 
 const dailyGoal = selectedTasks.length;
 
@@ -663,9 +663,7 @@ const last30Days = Array.from({ length: 30 }, (_, i) => {
         className="dark-toggle"
         onClick={() => setDarkMode(!darkMode)}
       >
-        {darkMode
-          ? texts.theme.light
-          : texts.theme.dark}
+        {darkMode ? "☀️" : "🌙"}
       </button>
 
       <div className="language-switch">

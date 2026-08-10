@@ -7,11 +7,14 @@ import {
 } from "recharts";
 import { PieChart as PieChartIcon } from "lucide-react";
 
-function ChartCard({ chartData, COLORS }) {
+function ChartCard({ chartData, COLORS, texts }) {
   return (
     <div className="chart-card">
 
-      <h3><PieChartIcon size={22}/> Görev Dağılımı</h3>
+      <h3>
+        <PieChartIcon size={22} />
+        {texts.chart.title}
+      </h3>
 
       <ResponsiveContainer width="100%" height={160}>
 

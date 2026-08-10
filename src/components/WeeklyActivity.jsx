@@ -3,50 +3,49 @@ import "./WeeklyActivity.css";
 import { BarChart3 } from "lucide-react";
 
 function WeeklyActivity({
-
-    weeklyData
-
+  weeklyData,
+  texts,
 }) {
   return (
+    <div className="weekly-card">
 
-          <div className="weekly-card">
+      <h3>
+        <BarChart3 size={22} />
+        {texts.weeklyActivity.title}
+      </h3>
 
-            <h3><BarChart3 size={22}/> Haftalık Aktivite</h3>
+      {weeklyData.map((item) => (
 
-            {weeklyData.map((item) => (
+        <div
+          key={item.day}
+          className="week-row"
+        >
 
-              <div
-                key={item.day}
-                className="week-row"
-              >
+          <span className="week-day">
+            {item.day}
+          </span>
 
-                <span className="week-day">
-                  {item.day}
-                </span>
+          <div className="week-bar">
 
-                <div className="week-bar">
-
-                  <div
-                    className="week-fill"
-                    style={{
-                      width: `${Math.min(item.count * 20, 100)}%`
-                    }}
-                  />
-
-                </div>
-
-                <span className="week-count">
-                  {item.count}
-                </span>
-
-              </div>
-
-            ))}
+            <div
+              className="week-fill"
+              style={{
+                width: `${Math.min(item.count * 20, 100)}%`,
+              }}
+            />
 
           </div>
 
-  );
+          <span className="week-count">
+            {item.count}
+          </span>
 
+        </div>
+
+      ))}
+
+    </div>
+  );
 }
 
 export default WeeklyActivity;

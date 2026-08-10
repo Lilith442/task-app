@@ -206,4 +206,24 @@ stats: {
   bestStreak: "En İyi Seri",
 },
 
+weeklyActivity: {
+  title: "Haftalık Aktivite",
+},
+
+chart: {
+  title: "Görev Dağılımı",
+  completed: "Tamamlanan",
+  active: "Aktif",
+},
+
+weekDays: [
+  "Pzt",
+  "Sal",
+  "Çar",
+  "Per",
+  "Cum",
+  "Cmt",
+  "Paz",
+],
+
 };
