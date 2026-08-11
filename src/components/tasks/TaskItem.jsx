@@ -40,9 +40,13 @@ function TaskItem({
   ).length;
 
   const progress =
-    taskSubtasks.length === 0
-      ? 0
-      : Math.round((completedSubtasks / taskSubtasks.length) * 100);
+  taskSubtasks.length === 0
+    ? task.completed
+      ? 100
+      : 0
+    : Math.round(
+        (completedSubtasks / taskSubtasks.length) * 100
+      );
 
   return (
     <motion.div

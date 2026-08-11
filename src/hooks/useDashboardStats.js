@@ -31,27 +31,53 @@ export function useDashboardStats(tasks, selectedDate, texts) {
 ];
 
   const COLORS = ["#0f5c63", "#4f9da6"];
+const weekDays = texts.weekDays;
 
-  const weekDays = texts.weekDays;
+const today = new Date();
+
+const currentDay =
+  today.getDay() === 0
+    ? 6
+    : today.getDay() - 1;
+
+const monday = new Date(today);
+
+monday.setDate(
+  today.getDate() - currentDay
+);
+
+monday.setHours(0, 0, 0, 0);
 
 const weeklyData = weekDays.map((day, index) => {
+
+  const targetDate = new Date(monday);
+
+  targetDate.setDate(
+    monday.getDate() + index
+  );
+
+  const targetDateString =
+    targetDate.toISOString().split("T")[0];
+
   const count = tasks.filter(task => {
+
     if (!task.completed_at) return false;
 
-    const completedDay = new Date(task.completed_at).getDay();
+    const completedDate =
+      new Date(task.completed_at)
+        .toISOString()
+        .split("T")[0];
 
-    const convertedDay =
-      completedDay === 0 ? 6 : completedDay - 1;
+    return completedDate === targetDateString;
 
-    return convertedDay === index;
   }).length;
 
   return {
     day,
     count,
   };
-});
 
+});
   const calculateStreak = () => {
     const completedDates = tasks
       .filter(task => task.completed_at)

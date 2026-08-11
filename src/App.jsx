@@ -199,6 +199,7 @@ useEffect(() => {
   if (!user) return;
 
   fetchTasks();
+  fetchSubtasks();
 
   const channel = supabase
     .channel("tasks-realtime")
