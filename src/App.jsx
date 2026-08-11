@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Header from "./components/Header";
 import DeleteModal from "./components/DeleteModal";
 import Toast from "./components/Toast";
@@ -28,6 +28,7 @@ import { useTaskFilters } from "./hooks/useTaskFilters";
 import WelcomePanel from "./components/WelcomePanel";
 import { tr } from "./locales/tr";
 import { en } from "./locales/en";
+import { arrayMove } from "@dnd-kit/sortable";
 
 // 🔥 ITEM
 
@@ -51,6 +52,7 @@ function App() {
   const [editText, setEditText] = useState("");
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
@@ -126,34 +128,44 @@ const showToast = (message, type = "success") => {
   }, 2000);
 };
 
-  const signUp = async () => {
-    setMessage("");
-    const { error } = await supabase.auth.signUp({
-      email,
-      password: "123456"
-    });
-    if (error) setMessage(error.message);
-    else {
+const signUp = async () => {
+  setMessage("");
+
+  if (!email.trim() || !password.trim()) {
+    setMessage(texts.login.required);
+    return;
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    setMessage(error.message);
+  } else {
     setMessage(texts.login.verifyMail);
     showToast(texts.login.signupSuccess, "success");
-}
-  };
+  }
+};
 
-  const login = async () => {
-    setMessage("");
-    setLoading(true);
+const login = async () => {
+  setMessage("");
+  setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: "123456"
-    });
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
-    if (error) setMessage(error.message);
-    setLoading(false);
-    if (!error) {
+  if (error) {
+    setMessage(error.message);
+  } else {
     showToast(texts.login.loginSuccess, "success");
-    }
-  };
+  }
+
+  setLoading(false);
+};
 
   const logout = async () => {
     await supabase.auth.signOut();
@@ -335,8 +347,6 @@ setTasks(prev => [...prev, ...data]);
 
 const addSubtask = async (taskId, text) => {
 
-  console.log("🚀 addSubtask çalıştı", taskId, text);
-
   const { data, error } = await supabase
     .from("subtasks")
     .insert([
@@ -347,9 +357,6 @@ const addSubtask = async (taskId, text) => {
       }
     ])
     .select();
-
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
 
   if (error) {
   console.error(error);
@@ -437,8 +444,6 @@ const addSubtask = async (taskId, text) => {
 };
 
 const {
-  changeDay,
-  goToToday,
   goToPreviousMonth,
   goToNextMonth,
 } = useCalendarNavigation(
@@ -618,34 +623,7 @@ const filteredTasks = useTaskFilters({
   filter,
   search,
 });
-  
 
-const last30Days = Array.from({ length: 30 }, (_, i) => {
-
-  const date = new Date();
-
-  date.setDate(date.getDate() - (29 - i));
-
-  const formatted = date.toISOString().split("T")[0];
-
-  const completed = tasks.some(task => {
-
-    if (!task.completed_at) return false;
-
-    return (
-      new Date(task.completed_at)
-        .toISOString()
-        .split("T")[0] === formatted
-    );
-
-  });
-
-  return {
-    date: formatted,
-    completed
-  };
-
-});
 
   // 🔐 LOGIN UI
   if (!user) {
@@ -696,23 +674,44 @@ const last30Days = Array.from({ length: 30 }, (_, i) => {
         </div>
 
         <div className="login-form">
+
           <input
+            type="email"
             placeholder={texts.login.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          {message && <p className="login-message">{message}</p>}
+          <input
+            type="password"
+            placeholder={texts.login.password}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-          <button onClick={login} disabled={loading} className="primary">
+          {message && (
+            <p className="login-message">
+              {message}
+            </p>
+          )}
+
+          <button
+            onClick={login}
+            disabled={loading}
+            className="primary"
+          >
             {loading
               ? texts.login.loginLoading
               : texts.login.login}
           </button>
 
-          <button onClick={signUp} className="secondary">
+          <button
+            onClick={signUp}
+            className="secondary"
+          >
             {texts.login.signup}
           </button>
+
         </div>
 
       </div>

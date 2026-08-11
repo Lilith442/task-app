@@ -134,6 +134,8 @@ login: {
   verifyMail: "📩 Check your email",
   loginSuccess: "Login successful 🎉",
   signupSuccess: "Account created 📩",
+  password: "Password",
+  required: "Email and password are required.",
 },
 
 theme: {

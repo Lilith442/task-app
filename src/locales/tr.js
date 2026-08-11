@@ -134,6 +134,8 @@ login: {
   verifyMail: "📩 Mailini doğrula",
   loginSuccess: "Giriş başarılı 🎉",
   signupSuccess: "Kayıt başarılı 📩",
+  password: "Şifre",
+  required: "Email ve şifre gerekli.",
 },
 
 theme: {
