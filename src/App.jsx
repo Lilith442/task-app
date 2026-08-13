@@ -71,6 +71,21 @@ function App() {
   return localStorage.getItem("language") || "tr";
   });
   const texts = language === "tr" ? tr : en;
+  const getTimeGreeting = () => {
+  const hour = new Date().getHours();
+
+  if (language === "tr") {
+    if (hour >= 5 && hour < 12) return "Günaydın";
+    if (hour >= 12 && hour < 18) return "İyi Günler";
+    if (hour >= 18 && hour < 22) return "İyi Akşamlar";
+    return "İyi Geceler";
+  }
+
+  if (hour >= 5 && hour < 12) return "Good Morning";
+  if (hour >= 12 && hour < 18) return "Good Afternoon";
+  if (hour >= 18 && hour < 22) return "Good Evening";
+  return "Good Night";
+};
   const [deleteId, setDeleteId] = useState(null);
 
   // 🌙 DARK MODE
@@ -759,12 +774,12 @@ return (
           />
 
           <WelcomePanel
-              greeting={texts.welcome.title}
-              todayText={texts.welcome.subtitle}
-              todayTasks={selectedTasks.length}
-              overdueTasks={0}
-              goalPercent={goalPercent}
-              texts={texts}
+            greeting={getTimeGreeting()}
+            todayText={texts.welcome.subtitle}
+            todayTasks={selectedTasks.length}
+            overdueTasks={0}
+            goalPercent={goalPercent}
+            texts={texts}
           />
 
           <div className="dashboard-layout">
