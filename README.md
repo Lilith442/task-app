@@ -78,6 +78,8 @@ Task App helps users organize their daily tasks, track progress, manage recurrin
 
 ---
 
+## 📸 Screenshots
+
 ## 📊 Dashboard
 
 The dashboard provides an overview of daily productivity including:
