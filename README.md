@@ -1,16 +1,186 @@
-# React + Vite
+# 🚀 Task App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern and responsive task management application built with React and Supabase.
 
-Currently, two official plugins are available:
+Task App helps users organize their daily tasks, track progress, manage recurring tasks and subtasks, and visualize their productivity through an interactive dashboard.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🌐 **Live Demo:** https://task-app-tau-six.vercel.app/
 
-## React Compiler
+📦 **GitHub:** https://github.com/Lilith442/task-app
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔐 User authentication with Supabase
+- 📝 Create, edit and delete tasks
+- ✅ Complete and uncomplete tasks
+- 📅 Calendar-based task management
+- 🔁 Recurring tasks
+  - One time
+  - Every day
+  - Every 2 days
+  - Weekly
+- 📌 Subtasks
+- 🗂️ List and Board views
+- 🖱️ Drag & drop task management
+- 🔎 Search tasks
+- 🎯 Task filtering
+  - All
+  - Active
+  - Completed
+- ⚡ Task priorities
+  - Low
+  - Medium
+  - High
+- 📊 Productivity dashboard
+- 🔥 Daily streak tracking
+- 🏆 Best streak tracking
+- 📈 Weekly activity statistics
+- 🥧 Task distribution chart
+- 🎯 Daily goal tracking
+- 🌙 Dark mode
+- 🌍 Turkish / English language support
+- 📱 Responsive design
+- 💾 Persistent application preferences
+- ⚡ Real-time task updates with Supabase
+
+---
+
+## 🛠️ Technologies
+
+### Frontend
+
+- React
+- JavaScript
+- HTML
+- CSS
+- Vite
+
+### Backend & Database
+
+- Supabase
+- PostgreSQL
+- Supabase Authentication
+- Row Level Security (RLS)
+- Realtime
+
+### Libraries
+
+- Framer Motion
+- dnd-kit
+- Recharts
+- Lucide React
+
+### Deployment
+
+- Vercel
+
+---
+
+## 📊 Dashboard
+
+The dashboard provides an overview of daily productivity including:
+
+- Daily task progress
+- Active and completed tasks
+- Daily goals
+- Current streak
+- Best streak
+- Task distribution
+- Weekly activity
+
+---
+
+## 🔁 Recurring Tasks
+
+Tasks can be scheduled to repeat automatically.
+
+Supported recurrence options:
+
+- One Time
+- Every Day
+- Every 2 Days
+- Weekly
+
+Recurring tasks are grouped together so users can manage an individual task, an entire series, or future occurrences.
+
+---
+
+## 🗂️ List & Board Views
+
+Tasks can be viewed in two different layouts.
+
+### List View
+
+A traditional task management interface with:
+
+- Task completion
+- Priority
+- Category
+- Due date
+- Recurrence
+- Subtasks
+- Edit and delete actions
+
+### Board View
+
+Tasks are organized into three columns:
+
+- 📝 Todo
+- ⚡ Doing
+- ✅ Done
+
+Tasks can be moved between columns using drag & drop.
+
+---
+
+## 🌍 Internationalization
+
+The application supports two languages:
+
+- 🇹🇷 Turkish
+- 🇬🇧 English
+
+The selected language is stored locally so the preference persists between sessions.
+
+---
+
+## 🌙 Dark Mode
+
+Task App includes a dark mode that can be enabled from the interface.
+
+The selected theme is also persisted locally.
+
+---
+
+## 🔐 Authentication & Security
+
+Authentication is handled through Supabase Auth.
+
+Each task is associated with its authenticated user.
+
+Row Level Security (RLS) is enabled to ensure that users can only access their own task data.
+
+Environment variables are used for Supabase configuration and are not included in the repository.
+
+---
+
+## 📱 Responsive Design
+
+The application is designed to work across:
+
+- Desktop
+- Tablet
+- Mobile
+
+The dashboard, calendar, task cards, board view and controls adapt to smaller screen sizes.
+
+---
+
+## ⚙️ Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Lilith442/task-app.git
