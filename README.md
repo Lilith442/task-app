@@ -80,7 +80,9 @@ Task App helps users organize their daily tasks, track progress, manage recurrin
 
 ## 📸 Screenshots
 
-## 📊 Dashboard
+### 📊 Dashboard
+
+![Dashboard](./screenshots/dashboard.png)
 
 The dashboard provides an overview of daily productivity including:
 
@@ -91,8 +93,35 @@ The dashboard provides an overview of daily productivity including:
 - Best streak
 - Task distribution
 - Weekly activity
+---
+
+### 📝 Task Management
+
+![Task Management](./screenshots/task-management.png)
+
+The task management interface allows users to:
+
+- Create and manage tasks
+- Set priorities
+- Set due dates
+- Create recurring tasks
+- Add subtasks
+- Search and filter tasks
+- Edit and delete tasks
 
 ---
+
+### 📈 Analytics
+
+![Analytics](./screenshots/analytics.png)
+
+The analytics section displays:
+
+- Daily goal progress
+- Completed and active tasks
+- Best streak
+- Task distribution
+- Weekly activity
 
 ## 🔁 Recurring Tasks
 
@@ -125,17 +154,17 @@ A traditional task management interface with:
 - Subtasks
 - Edit and delete actions
 
-### Board View
+### 🗂️ Board View
 
-Tasks are organized into three columns:
+![Board View](./screenshots/board.png)
 
-- 📝 Todo
-- ⚡ Doing
-- ✅ Done
+Tasks can be organized into:
+
+- Todo
+- Doing
+- Done
 
 Tasks can be moved between columns using drag & drop.
-
----
 
 ## 🌍 Internationalization
 
