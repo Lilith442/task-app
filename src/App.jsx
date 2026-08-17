@@ -682,8 +682,9 @@ const filteredTasks = useTaskFilters({
 
       <div className="login-container">
 
-        <div className="login-header">
-          <div className="avatar">🚀</div>
+        <div className="login-header"><a href="https://task-app-tau-six.vercel.app/">
+          <img className="login-logo" src="/task-app-logo.png" alt="Task App Logo"/>
+          </a>
           <h2>{texts.login.title}</h2>
           <p>{texts.login.subtitle}</p>
         </div>
