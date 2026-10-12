@@ -50,11 +50,18 @@ function App() {
   });
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editCategory, setEditCategory] = useState("Genel");
+  const [editPriority, setEditPriority] = useState("medium");
+  const [editDueDate, setEditDueDate] = useState("");
+  const [editRepeatType, setEditRepeatType] = useState("none");
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showEditScopeModal, setShowEditScopeModal] = useState(false);
+  const [pendingEditId, setPendingEditId] = useState(null);
   const [darkMode, setDarkMode] = useState(() => {
   return localStorage.getItem("darkMode") === "true";
   });
@@ -614,23 +621,93 @@ if (deleteMode === "future") {
 }
 
 };
-  const saveEdit = async (id) => {
-    await supabase
-      .from("tasks")
-      .update({ text: editText })
-      .eq("id", id);
+const saveEdit = async (id, scope = "single") => {
+  const currentTask = tasks.find((task) => task.id === id);
 
-    setTasks(prev =>
-      prev.map(t =>
-        t.id === id ? { ...t, text: editText } : t
-      )
-    );
+  if (!currentTask) {
+    showToast("Görev bulunamadı.", "warning");
+    return;
+  }
 
-    setEditingId(null);
-    setEditText("");
+  const isRecurring =
+    currentTask.repeat_type &&
+    currentTask.repeat_type !== "none" &&
+    currentTask.recurring_group_id;
 
-   showToast(texts.toast.taskUpdated);
+  // Tekrarlanan görevlerde henüz seçim yapılmadıysa pencereyi aç.
+  if (isRecurring && scope === "ask") {
+    setPendingEditId(id);
+    setShowEditScopeModal(true);
+    return;
+  }
+
+  const updates = {
+    text: editText.trim(),
+    description: editDescription.trim(),
+    category: editCategory,
+    priority: editPriority,
   };
+
+  // Tarih ve tekrar sıklığını şimdilik yalnızca tek göreve uygula.
+  if (scope === "single" || !isRecurring) {
+    updates.due_date = editDueDate;
+    updates.repeat_type = editRepeatType;
+  }
+
+  let query = supabase
+    .from("tasks")
+    .update(updates);
+
+  if (scope === "series" && isRecurring) {
+    query = query.eq(
+      "recurring_group_id",
+      currentTask.recurring_group_id
+    );
+  } else {
+    query = query.eq("id", id);
+  }
+
+  const { data, error } = await query.select();
+
+  if (error) {
+    console.error("Görev güncellenemedi:", error);
+    showToast("Görev güncellenemedi.", "warning");
+    return;
+  }
+
+  setTasks((prev) =>
+    prev.map((task) => {
+      const updatedTask = data.find(
+        (row) => row.id === task.id
+      );
+
+      return updatedTask ? updatedTask : task;
+    })
+  );
+
+  setEditingId(null);
+  setEditText("");
+  setEditDescription("");
+  setEditCategory("Genel");
+  setEditPriority("medium");
+  setEditDueDate("");
+  setEditRepeatType("none");
+
+  setPendingEditId(null);
+  setShowEditScopeModal(false);
+
+  showToast(texts.toast.taskUpdated);
+};
+
+const cancelEdit = () => {
+  setEditingId(null);
+  setEditText("");
+  setEditDescription("");
+  setEditCategory("Genel");
+  setEditPriority("medium");
+  setEditDueDate("");
+  setEditRepeatType("none");
+};
 
 const filteredTasks = useTaskFilters({
   tasks,
@@ -897,23 +974,34 @@ return (
 
           ) : (
 
-            <TaskList
-
+           <TaskList
               filteredTasks={filteredTasks}
               handleDragEnd={handleDragEnd}
-
               toggleTask={toggleTask}
               deleteTask={deleteTask}
 
+              // Edit
               editingId={editingId}
               editText={editText}
-
               setEditText={setEditText}
+              editDescription={editDescription}
+              setEditDescription={setEditDescription}
+              editCategory={editCategory}
+              setEditCategory={setEditCategory}
+              editPriority={editPriority}
+              setEditPriority={setEditPriority}
+              editDueDate={editDueDate}
+              setEditDueDate={setEditDueDate}
+              editRepeatType={editRepeatType}
+              setEditRepeatType={setEditRepeatType}
               setEditingId={setEditingId}
-
               saveEdit={saveEdit}
+              cancelEdit={cancelEdit}
+
+              // Delete
               setDeleteId={setDeleteId}
 
+              // Subtasks
               addSubtask={addSubtask}
               subtasks={subtasks}
               toggleSubtask={toggleSubtask}

@@ -1,4 +1,3 @@
-/*TaskItem.jsx */
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -10,22 +9,44 @@ import {
   ChevronDown,
   ChevronRight,
   Plus,
+  X,
 } from "lucide-react";
 import "./TaskItem.css";
 
 function TaskItem({
   task,
   toggleTask,
+
+  // Edit
   editingId,
   editText,
   setEditText,
+  editDescription,
+  setEditDescription,
+  editCategory,
+  setEditCategory,
+  editPriority,
+  setEditPriority,
+  editDueDate,
+  setEditDueDate,
+  editRepeatType,
+  setEditRepeatType,
   setEditingId,
   saveEdit,
-  dragHandleProps,
+  cancelEdit,
+
+  // Delete
   setDeleteId,
+
+  // Subtasks
   addSubtask,
   subtasks,
   toggleSubtask,
+
+  // Drag
+  dragHandleProps,
+
+  // Language
   texts,
 }) {
   const [showSubtasks, setShowSubtasks] = useState(false);
@@ -40,13 +61,26 @@ function TaskItem({
   ).length;
 
   const progress =
-  taskSubtasks.length === 0
-    ? task.completed
-      ? 100
-      : 0
-    : Math.round(
-        (completedSubtasks / taskSubtasks.length) * 100
-      );
+    taskSubtasks.length === 0
+      ? task.completed
+        ? 100
+        : 0
+      : Math.round(
+          (completedSubtasks / taskSubtasks.length) * 100
+        );
+
+  const isEditing = editingId === task.id;
+  const [showScopeChoice, setShowScopeChoice] = useState(false);
+
+  const startEditing = () => {
+    setEditingId(task.id);
+    setEditText(task.text || "");
+    setEditDescription(task.description || "");
+    setEditCategory(task.category || "Genel");
+    setEditPriority(task.priority || "medium");
+    setEditDueDate(task.due_date || "");
+    setEditRepeatType(task.repeat_type || "none");
+  };
 
   return (
     <motion.div
@@ -57,235 +91,334 @@ function TaskItem({
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.2 }}
     >
-
-      {/* ================= HEADER ================= */}
-
       <div className="task-header">
-
         <div className="task-header-left">
-
-          <span
-            className="drag-handle"
-            {...dragHandleProps}
-          >
+          <span className="drag-handle" {...dragHandleProps}>
             <GripVertical size={20} />
           </span>
 
           <label className="task-checkbox">
-
             <input
-                type="checkbox"
-                checked={!!task.completed}
-                onChange={() => toggleTask(task.id)}
+              type="checkbox"
+              checked={!!task.completed}
+              onChange={() => toggleTask(task.id)}
             />
-
             <span className="checkmark"></span>
-
           </label>
 
-          {editingId === task.id ? (
-            <input
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-            />
-          ) : (
-            <h3 className={task.completed ? "done task-title" : "task-title"}>
-              {task.text}
-            </h3>
-          )}
+          {isEditing ? (
+            <div className="task-edit-fields">
+              <input
+                className="task-edit-title"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                placeholder="Görev başlığı"
+              />
 
+              <textarea
+                className="task-edit-description"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                placeholder="Açıklama"
+                rows={3}
+              />
+            </div>
+          ) : (
+            <div className="task-title-wrapper">
+              <h3
+                className={
+                  task.completed
+                    ? "done task-title"
+                    : "task-title"
+                }
+              >
+                {task.text}
+              </h3>
+
+              {task.description && (
+                <p className="task-description">
+                  {task.description}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
-        <span className={`priority ${task.priority}`}>
+        {!isEditing && (
+          <span className={`priority ${task.priority}`}>
+            {task.priority === "high" &&
+              texts.taskItem.priority.high}
 
-          {task.priority === "high" && texts.taskItem.priority.high}
+            {task.priority === "medium" &&
+              texts.taskItem.priority.medium}
 
-          {task.priority === "medium" && texts.taskItem.priority.medium}
-
-          {task.priority === "low" && texts.taskItem.priority.low}
-
-        </span>
-
+            {task.priority === "low" &&
+              texts.taskItem.priority.low}
+          </span>
+        )}
       </div>
 
-      {/* ================= PROGRESS ================= */}
+      {isEditing && (
+        <div className="task-edit-panel">
+          <div className="task-edit-row">
+            <div className="task-edit-group">
+              <label>Kategori</label>
+
+              <select
+                value={editCategory}
+                onChange={(e) =>
+                  setEditCategory(e.target.value)
+                }
+              >
+                <option value="Genel">Genel</option>
+                <option value="İş">İş</option>
+                <option value="Kişisel">Kişisel</option>
+              </select>
+            </div>
+
+            <div className="task-edit-group">
+              <label>Öncelik</label>
+
+              <select
+                value={editPriority}
+                onChange={(e) =>
+                  setEditPriority(e.target.value)
+                }
+              >
+                <option value="high">Yüksek</option>
+                <option value="medium">Orta</option>
+                <option value="low">Düşük</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="task-edit-row">
+            <div className="task-edit-group">
+              <label>Tarih</label>
+
+              <input
+                type="date"
+                value={editDueDate}
+                onChange={(e) =>
+                  setEditDueDate(e.target.value)
+                }
+              />
+            </div>
+
+            <div className="task-edit-group">
+              <label>Tekrar</label>
+
+              <select
+                value={editRepeatType}
+                onChange={(e) =>
+                  setEditRepeatType(e.target.value)
+                }
+              >
+                <option value="none">Tekrar yok</option>
+                <option value="daily">Her gün</option>
+                <option value="weekly">Her hafta</option>
+                <option value="every2days">
+                  2 günde bir
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="task-progress">
-
         <div className="progress-bar">
-
           <div
             className="progress-fill"
             style={{ width: `${progress}%` }}
           />
-
         </div>
 
         <div className="progress-info">
+          <span>
+            {progress}% {texts.taskItem.completed}
+          </span>
 
-            <span>
-                {progress}% {texts.taskItem.completed}
-            </span>
-
-            <span>
-
-                {completedSubtasks} / {taskSubtasks.length}
-
-            </span>
-
+          <span>
+            {completedSubtasks} / {taskSubtasks.length}
+          </span>
         </div>
       </div>
 
-      {/* ================= BODY ================= */}
-
       <div className="task-body">
-
-       <button
+        <button
           className="toggle-subtasks-btn"
           onClick={() => setShowSubtasks(!showSubtasks)}
         >
           {showSubtasks ? (
-              <ChevronDown size={18}/>
+            <ChevronDown size={18} />
           ) : (
-              <ChevronRight size={18}/>
-          )}
+            <ChevronRight size={18} />
+          )}  
 
           {texts.taskItem.subtasks} ({taskSubtasks.length})
-      </button>
+        </button>
 
         {showSubtasks && (
-
           <div className="subtask-list">
-
             {taskSubtasks.map((subtask) => (
-
               <div
                 key={subtask.id}
                 className="subtask-item"
               >
-
                 <input
                   type="checkbox"
                   checked={subtask.completed}
                   onChange={() =>
-                    toggleSubtask(subtask.id, subtask.completed)
+                    toggleSubtask(
+                      subtask.id,
+                      subtask.completed
+                    )
                   }
                 />
 
                 <span>{subtask.text}</span>
-
               </div>
-
             ))}
-
           </div>
-
         )}
 
         <div className="subtask-input">
-
           <input
             value={subtaskText}
-            onChange={(e) => setSubtaskText(e.target.value)}
+            onChange={(e) =>
+              setSubtaskText(e.target.value)
+            }
             placeholder={texts.taskItem.addSubtask}
           />
 
           <button
             onClick={() => {
-
               if (!subtaskText.trim()) return;
 
               addSubtask(task.id, subtaskText);
-
               setSubtaskText("");
-
             }}
           >
-            <Plus size={18}/>
+            <Plus size={18} />
           </button>
-
         </div>
-
       </div>
 
-      {/* ================= FOOTER ================= */}
-
       <div className="task-footer">
-
         <div className="task-meta">
-
           <span className={`tag ${task.category}`}>
             {task.category}
           </span>
 
           <span className="task-date">
-
-            <CalendarDays size={14}/>
-
+            <CalendarDays size={14} />
             {texts.taskItem.today}
-
           </span>
 
           {task.repeat_type !== "none" && (
-
             <span className="task-repeat">
-
-              <Repeat size={14}/>{" "}
-
+              <Repeat size={14} />{" "}
               {task.repeat_type === "daily"
                 ? texts.taskItem.repeat.daily
-
                 : task.repeat_type === "weekly"
-
                 ? texts.taskItem.repeat.weekly
-
                 : texts.taskItem.repeat.every2days}
-
             </span>
-
           )}
-
         </div>
 
         <div className="task-actions">
-
-          {editingId === task.id ? (
-
-            <button onClick={() => saveEdit(task.id)}>
-              {texts.taskItem.save}
-            </button>
-
-          ) : (
-
-            <button
+          {isEditing ? (
+            <>
+              <button
               onClick={() => {
+                const isRecurring =
+                  task.repeat_type &&
+                  task.repeat_type !== "none";
 
-                setEditingId(task.id);
-                setEditText(task.text);
-
+                if (isRecurring) {
+                  setShowScopeChoice(true);
+                } else {
+                  saveEdit(task.id, "single");
+                }
               }}
-            >
-              <>
-                {" "}<Pencil size={16}/>{" "}
-                {texts.taskItem.edit}
-            </>
-            </button>
+                disabled={!editText.trim()}
+              >
+                💾 {texts.taskItem.save}
+              </button>
 
+              <button onClick={cancelEdit}>
+                <X size={16} />
+                İptal
+              </button>
+            </>
+          ) : (
+            <button onClick={startEditing}>
+              <Pencil size={16} />
+              {texts.taskItem.edit}
+            </button>
           )}
 
-          <button
-            onClick={() => setDeleteId(task.id)}
-          >
-            <>
-                <Trash2 size={16}/>{" "}
-                {texts.taskItem.delete}
-            </>
-          </button>
-
+          {!isEditing && (
+            <button
+              onClick={() => setDeleteId(task.id)}
+            >
+              <Trash2 size={16} />
+              {texts.taskItem.delete}
+            </button>
+          )}
         </div>
-
       </div>
+      {showScopeChoice && (
+        <div className="edit-scope-backdrop">
+          <div
+            className="edit-scope-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-scope-title"
+          >
+            <h3 id="edit-scope-title">
+              Görevleri nasıl güncelleyelim?
+            </h3>
 
+            <p>
+              Bu görev tekrarlanan bir seriye ait.
+              Hangi görevleri değiştirmek istiyorsun?
+            </p>
+
+            <div className="edit-scope-actions">
+              <button
+                onClick={async () => {
+                  setShowScopeChoice(false);
+                  await saveEdit(task.id, "single");
+                }}
+              >
+                Sadece bu görev
+              </button>
+
+              <button
+                onClick={async () => {
+                  setShowScopeChoice(false);
+                  await saveEdit(task.id, "series");
+                }}
+
+            
+              >
+                
+                Serinin tamamı
+              </button>
+              
+
+              <button
+                onClick={() => setShowScopeChoice(false)}
+              >
+                Vazgeç
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }

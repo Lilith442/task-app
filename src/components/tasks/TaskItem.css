@@ -434,6 +434,47 @@
 
 }
 
+.edit-scope-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.task-card {
+  position: relative;
+}
+
+.edit-scope-modal {
+  width: 100%;
+  max-width: 360px;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--card-bg, #fff);
+  color: var(--text-color, #222);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+.edit-scope-modal h3 {
+  margin-top: 0;
+}
+
+.edit-scope-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.edit-scope-actions button {
+  width: 100%;
+}
+
 /* =======================================================
    FOOTER
 ======================================================= */
