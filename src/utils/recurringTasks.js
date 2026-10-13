@@ -14,5 +14,4 @@ export async function checkRecurringTasks({
       task.last_generated_date
   );
 
-  console.log(recurringTasks);
 }
