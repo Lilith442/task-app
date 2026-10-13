@@ -716,6 +716,13 @@ const filteredTasks = useTaskFilters({
   search,
 });
 
+console.log("FİLTRE SONUCU:", {
+  filter,
+  totalTasks: tasks.length,
+  filteredTasks: filteredTasks.length,
+  selectedDate,
+});
+
 
   // 🔐 LOGIN UI
   if (!user) {
