@@ -5,17 +5,24 @@ export function useTaskFilters({
   filter,
   search,
 }) {
- 
 
 console.log(
-  "GÖREV FİLTRE KONTROLÜ:",
+  "GÖREV FİLTRE DETAYI:",
   JSON.stringify({
     selectedDate,
     taskCount: tasks.length,
     matchingDateCount: tasks.filter(
       (task) => task.due_date === selectedDate
     ).length,
-    lastTaskDate: tasks[tasks.length - 1]?.due_date,
+    filter,
+    search,
+    matchingAfterStatus: tasks
+      .filter((task) => task.due_date === selectedDate)
+      .filter((task) => {
+        if (filter === "completed") return task.completed;
+        if (filter === "active") return !task.completed;
+        return true;
+      }).length,
   })
 );
 
