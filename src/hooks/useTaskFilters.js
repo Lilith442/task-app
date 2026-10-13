@@ -6,14 +6,18 @@ export function useTaskFilters({
   search,
 }) {
  
-console.log("GÖREV FİLTRE KONTROLÜ:", {
-  selectedDate,
-  taskCount: tasks.length,
-  matchingDateCount: tasks.filter(
-    (task) => task.due_date === selectedDate
-  ).length,
-  lastTaskDate: tasks[tasks.length - 1]?.due_date,
-});
+
+console.log(
+  "GÖREV FİLTRE KONTROLÜ:",
+  JSON.stringify({
+    selectedDate,
+    taskCount: tasks.length,
+    matchingDateCount: tasks.filter(
+      (task) => task.due_date === selectedDate
+    ).length,
+    lastTaskDate: tasks[tasks.length - 1]?.due_date,
+  })
+);
 
   return tasks
     .filter((task) => {
