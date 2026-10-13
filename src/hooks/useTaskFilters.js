@@ -5,11 +5,15 @@ export function useTaskFilters({
   filter,
   search,
 }) {
-  console.log("GÖREV FİLTRE KONTROLÜ:", {
-    selectedDate,
-    firstTaskDate: tasks[0]?.due_date,
-    taskCount: tasks.length,
-  });
+ 
+console.log("GÖREV FİLTRE KONTROLÜ:", {
+  selectedDate,
+  taskCount: tasks.length,
+  matchingDateCount: tasks.filter(
+    (task) => task.due_date === selectedDate
+  ).length,
+  lastTaskDate: tasks[tasks.length - 1]?.due_date,
+});
 
   return tasks
     .filter((task) => {
