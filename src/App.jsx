@@ -42,9 +42,8 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(() => {
     return new Date().toISOString().split("T")[0];
   });
-  const [filter, setFilter] = useState(() => {
-  return localStorage.getItem("filterMode") || "all";
-  });
+const [filter, setFilter] = useState("all");
+
   const [search, setSearch] = useState(() => {
   return localStorage.getItem("searchText") || "";
   });
@@ -487,6 +486,21 @@ const {
 
 const dailyGoal = selectedTasks.length;
 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const todayString = [
+  today.getFullYear(),
+  String(today.getMonth() + 1).padStart(2, "0"),
+  String(today.getDate()).padStart(2, "0"),
+].join("-");
+
+const overdueTasks = tasks.filter(
+  (task) =>
+    task.due_date < todayString &&
+    !task.completed
+).length;
+
 const selectedCompleted = completedTasks;
 
 const goalPercent =
@@ -557,70 +571,94 @@ const formatDueDate = (date) => {
   };
 
 const deleteTask = async (id, deleteMode = "single") => {
-
   const task = tasks.find((t) => t.id === id);
 
   if (!task) return;
 
+  // Tek görevi sil
   if (deleteMode === "single") {
-
-    await supabase
+    const { error } = await supabase
       .from("tasks")
       .delete()
       .eq("id", id);
 
-    setTasks(prev => prev.filter(t => t.id !== id));
+    if (error) {
+      console.error("Görev silinemedi:", error);
+      showToast("Görev silinemedi. Lütfen tekrar dene.", "warning");
+      return;
+    }
 
+    setTasks((prev) => prev.filter((t) => t.id !== id));
     showToast(texts.toast.taskDeleted, "warning");
-
     return;
   }
 
+  // Serinin tamamını sil
   if (deleteMode === "series") {
+    if (!task.recurring_group_id) {
+      showToast(
+        "Bu görev bir seriye ait değil. Yalnızca bu görevi silebilirsin.",
+        "warning"
+      );
+      return;
+    }
 
-  await supabase
-    .from("tasks")
-    .delete()
-    .eq("recurring_group_id", task.recurring_group_id);
+    const { error } = await supabase
+      .from("tasks")
+      .delete()
+      .eq("recurring_group_id", task.recurring_group_id);
 
-  setTasks(prev =>
-    prev.filter(
-      t =>
-        t.recurring_group_id !==
-        task.recurring_group_id
-    )
-  );
+    if (error) {
+      console.error("Görev serisi silinemedi:", error);
+      showToast("Görev serisi silinemedi. Lütfen tekrar dene.", "warning");
+      return;
+    }
 
-  showToast(texts.toast.seriesDeleted, "warning");
+    setTasks((prev) =>
+      prev.filter(
+        (t) => t.recurring_group_id !== task.recurring_group_id
+      )
+    );
 
-  return;
-}
+    showToast(texts.toast.seriesDeleted, "warning");
+    return;
+  }
 
-if (deleteMode === "future") {
+  // Seçilen görev ve aynı serideki gelecek görevleri sil
+  if (deleteMode === "future") {
+    let futureTasks;
 
-  const futureTasks = tasks.filter(
-    (t) =>
-      t.recurring_group_id === task.recurring_group_id &&
-      t.due_date >= task.due_date
-  );
+    if (task.recurring_group_id) {
+      futureTasks = tasks.filter(
+        (t) =>
+          t.recurring_group_id === task.recurring_group_id &&
+          t.due_date >= task.due_date
+      );
+    } else {
+      // Seri olmayan bir görevde yalnızca o görevi hedefle
+      futureTasks = [task];
+    }
 
-  const ids = futureTasks.map((t) => t.id);
+    const ids = futureTasks.map((t) => t.id);
 
-  await supabase
-    .from("tasks")
-    .delete()
-    .in("id", ids);
+    if (ids.length === 0) return;
 
-  setTasks((prev) =>
-    prev.filter((t) => !ids.includes(t.id))
-  );
+    const { error } = await supabase
+      .from("tasks")
+      .delete()
+      .in("id", ids);
 
- showToast(texts.toast.futureDeleted, "warning");
+    if (error) {
+      console.error("Gelecek görevler silinemedi:", error);
+      showToast("Görevler silinemedi. Lütfen tekrar dene.", "warning");
+      return;
+    }
 
-  return;
-}
-
+    setTasks((prev) => prev.filter((t) => !ids.includes(t.id)));
+    showToast(texts.toast.futureDeleted, "warning");
+  }
 };
+
 const saveEdit = async (id, scope = "single") => {
   const currentTask = tasks.find((task) => task.id === id);
 
@@ -854,7 +892,7 @@ return (
             greeting={getTimeGreeting()}
             todayText={texts.welcome.subtitle}
             todayTasks={selectedTasks.length}
-            overdueTasks={0}
+            overdueTasks={overdueTasks}
             goalPercent={goalPercent}
             texts={texts}
           />
