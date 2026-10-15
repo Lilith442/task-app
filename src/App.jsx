@@ -367,45 +367,136 @@ setTasks(prev => [...prev, ...data]);
 };
 
 const addSubtask = async (taskId, text) => {
-
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("subtasks")
     .insert([
       {
         task_id: taskId,
-        text,
-        completed: false
-      }
-    ])
-    .select();
+        text: text.trim(),
+        completed: false,
+      },
+    ]);
 
   if (error) {
-  console.error(error);
-  return;
-  }
-
-  await fetchSubtasks();
-
-  };
-
-  const toggleSubtask = async (id, completed) => {
-
-  const { error } = await supabase
-    .from("subtasks")
-    .update({
-      completed: !completed
-    })
-    .eq("id", id);
-
-  if (error) {
-    console.error(error);
+    console.error("Alt görev eklenemedi:", error);
     return;
   }
 
-  await fetchSubtasks();
+  // Yeni alt görev eklendiğinde ana görevi tamamlanmamış yap.
+  const { error: taskError } = await supabase
+    .from("tasks")
+    .update({
+      completed: false,
+      completed_at: null,
+      status: "todo",
+    })
+    .eq("id", taskId);
 
+  if (taskError) {
+    console.error("Ana görev güncellenemedi:", taskError);
+    await fetchSubtasks();
+    return;
+  }
+
+  // Ana görevi ekrandaki listede de güncelle.
+  setTasks((prev) =>
+    prev.map((task) =>
+      task.id === taskId
+        ? {
+            ...task,
+            completed: false,
+            completed_at: null,
+            status: "todo",
+          }
+        : task
+    )
+  );
+
+  await fetchSubtasks();
 };
 
+const toggleSubtask = async (id, completed) => {
+  // Alt görevin bağlı olduğu ana görevi bul.
+  const currentSubtask = subtasks.find(
+    (subtask) => subtask.id === id
+  );
+
+  if (!currentSubtask) {
+    console.error("Alt görev bulunamadı:", id);
+    return;
+  }
+
+  const newValue = !completed;
+
+  // 1. Alt görevin tamamlanma durumunu kaydet.
+  const { error: subtaskError } = await supabase
+    .from("subtasks")
+    .update({ completed: newValue })
+    .eq("id", id);
+
+  if (subtaskError) {
+    console.error("Alt görev güncellenemedi:", subtaskError);
+    return;
+  }
+
+  // 2. Aynı ana göreve bağlı bütün alt görevleri getir.
+  const { data: relatedSubtasks, error: relatedError } =
+    await supabase
+      .from("subtasks")
+      .select("completed")
+      .eq("task_id", currentSubtask.task_id);
+
+  if (relatedError) {
+    console.error(
+      "Alt görevler kontrol edilemedi:",
+      relatedError
+    );
+    await fetchSubtasks();
+    return;
+  }
+
+  // 3. En az bir alt görev olmalı ve hepsi tamamlanmış olmalı.
+  const allCompleted =
+    relatedSubtasks.length > 0 &&
+    relatedSubtasks.every((subtask) => subtask.completed);
+
+  // 4. Ana görevi Supabase üzerinde güncelle.
+  const { error: taskError } = await supabase
+    .from("tasks")
+    .update({
+      completed: allCompleted,
+      completed_at: allCompleted
+        ? new Date().toISOString()
+        : null,
+      status: allCompleted ? "done" : "todo",
+    })
+    .eq("id", currentSubtask.task_id);
+
+  if (taskError) {
+    console.error("Ana görev güncellenemedi:", taskError);
+    await fetchSubtasks();
+    return;
+  }
+
+  // 5. Arayüzdeki ana görev listesini güncelle.
+  setTasks((prev) =>
+    prev.map((task) =>
+      task.id === currentSubtask.task_id
+        ? {
+            ...task,
+            completed: allCompleted,
+            completed_at: allCompleted
+              ? new Date().toISOString()
+              : null,
+            status: allCompleted ? "done" : "todo",
+          }
+        : task
+    )
+  );
+
+  // 6. Alt görevleri yeniden yükle.
+  await fetchSubtasks();
+};
   // 🔄 DRAG
   const handleDragEnd = (event) => {
     const { active, over } = event;
